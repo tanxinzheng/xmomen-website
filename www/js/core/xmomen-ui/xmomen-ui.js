@@ -39,20 +39,7 @@ define([
                 $ocLazyLoad.load(names);
             }
         }
-    }]).constant("$xmomenUILazyLoadConfig", {
-        debug:  true,
-        events: true,
-        modules: [
-            {
-                name: 'xmomen.validate',
-                files: [
-                    "js/vendor/jquery/jquery-validate/jquery.validate.js",
-                    "js/vendor/jquery/jquery-validate/messages_zh.js",
-                    "js/core/xmomen-ui/" + 'validate.js'
-                ]
-            }
-        ]
-    }).factory("HttpInterceptor", ["$q", "$log", "$injector", function($q, $log, $injector){
+    }]).factory("HttpInterceptor", ["$q", "$log", "$injector", function($q, $log, $injector){
         var $dialog = null;
         return {
             request: function (config) {
@@ -181,11 +168,11 @@ define([
 
             return resource;
         };
-    }]).config(["$ocLazyLoadProvider", "$xmomenUILazyLoadConfig", "$httpProvider", function($ocLazyLoadProvider,$xmomenUILazyLoadConfig, $httpProvider){
-        $ocLazyLoadProvider.config($xmomenUILazyLoadConfig);
+    }]).config(["$ocLazyLoadProvider", "$httpProvider", function($ocLazyLoadProvider, $httpProvider){
+        //$ocLazyLoadProvider.config($xmomenUILazyLoadConfig);
         $httpProvider.interceptors.push('HttpInterceptor');
         $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-    }]).run(["$ocLazyLoadTool", "$xmomenUILazyLoadConfig", function($ocLazyLoadTool, $xmomenUILazyLoadConfig){
-        $ocLazyLoadTool.loadConfig($xmomenUILazyLoadConfig);
+    }]).run(["$ocLazyLoadTool", function($ocLazyLoadTool){
+        //$ocLazyLoadTool.loadConfig($xmomenUILazyLoadConfig);
     }]);
 });

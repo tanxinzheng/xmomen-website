@@ -4,10 +4,17 @@
 var url = require('url');
 var fs = require('fs');
 var path = require('path');
-gulp = require('gulp');
-livereload = require('gulp-livereload');
-webserver = require('gulp-webserver');
-mockApi = require('./mock');
+var gulp = require('gulp');
+var livereload = require('gulp-livereload');
+var webserver = require('gulp-webserver');
+var concat = require('gulp-concat');
+var clean = require('gulp-clean');
+var rename = require('gulp-rename');
+var uglify = require('gulp-uglify');
+var mockApi = require('./mock');
+var requirejsOptimize = require('gulp-requirejs-optimize');
+var amdOptimize = require("amd-optimize");           //require优化
+var sourcemaps = require('gulp-sourcemaps');
 
 //web服务器
 gulp.task('server', function() {
@@ -35,4 +42,29 @@ gulp.task('server', function() {
             },
             open: 'http://localhost:8000/index.html'
         }));
+});
+
+gulp.task('dist', function () {
+    return gulp.src('www/app.js')
+        .pipe(sourcemaps.init())
+        .pipe(requirejsOptimize())
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest('dist'));
+});
+
+gulp.task('clean', function(){
+    gulp.src('./www/assert')
+        .pipe(clean());
+})
+
+gulp.task('rjs',['clean'], function () {
+    gulp.src('./www/**/*.js')
+        .pipe(amdOptimize("app", {
+            configFile:"www/config.js"
+        }))
+        .pipe(concat("app.js"))           //合并
+        .pipe(gulp.dest("./www"))           //输出保存
+        .pipe(rename("app.min.js"))       //重命名
+        .pipe(uglify())                     //压缩
+        .pipe(gulp.dest("./www"));        //输出保存
 });

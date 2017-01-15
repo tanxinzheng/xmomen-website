@@ -14,7 +14,7 @@ define([
         "system.module",
         "user.module",
         "App.REST"
-    ]).controller('AppCtrl', ['$scope', '$window', '$localStorage',"AppAPI","$rootScope",
+    ]).controller('AppCtrl', ['$scope', '$window', 'localStorageService',"AppAPI","$rootScope",
         function($scope,  $window, $localStorage, AppAPI, $rootScope) {
         // add 'ie' classes to html
         var isIE = !!navigator.userAgent.match(/MSIE/i);

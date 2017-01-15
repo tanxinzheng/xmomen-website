@@ -4,7 +4,7 @@ define(function(){
     return angular.module('app', [
 
         'ui.bootstrap',
-        'ngStorage',
+        //'ngStorage',
 
         'ngAnimate',
         'ngCookies',
@@ -15,6 +15,7 @@ define(function(){
         'oc.lazyLoad', //懒加载包
         'pascalprecht.translate',
         'xmomen.ui',
+        'LocalStorageModule',
         'ui.router',
         //'ui.router.extras.tabs',
         "angular-loading-bar",

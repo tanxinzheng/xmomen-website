@@ -43,7 +43,7 @@ xmomenUiDirective.directive('uiFullscreen', ['$ocLazyLoad', '$document', '$windo
       template:'<i class="fa fa-expand fa-fw text"></i><i class="fa fa-compress fa-fw text-active"></i>',
       link: function(scope, el, attr) {
         el.addClass('hide');
-        $ocLazyLoad.load('js/vendor/screenfull/screenfull.min.js').then(function(){
+        $ocLazyLoad.load('bower_components/screenfull/dist/screenfull.min.js').then(function(){
           // disable on ie11
           if (screenfull.enabled && !navigator.userAgent.match(/Trident.*rv:11\./)) {
             el.removeClass('hide');
