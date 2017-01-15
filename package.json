@@ -14,10 +14,8 @@
   ],
   "author": "tanxinzheng",
   "license": "ISC",
-  "dependencies": {
-    "bower": "^1.7.9"
-  },
   "devDependencies": {
+    "bower": "^1.7.9",
     "angular-ui-bootstrap": "^2.4.0",
     "gulp": "^3.9.1",
     "gulp-livereload": "^3.8.1",

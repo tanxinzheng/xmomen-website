@@ -8,20 +8,20 @@ var path = require('path');
 
 var mockbase = path.join(__dirname, 'api');
 
+var response = function(res, file){
+    var data = fs.readFileSync(path.join(mockbase, file), 'utf-8');
+    res.setHeader('Content-Type', 'application/json');
+    res.end(data);
+};
+
 var mockApi = function(res, pathname, paramObj, next) {
     switch (pathname) {
         case '/account':
-            var data = fs.readFileSync(path.join(mockbase, 'account.json'), 'utf-8');
-
-             res.setHeader('Content-Type', 'application/json');
-            //res.setHeader('Content-type', 'application/javascript');
-            res.end(paramObj.callback + '(' + data + ')');
+            response(res, 'account.json');
             return ;
 
         case '/account/permissions':
-            var data = fs.readFileSync(path.join(mockbase, 'account/permissions.json'), 'utf-8');
-            res.setHeader('Content-type', 'application/json');
-            res.end(data);
+            response(res, 'account/permissions.json');
             return ;
         default:
             ;
