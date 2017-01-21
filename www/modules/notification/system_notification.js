@@ -2,7 +2,7 @@
  * Created by tanxinzheng on 16/7/3.
  */
 define(function(){
-    return ["$scope", "$modal", "SystemNotificationAPI", "$dialog", function($scope, $modal, SystemNotificationAPI, $dialog){
+    return ["$scope", "$uibModal", "SystemNotificationAPI", "$dialog", function($scope, $uibModal, SystemNotificationAPI, $dialog){
         $scope.pageSetting = {
             checkAll : false,
             queryBtnLoading : false
@@ -72,7 +72,7 @@ define(function(){
         };
         // 弹出
         $scope.openModal = function(index, action){
-            $modal.open({
+            $uibModal.open({
                 templateUrl: 'systemNotification_detail.html',
                 modal:true,
                 resolve: {
@@ -86,7 +86,7 @@ define(function(){
                         return params;
                     }
                 },
-                controller: ['$scope', '$modalInstance', "$modal", "SystemNotificationAPI", "Params", "$dialog", function($scope, $modalInstance, $modal, SystemNotificationAPI, Params, $dialog){
+                controller: ['$scope', '$uibModalInstance', "$uibModal", "SystemNotificationAPI", "Params", "$dialog", function($scope, $uibModalInstance, $uibModal, SystemNotificationAPI, Params, $dialog){
                     //$scope.systemNotification = null;
                     $scope.pageSetting = {
                         formDisabled : true,
@@ -109,14 +109,14 @@ define(function(){
                                     if ( !$scope.systemNotification.id ) {
                                         SystemNotificationAPI.create($scope.systemNotification, function(data,headers){
                                             $dialog.success("新增成功");
-                                            $modalInstance.close();
+                                            $uibModalInstance.close();
                                         }).$promise.finally(function(){
                                             $scope.pageSetting.saveBtnLoading = false;
                                         });
                                     }else {
                                         SystemNotificationAPI.update($scope.systemNotification, function(data,headers){
                                             $dialog.success("更新成功");
-                                            $modalInstance.close();
+                                            $uibModalInstance.close();
                                         }).$promise.finally(function(){
                                             $scope.pageSetting.saveBtnLoading = false;
                                         });
@@ -126,7 +126,7 @@ define(function(){
                         }
                     };
                     $scope.cancel = function(){
-                        $modalInstance.dismiss();
+                        $uibModalInstance.dismiss();
                     };
                 }]
             }).result.then(function () {

@@ -2,7 +2,7 @@
  * Created by tanxinzheng on 16/7/3.
  */
 define(function(){
-    return ["$scope", "$modal", "NotificationAPI", "$dialog", function($scope, $modal, NotificationAPI, $dialog){
+    return ["$scope", "$uibModal", "NotificationAPI", "$dialog", function($scope, $uibModal, NotificationAPI, $dialog){
         $scope.pageSetting = {
             checkAll : false,
             queryBtnLoading : false
@@ -72,7 +72,7 @@ define(function(){
         };
         // 弹出
         $scope.openModal = function(index, action){
-            $modal.open({
+            $uibModal.open({
                 templateUrl: 'notification_detail.html',
                 modal:true,
                 resolve: {
@@ -86,7 +86,7 @@ define(function(){
                         return params;
                     }
                 },
-                controller: ['$scope', '$modalInstance', "$modal", "NotificationAPI", "Params", "$dialog", function($scope, $modalInstance, $modal, NotificationAPI, Params, $dialog){
+                controller: ['$scope', '$uibModalInstance', "$uibModal", "NotificationAPI", "Params", "$dialog", function($scope, $uibModalInstance, $uibModal, NotificationAPI, Params, $dialog){
                     //$scope.notification = null;
                     $scope.pageSetting = {
                         formDisabled : true,
@@ -109,14 +109,14 @@ define(function(){
                                     if ( !$scope.notification.id ) {
                                         NotificationAPI.create($scope.notification, function(data,headers){
                                             $dialog.success("新增成功");
-                                            $modalInstance.close();
+                                            $uibModalInstance.close();
                                         }).$promise.finally(function(){
                                             $scope.pageSetting.saveBtnLoading = false;
                                         });
                                     }else {
                                         NotificationAPI.update($scope.notification, function(data,headers){
                                             $dialog.success("更新成功");
-                                            $modalInstance.close();
+                                            $uibModalInstance.close();
                                         }).$promise.finally(function(){
                                             $scope.pageSetting.saveBtnLoading = false;
                                         });
@@ -126,7 +126,7 @@ define(function(){
                         }
                     };
                     $scope.cancel = function(){
-                        $modalInstance.dismiss();
+                        $uibModalInstance.dismiss();
                     };
                 }]
             }).result.then(function () {

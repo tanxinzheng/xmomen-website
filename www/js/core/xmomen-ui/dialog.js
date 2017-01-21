@@ -6,7 +6,8 @@ define(["toaster","ui-bootstrap-tpls"], function(toaster){
     return angular.module('xmomen.dialog', [
         "toaster",
         "ui.bootstrap"
-    ]).factory("$dialog", ["$q","toaster","$modal", function ($q, toaster, $modal) {
+    ]).factory("$dialog", ["$q","toaster","$injector", function ($q, toaster, $injector) {
+        var $modal;
         return {
             alert : function(option){
                 var defaultConfig = {
@@ -68,6 +69,9 @@ define(["toaster","ui-bootstrap-tpls"], function(toaster){
                 toaster.pop(defaultConfig.type, defaultConfig.title, defaultConfig.text);
             },
             confirm: function (option) {
+                if(!$modal){
+                    $modal = $injector.get("$modal");
+                }
                 var deferred = $q.defer();
                 var defaultConfig = {
                     title:"确认框",

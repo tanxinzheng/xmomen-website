@@ -2,7 +2,7 @@
  * Created by tanxinzheng on 16/7/3.
  */
 define(function(){
-    return ["$scope", "$modal", "UserPermissionAPI", "$dialog", function($scope, $modal, UserPermissionAPI, $dialog){
+    return ["$scope", "$uibModal", "UserPermissionAPI", "$dialog", function($scope, $uibModal, UserPermissionAPI, $dialog){
         $scope.pageSetting = {
             checkAll : false,
             queryBtnLoading : false
@@ -72,7 +72,7 @@ define(function(){
         };
         // 弹出
         $scope.openModal = function(index, action){
-            $modal.open({
+            $uibModal.open({
                 templateUrl: 'userPermission_detail.html',
                 modal:true,
                 resolve: {
@@ -86,7 +86,7 @@ define(function(){
                         return params;
                     }
                 },
-                controller: ['$scope', '$modalInstance', "$modal", "UserPermissionAPI", "Params", "$dialog", function($scope, $modalInstance, $modal, UserPermissionAPI, Params, $dialog){
+                controller: ['$scope', '$uibModalInstance', "$uibModal", "UserPermissionAPI", "Params", "$dialog", function($scope, $uibModalInstance, $uibModal, UserPermissionAPI, Params, $dialog){
                     //$scope.userPermission = null;
                     $scope.pageSetting = {
                         formDisabled : true,
@@ -109,14 +109,14 @@ define(function(){
                                     if ( !$scope.userPermission.id ) {
                                         UserPermissionAPI.create($scope.userPermission, function(data,headers){
                                             $dialog.success("新增成功");
-                                            $modalInstance.close();
+                                            $uibModalInstance.close();
                                         }).$promise.finally(function(){
                                             $scope.pageSetting.saveBtnLoading = false;
                                         });
                                     }else {
                                         UserPermissionAPI.update($scope.userPermission, function(data,headers){
                                             $dialog.success("更新成功");
-                                            $modalInstance.close();
+                                            $uibModalInstance.close();
                                         }).$promise.finally(function(){
                                             $scope.pageSetting.saveBtnLoading = false;
                                         });
@@ -126,7 +126,7 @@ define(function(){
                         }
                     };
                     $scope.cancel = function(){
-                        $modalInstance.dismiss();
+                        $uibModalInstance.dismiss();
                     };
                 }]
             }).result.then(function () {

@@ -30,7 +30,7 @@ define(function () {
                 params:{userId: "@userId", groupIds:"@groupIds"},
                 isArray:true
             }
-    });
+        });
         resource.export = function(data, success, error){
             if(!data.url){
                 data.url = "/user/export";

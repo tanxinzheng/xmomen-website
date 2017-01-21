@@ -2,7 +2,7 @@
  * Created by tanxinzheng on 16/7/3.
  */
 define(function(){
-    return ["$scope", "$modal", "UserAPI", "$dialog", function($scope, $modal, UserAPI, $dialog){
+    return ["$scope",  "UserAPI", "$dialog", "$injector", function($scope, UserAPI, $dialog, $injector){
         $scope.pageSetting = {
             checkAll : false,
             queryBtnLoading : false
@@ -72,7 +72,11 @@ define(function(){
         };
         // 弹出
         $scope.openModal = function(index, action){
-            $modal.open({
+            var $uibModal;
+            if(!$uibModal){
+                $uibModal = $injector.get('$uibModal');
+            }
+            $uibModal.open({
                 templateUrl: 'user_detail.html',
                 modal:true,
                 resolve: {
@@ -86,7 +90,7 @@ define(function(){
                         return params;
                     }
                 },
-                controller: ['$scope', '$modalInstance', "$modal", "UserAPI", "Params", "$dialog", function($scope, $modalInstance, $modal, UserAPI, Params, $dialog){
+                controller: ['$scope', '$uibModalInstance', "$uibModal", "UserAPI", "Params", "$dialog", function($scope, $uibModalInstance, $uibModal, UserAPI, Params, $dialog){
                     //$scope.user = null;
                     $scope.pageSetting = {
                         formDisabled : true,
@@ -111,14 +115,14 @@ define(function(){
                                     if ( !$scope.user.id ) {
                                         UserAPI.create($scope.user, function(data,headers){
                                             $dialog.success("新增成功");
-                                            $modalInstance.close();
+                                            $uibModalInstance.close();
                                         }).$promise.finally(function(){
                                             $scope.pageSetting.saveBtnLoading = false;
                                         });
                                     }else {
                                         UserAPI.update($scope.user, function(data,headers){
                                             $dialog.success("更新成功");
-                                            $modalInstance.close();
+                                            $uibModalInstance.close();
                                         }).$promise.finally(function(){
                                             $scope.pageSetting.saveBtnLoading = false;
                                         });
@@ -128,7 +132,7 @@ define(function(){
                         }
                     };
                     $scope.cancel = function(){
-                        $modalInstance.dismiss();
+                        $uibModalInstance.dismiss();
                     };
                 }]
             }).result.then(function () {
@@ -170,7 +174,11 @@ define(function(){
         };
         // 用户权限
         $scope.viewUserPermission = function(index){
-            $modal.open({
+            var $uibModal;
+            if(!$uibModal){
+                $uibModal = $injector.get('$uibModal');
+            }
+            $uibModal.open({
                 templateUrl: 'user_permission.html',
                 modal:true,
                 size:"lg",
@@ -184,7 +192,7 @@ define(function(){
                         return params;
                     }
                 },
-                controller: ['$scope', '$modalInstance', "$modal", "UserAPI", "UserPermissionAPI", "Params", function($scope, $modalInstance, $modal, UserAPI, UserPermissionAPI, Params){
+                controller: ['$scope', '$uibModalInstance', "$uibModal", "UserAPI", "UserPermissionAPI", "Params", function($scope, $uibModalInstance, $uibModal, UserAPI, UserPermissionAPI, Params){
                     $scope.queryParam = {};
                     // 查询可选资源
                     $scope.getNotHasResource = function(){
@@ -312,7 +320,7 @@ define(function(){
                         })
                     };
                     $scope.cancel = function(){
-                        $modalInstance.dismiss();
+                        $uibModalInstance.dismiss();
                     };
                     var init = function(){
                         if(Params && Params.id){
@@ -331,7 +339,11 @@ define(function(){
         };
         // 组权限
         $scope.viewUserGroup = function(index){
-            $modal.open({
+            var $uibModal;
+            if(!$uibModal){
+                $uibModal = $injector.get('$uibModal');
+            }
+            $uibModal.open({
                 templateUrl: 'user_group.html',
                 modal:true,
                 size:"lg",
@@ -345,7 +357,7 @@ define(function(){
                         return params;
                     }
                 },
-                controller: ['$scope', '$modalInstance', "$modal", "UserAPI", "UserGroupAPI", "Params", function($scope, $modalInstance, $modal, UserAPI, UserGroupAPI, Params){
+                controller: ['$scope', '$uibModalInstance', "$uibModal", "UserAPI", "UserGroupAPI", "Params", function($scope, $uibModalInstance, $uibModal, UserAPI, UserGroupAPI, Params){
                     $scope.queryParam = {};
                     // 查询可选资源
                     $scope.getNotHasResource = function(){
@@ -473,7 +485,7 @@ define(function(){
                         })
                     };
                     $scope.cancel = function(){
-                        $modalInstance.dismiss();
+                        $uibModalInstance.dismiss();
                     };
                     var init = function(){
                         if(Params && Params.id){

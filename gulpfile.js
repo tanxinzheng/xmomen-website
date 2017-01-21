@@ -53,14 +53,60 @@ gulp.task('dist', function () {
 });
 
 gulp.task('clean', function(){
-    gulp.src('./www/assert')
+    gulp.src(['./www/app.js','./www/app.min.js'])
         .pipe(clean());
 })
 
 gulp.task('rjs',['clean'], function () {
-    gulp.src('./www/**/*.js')
-        .pipe(amdOptimize("app", {
-            configFile:"www/config.js"
+    gulp.src('./www/main.js')
+        .pipe(amdOptimize("main", {
+            "appDir":"./www",
+            "optimizeCss": "standard",
+            "optimize": "uglify2",
+            "mainConfigFile":"www/config.js",
+            "generateSourceMaps": true,
+            "preserveLicenseComments": false,
+            "dir": "dist",
+            "removeCombined": "true",
+            "modules": [
+                {
+                    "name": "main",
+                    "include": [
+                        "./bower_components/angular/angular.min",
+                        "./bower_components/angularAMD/angularAMD",
+                        "./js/app.define"
+                    ]
+                }
+            ]
+        }))
+        .pipe(concat("app.js"))           //合并
+        .pipe(gulp.dest("./www"))           //输出保存
+        .pipe(rename("app.min.js"))       //重命名
+        .pipe(uglify())                     //压缩
+        .pipe(gulp.dest("./www"));        //输出保存
+});
+
+gulp.task('rjs2',['clean'], function () {
+    gulp.src('./www/*/**.js')
+        .pipe(requirejsOptimize({
+            "appDir":"./www",
+            "optimizeCss": "standard",
+            "optimize": "uglify2",
+            "mainConfigFile":"www/config.js",
+            "generateSourceMaps": true,
+            "preserveLicenseComments": false,
+            "dir": "dist",
+            "removeCombined": "true",
+            "modules": [
+                {
+                    "name": "main",
+                    "include": [
+                        "./bower_components/angular/angular.min",
+                        "./bower_components/angularAMD/angularAMD",
+                        "./js/app.define"
+                    ]
+                }
+            ]
         }))
         .pipe(concat("app.js"))           //合并
         .pipe(gulp.dest("./www"))           //输出保存

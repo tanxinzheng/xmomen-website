@@ -2,7 +2,7 @@
  * Created by tanxinzheng on 16/7/3.
  */
 define(function(){
-    return ["$scope", "$modal", "GroupAPI", "$dialog", function($scope, $modal, GroupAPI, $dialog){
+    return ["$scope", "$uibModal", "GroupAPI", "$dialog", function($scope, $uibModal, GroupAPI, $dialog){
         $scope.pageSetting = {
             checkAll : false,
             queryBtnLoading : false
@@ -72,7 +72,7 @@ define(function(){
         };
         // 弹出
         $scope.openModal = function(index, action){
-            $modal.open({
+            $uibModal.open({
                 templateUrl: 'group_detail.html',
                 modal:true,
                 resolve: {
@@ -86,7 +86,7 @@ define(function(){
                         return params;
                     }
                 },
-                controller: ['$scope', '$modalInstance', "$modal", "GroupAPI", "Params", "$dialog", function($scope, $modalInstance, $modal, GroupAPI, Params, $dialog){
+                controller: ['$scope', '$uibModalInstance', "$uibModal", "GroupAPI", "Params", "$dialog", function($scope, $uibModalInstance, $uibModal, GroupAPI, Params, $dialog){
                     //$scope.group = null;
                     $scope.pageSetting = {
                         formDisabled : true,
@@ -109,14 +109,14 @@ define(function(){
                                     if ( !$scope.group.id ) {
                                         GroupAPI.create($scope.group, function(data,headers){
                                             $dialog.success("新增成功");
-                                            $modalInstance.close();
+                                            $uibModalInstance.close();
                                         }).$promise.finally(function(){
                                             $scope.pageSetting.saveBtnLoading = false;
                                         });
                                     }else {
                                         GroupAPI.update($scope.group, function(data,headers){
                                             $dialog.success("更新成功");
-                                            $modalInstance.close();
+                                            $uibModalInstance.close();
                                         }).$promise.finally(function(){
                                             $scope.pageSetting.saveBtnLoading = false;
                                         });
@@ -126,7 +126,7 @@ define(function(){
                         }
                     };
                     $scope.cancel = function(){
-                        $modalInstance.dismiss();
+                        $uibModalInstance.dismiss();
                     };
                 }]
             }).result.then(function () {
@@ -168,7 +168,7 @@ define(function(){
         };
         // 组权限
         $scope.viewGroupPermission = function(index){
-            $modal.open({
+            $uibModal.open({
                 templateUrl: 'group_permission.html',
                 modal:true,
                 size:"lg",
@@ -182,7 +182,7 @@ define(function(){
                         return params;
                     }
                 },
-                controller: ['$scope', '$modalInstance', "$modal", "GroupAPI", "GroupPermissionAPI", "Params", function($scope, $modalInstance, $modal, GroupAPI, GroupPermissionAPI, Params){
+                controller: ['$scope', '$uibModalInstance', "$uibModal", "GroupAPI", "GroupPermissionAPI", "Params", function($scope, $uibModalInstance, $uibModal, GroupAPI, GroupPermissionAPI, Params){
                     $scope.queryParam = {};
                     // 查询可选资源
                     $scope.getNotHasResource = function(){
@@ -310,7 +310,7 @@ define(function(){
                         })
                     };
                     $scope.cancel = function(){
-                        $modalInstance.dismiss();
+                        $uibModalInstance.dismiss();
                     };
                     var init = function(){
                         if(Params && Params.id){

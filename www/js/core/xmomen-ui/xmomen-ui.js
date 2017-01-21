@@ -8,8 +8,7 @@ define([
     "./datetimepicker",
     "./grid"
 ],function(dialog, modal_draggable, uiDirective, validate, pagination, datetimepicker,
-           grid
-){
+           grid){
     return angular.module("xmomen.ui",[
         pagination.name,
         uiDirective.name,
@@ -39,39 +38,13 @@ define([
                 $ocLazyLoad.load(names);
             }
         }
-    }]).factory("HttpInterceptor", ["$q", "$log", "$injector", function($q, $log, $injector){
-        var $dialog = null;
-        return {
-            request: function (config) {
-                if(config.method=='GET' && !config.cache){
-                    if(config.params){
-                        config.params._noCache = new Date().getTime();
-                    }else{
-                        config.params = {
-                            _noCache : new Date().getTime()
-                        }
-                    }
-                }
-                return config;
-            },
-            responseError:function(response){
-                $log.error("Response Error: ", response);
-                if(!$dialog){
-                    $dialog = $injector.get("$dialog");
-                }
-                if(response.status == 400){
-                    $dialog.error(response.data.message);
-                }else if(response.status == 401){
-                    //未找到用户
-                    window.location.reload();
-                }else if(response.status == 500){
-                    $dialog.error("系统操作异常，请联系管理员。");
-                }
-                return $q.reject(response);
-            }
-        }
-    }]).factory( 'Resource', [ '$resource', '$dialog', "$timeout", function( $resource , $dialog, $timeout) {
+    }]).factory('Resource', [ '$resource', '$injector', "$timeout", function( $resource , $injector, $timeout) {
+        var $dialog;
+
         return function( url, params, methods ) {
+            if(!$dialog){
+                $dialog = $injector.get("$dialog");
+            }
             var defaults = {
                 query: {method: "GET", isArray: false},
                 update: { method: 'PUT' },
@@ -168,6 +141,37 @@ define([
 
             return resource;
         };
+    }]).factory("HttpInterceptor", ["$q", "$log", "$injector", function($q, $log, $injector){
+        return {
+            request: function (config) {
+                if(config.method=='GET' && !config.cache){
+                    if(config.params){
+                        config.params._noCache = new Date().getTime();
+                    }else{
+                        config.params = {
+                            _noCache : new Date().getTime()
+                        }
+                    }
+                }
+                return config;
+            },
+            responseError:function(response){
+                var $dialog;
+                if(!$dialog){
+                    $dialog = $injector.get("$dialog");
+                }
+                $log.error("Response Error: ", response);
+                if(response.status == 400){
+                    $dialog.error(response.data.message);
+                }else if(response.status == 401){
+                    //未找到用户
+                    window.location.reload();
+                }else if(response.status == 500){
+                    $dialog.error("系统操作异常，请联系管理员。");
+                }
+                return $q.reject(response);
+            }
+        }
     }]).config(["$ocLazyLoadProvider", "$httpProvider", function($ocLazyLoadProvider, $httpProvider){
         //$ocLazyLoadProvider.config($xmomenUILazyLoadConfig);
         $httpProvider.interceptors.push('HttpInterceptor');

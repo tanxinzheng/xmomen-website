@@ -8,7 +8,7 @@ define(function(){
             cfpLoadingBarProvider.latencyThreshold = 500;
             cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
             cfpLoadingBarProvider.spinnerTemplate = '<div><span class="fa fa-spinner">Loading...</div>';
-            $logProvider.debugEnabled(false);
+            $logProvider.debugEnabled(true);
 
             // lazy controller, directive and service
             //App.controller = $controllerProvider.register;

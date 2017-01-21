@@ -6,10 +6,9 @@
  * @version 1.0.0
  */
 define([
-    "angularAMD",
     "./user.api",
     "./user"
-],function(angularAMD, UserRest, user){
+],function(UserRest, user){
     angular.module('user.module',[
         "User.REST"
     ]).config(['$stateProvider', '$urlRouterProvider',

@@ -2,6 +2,7 @@
  * Created by tanxinzheng on 16/8/11.
  */
 require.config({
+    //baseUrl:"./",
     paths: {
         "jquery":"bower_components/jquery/dist/jquery.min",
         "angular": "bower_components/angular/angular.min",
@@ -72,7 +73,8 @@ require.config({
             "loading-bar",
             "jquery-validate-local",
             "toaster",
-            "app.module", "xmomen-ui", "config",
+            "xmomen-ui",
+            "app.module", "config",
             "config-lazyload", "config-i18n", "config-router"
         ]
     }

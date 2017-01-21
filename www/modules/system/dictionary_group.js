@@ -2,7 +2,7 @@
  * Created by tanxinzheng on 16/7/3.
  */
 define(function(){
-    return ["$scope", "$modal", "DictionaryGroupAPI", "$dialog", function($scope, $modal, DictionaryGroupAPI, $dialog){
+    return ["$scope", "$uibModal", "DictionaryGroupAPI", "$dialog", function($scope, $uibModal, DictionaryGroupAPI, $dialog){
         $scope.pageSetting = {
             checkAll : false,
             queryBtnLoading : false
@@ -72,7 +72,7 @@ define(function(){
         };
         // 弹出
         $scope.openModal = function(action, index){
-            $modal.open({
+            $uibModal.open({
                 templateUrl: 'dictionaryGroup_detail.html',
                 modal:true,
                 resolve: {
@@ -86,7 +86,7 @@ define(function(){
                         return params;
                     }
                 },
-                controller: ['$scope', '$modalInstance', "$modal", "DictionaryGroupAPI", "Params", "$dialog", function($scope, $modalInstance, $modal, DictionaryGroupAPI, Params, $dialog){
+                controller: ['$scope', '$uibModalInstance', "$uibModal", "DictionaryGroupAPI", "Params", "$dialog", function($scope, $uibModalInstance, $uibModal, DictionaryGroupAPI, Params, $dialog){
                     //$scope.dictionaryGroup = null;
                     $scope.pageSetting = {
                         formDisabled : true,
@@ -108,14 +108,14 @@ define(function(){
                                 if ( !$scope.dictionaryGroup.id ) {
                                     DictionaryGroupAPI.create($scope.dictionaryGroup, function(data,headers){
                                         $dialog.success("新增成功");
-                                        $modalInstance.close();
+                                        $uibModalInstance.close();
                                     }).$promise.finally(function(){
                                         $scope.pageSetting.saveBtnLoading = false;
                                     });
                                 }else {
                                     DictionaryGroupAPI.update($scope.dictionaryGroup, function(data,headers){
                                         $dialog.success("更新成功");
-                                        $modalInstance.close();
+                                        $uibModalInstance.close();
                                     }).$promise.finally(function(){
                                         $scope.pageSetting.saveBtnLoading = false;
                                     });
@@ -124,7 +124,7 @@ define(function(){
                         }
                     };
                     $scope.cancel = function(){
-                        $modalInstance.dismiss();
+                        $uibModalInstance.dismiss();
                     };
                 }]
             }).result.then(function () {
