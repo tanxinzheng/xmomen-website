@@ -6,6 +6,7 @@
   <meta name="description" content="app, web app, responsive, responsive layout, admin, admin panel, admin dashboard, flat, flat ui, ui kit, AngularJS, ui route, charts, widgets, components" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
+    <!-- build:css -->
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" type="text/css" />
   <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" type="text/css" />
 
@@ -14,6 +15,7 @@
   <link rel="stylesheet" href="css/font.css" type="text/css" />
   <link rel="stylesheet" href="css/app.css" type="text/css" />
   <link rel="stylesheet" href="css/xmomen.css" type="text/css" />
+    <!-- endbuild -->
 
 </head>
 <body ng-controller="AppCtrl">
@@ -27,19 +29,13 @@
        }" ui-view>
   </div>
 
-
-｀  <!-- jQuery -->
+  <!-- build:js -->
   <script src="bower_components/jquery/dist/jquery.min.js"></script>
-  <!-- Angular -->
   <script src="bower_components/angular/angular.min.js"></script>
-
-  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <!-- endbuild -->
 
   <script data-main="main.js" src="bower_components/requirejs/require.js"></script>
   <script src="config.js"></script>
-
-  <!--<script data-main="assert/js/index.min.js" src="bower_components/requirejs/require.js"></script>-->
-  <!--<script src="config.js"></script>-->
 
   <toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
 </body>

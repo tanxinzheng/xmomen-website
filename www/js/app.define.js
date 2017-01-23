@@ -1,6 +1,6 @@
-'use strict';
-
-define(function(){
+define(function(require){
+    'use strict';
+    var angular = require('angular');
     return angular.module('app', [
 
         'ui.bootstrap',

@@ -9,3 +9,6 @@ logs
 npm-debug.log
 coverage
 www/bower_components
+build
+dist
+rev
