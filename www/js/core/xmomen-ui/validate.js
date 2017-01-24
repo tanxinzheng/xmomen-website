@@ -4,7 +4,8 @@
 /*jshint globalstrict:true*/
 /*global angular:false*/
 'use strict';
-define(function(){
+define(function(require){
+    var angular = require("angular");
     /**
      * 校验规则表达式
      */

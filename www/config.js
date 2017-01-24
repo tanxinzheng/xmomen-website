@@ -2,18 +2,17 @@
  * Created by tanxinzheng on 16/8/11.
  */
 require.config({
-    //baseUrl:"./",
+    baseUrl:"./",
     paths: {
-        "jquery":"bower_components/jquery/dist/jquery.min",
-        "angular": "bower_components/angular/angular.min",
+        "jquery":"bower_components/jquery/dist/jquery",
+        "angular": "bower_components/angular/angular",
+        "angularAMD": "bower_components/angularAMD/angularAMD",
         "angular-ui-router": "bower_components/angular-ui-router/release/angular-ui-router",
         "ui-bootstrap-tpls":"bower_components/angular-bootstrap/ui-bootstrap-tpls",
-        "angularAMD": "bower_components/angularAMD/angularAMD",
         "permission":"bower_components/angular-permission/dist/angular-permission.min",
         "toaster":'bower_components/AngularJS-Toaster/toaster',
         "loading-bar": "bower_components/angular-loading-bar/build/loading-bar",
         "jquery-validate":"bower_components/jquery-validation/dist/jquery.validate",
-        "jquery-validate-local":"bower_components/jquery-validation/src/localization/messages_zh",
         "datetimepicker": "bower_components/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker",
         "ocLazyLoad":"bower_components/oclazyload/dist/ocLazyLoad.min",
         "angular-translate":"bower_components/angular-translate/angular-translate",
@@ -31,32 +30,31 @@ require.config({
         "config-lazyload": "js/config.lazyload",
         "config-i18n": "js/config.i18n",
         "config-router": "js/config.router",
-        "app":"js/app.define"
-    },
-    map: {
-        '*': {
-            'css': 'bower_components/require-css/css'
-        }
+        "main":"main"
     },
     shim: {
         "jquery" : { exports : "jquery" },
-        "datetimepicker" : ["jquery","css!bower_components/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min"],
+        "datetimepicker" : ["jquery"],
         "angular": { exports: "angular" },
+        "angularAMD": ["angular"],
         "angular-ui-router": ["angular"],
         "ui-bootstrap-tpls": ["angular"],
-        "angularAMD": ["angular"],
-        "toaster" : ["css!bower_components/AngularJS-Toaster/toaster"],
-        "loading-bar" : ["css!bower_components/angular-loading-bar/build/loading-bar"],
-        "depLib":[
-            "ocLazyLoad"
-        ],
-        "jquery-validate-local":[
-            "jquery-validate"
-        ],
-        "loader-static-files":["angular-translate"],
-        "storage-cookie":["angular-translate"],
-        "storage-local":["angular-translate"],
-        "app": [
+        "toaster" : ["angular"],
+        "loading-bar" : ["angular"],
+        "ocLazyLoad":["angular"],
+        "jquery-validate":{
+            deps:['jquery'],
+            exports:"$.validator"
+        },
+        "angular-local-storage":["angular"],
+        "angular-cookies": ["angular"],
+        "angular-resource": ["angular"],
+        "angular-animate": ["angular"],
+        "angular-translate": ["angular"],
+        "loader-static-files":["angular", "angular-translate"],
+        "storage-cookie":["angular","angular-translate"],
+        "storage-local":["angular","angular-translate"],
+        "main": [
             "ocLazyLoad",
             "angular-cookies",
             "angular-resource",
@@ -71,11 +69,16 @@ require.config({
             "ui-bootstrap-tpls",
             "angularAMD",
             "loading-bar",
-            "jquery-validate-local",
+            "jquery-validate",
+            //"jquery-validate-local",
             "toaster",
+
             "xmomen-ui",
-            "app.module", "config",
-            "config-lazyload", "config-i18n", "config-router"
+            "app.module",
+            "config",
+            "config-lazyload",
+            "config-i18n",
+            "config-router"
         ]
     }
 });

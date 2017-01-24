@@ -1,5 +1,6 @@
 // config
-define(function(){
+define(function(require){
+    var angular = require('angular');
     angular.module("config",[]).config(
     ['$controllerProvider', '$compileProvider', '$filterProvider', '$provide', "$logProvider", "$httpProvider",
         "cfpLoadingBarProvider",

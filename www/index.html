@@ -1,42 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Be Angular | Bootstrap Admin Web App with AngularJS</title>
-  <meta name="description" content="app, web app, responsive, responsive layout, admin, admin panel, admin dashboard, flat, flat ui, ui kit, AngularJS, ui route, charts, widgets, components" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta charset="utf-8"/>
+    <title>Be Angular | Bootstrap Admin Web App with AngularJS</title>
+    <meta name="description"
+          content="app, web app, responsive, responsive layout, admin, admin panel, admin dashboard, flat, flat ui, ui kit, AngularJS, ui route, charts, widgets, components"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
-    <!-- build:css -->
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" type="text/css" />
-  <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" type="text/css" />
-
-  <link rel="stylesheet" href="css/animate.css" type="text/css" />
-  <link rel="stylesheet" href="css/simple-line-icons.css" type="text/css" />
-  <link rel="stylesheet" href="css/font.css" type="text/css" />
-  <link rel="stylesheet" href="css/app.css" type="text/css" />
-  <link rel="stylesheet" href="css/xmomen.css" type="text/css" />
+    <!-- build:css css/product.css -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" type="text/css"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" type="text/css"/>
+    <link rel="stylesheet" href="bower_components/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css"
+          type="text/css"/>
+    <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" type="text/css"/>
+    <link rel="stylesheet" href="bower_components/AngularJS-Toaster/toaster.css" type="text/css"/>
+    <link rel="stylesheet" href="css/animate.css" type="text/css"/>
+    <link rel="stylesheet" href="css/simple-line-icons.css" type="text/css"/>
+    <link rel="stylesheet" href="css/font.css" type="text/css"/>
+    <link rel="stylesheet" href="css/app.css" type="text/css"/>
+    <link rel="stylesheet" href="css/xmomen.css" type="text/css"/>
     <!-- endbuild -->
 
 </head>
 <body ng-controller="AppCtrl">
-  <div class="app" id="app"
-       ng-class="{
+<div class="app" id="app"
+     ng-class="{
        'app-header-fixed':app.settings.headerFixed,
        'app-aside-fixed':app.settings.asideFixed,
        'app-aside-folded':app.settings.asideFolded,
        'app-aside-dock':app.settings.asideDock,
        'container':app.settings.container
        }" ui-view>
-  </div>
+</div>
 
-  <!-- build:js -->
-  <script src="bower_components/jquery/dist/jquery.min.js"></script>
-  <script src="bower_components/angular/angular.min.js"></script>
-  <!-- endbuild -->
+<!-- build:rjs js/product.js -->
+<script data-main="main" src="bower_components/requirejs/require.js"></script>
+<script src="config.js"></script>
+<!-- endbuild -->
 
-  <script data-main="main.js" src="bower_components/requirejs/require.js"></script>
-  <script src="config.js"></script>
-
-  <toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
 </body>
 </html>

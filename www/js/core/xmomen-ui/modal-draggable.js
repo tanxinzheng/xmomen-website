@@ -1,7 +1,8 @@
 /**
  * Created by tanxinzheng on 16/7/3.
  */
-define(function(){
+define(function(require){
+    var angular = require("angular");
     return angular.module("xmomen.draggable",[
 
     ]).directive('draggable', ['$document', function($document) {

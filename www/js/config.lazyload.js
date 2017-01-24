@@ -1,5 +1,6 @@
 // lazyload config
-define(function() {
+define(function(require) {
+    var angular = require('angular');
     return angular.module('config.lazyload',[])
     /**
      * jQuery plugin config use ui-jq directive , config the js and css files that required

@@ -12,3 +12,5 @@ www/bower_components
 build
 dist
 rev
+csslint_report*
+temp

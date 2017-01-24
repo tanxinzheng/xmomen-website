@@ -2,7 +2,9 @@
 /**
  * 分页插件
  */
-define(function(){
+define(function(require){
+    'use strict';
+    var angular = require('angular');
     var moduleName = angular.module('xmomen.grid',[]);
     moduleName.directive('ugEmptyDataMsg', [function() {
         return {

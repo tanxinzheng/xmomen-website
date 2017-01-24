@@ -1,7 +1,8 @@
 /**
  * Created by Jeng on 2016/1/28.
  */
-define(function () {
+define(function(require){
+    var angular = require('angular');
     return angular.module("User.REST",[
         "ngResource"
     ]).factory("UserAPI", ["Resource", function(Resource){

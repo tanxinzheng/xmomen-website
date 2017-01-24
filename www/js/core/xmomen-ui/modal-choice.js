@@ -1,7 +1,9 @@
 /**
  * Created by tanxinzheng on 16/7/3.
  */
-define(function(){
+define(function(require){
+    'use strict';
+    var angular = require('angular');
     return angular.module("xmomen.modal-choice",[
 
     ]).directive('modalChoice', ['$modal', function($modal) {

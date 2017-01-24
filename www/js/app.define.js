@@ -1,7 +1,8 @@
 define(function(require){
     'use strict';
     var angular = require('angular');
-    return angular.module('app', [
+    var angularAMD = require('angularAMD');
+    var ngApp = angular.module('app', [
 
         'ui.bootstrap',
         //'ngStorage',
@@ -26,4 +27,15 @@ define(function(require){
         "config",
         "config.i18n"
     ]);
+    var init = function(){
+        angular.element(document).ready(function() {
+            $.get('/account/permissions', function(data) {
+                var permissionList = data;
+                angularAMD.bootstrap(ngApp);
+            });
+        });
+    };
+    return {
+        init:init
+    }
 });

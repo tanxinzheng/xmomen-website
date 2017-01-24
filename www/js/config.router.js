@@ -3,8 +3,9 @@
 /**
  * Config for the router
  */
-define(["angularAMD"], function(angularAMD){
-angular.module("config.router",[]).config(['$stateProvider', '$urlRouterProvider',
+define(function(require){
+    var angular = require('angular');
+    angular.module("config.router",[]).config(['$stateProvider', '$urlRouterProvider',
         function ($stateProvider,   $urlRouterProvider) {
 
             $urlRouterProvider

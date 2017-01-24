@@ -1,5 +1,6 @@
 // config
-define(function(){
+define(function(require){
+    var angular = require('angular');
     angular.module("config.i18n",[]).config(['$translateProvider', function($translateProvider){
         // Register a loader for the static files
         // So, the module will search missing translation tables under the specified urls.
