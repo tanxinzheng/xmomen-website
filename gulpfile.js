@@ -28,7 +28,7 @@ var revCollector = require('gulp-rev-collector');   //路径替换
 var gulpsync = require('gulp-sync')(gulp);
 
 var environment = require("./environments.json");
-var ENV = environment['production'];
+var ENV = environment['development'];
 //web服务器
 gulp.task('server', function() {
     gulp.src(ENV.serverPath) // 服务器目录（./代表根目录）
@@ -83,7 +83,7 @@ gulp.task('csslint', function (cb) {
 
 // html压缩
 gulp.task('htmlmin', function() {
-    return gulp.src(['www/**/*.html', 'temp/index.html', '!www/bower_components/**'])
+    return gulp.src(['www/**/*.html', '!www/bower_components/**'])
         .pipe(gulp.dest('build'))
         .pipe(notify({ message: 'html min task ok' }));
 
@@ -104,12 +104,12 @@ gulp.task('css', function(){
         .pipe(gulp.dest('build/css'))           //设置输出路径
         .pipe(rename({suffix:'.min'}))          //修改文件名
         .pipe(minifycss())                      //压缩文件
-        .pipe(rev())                            //生成MD5指纹
+        //.pipe(rev())                            //生成MD5指纹
         .pipe(gulp.dest('build/css'))           //输出文件目录
-        .pipe(rev.manifest({
-            merge: true // merge with the existing manifest (if one exists)
-        }))                   //- 生成一个rev-manifest.json
-        .pipe(gulp.dest('./rev'))               //- 将 rev-manifest.json 保存到 rev 目录内
+        //.pipe(rev.manifest({
+        //    merge: true // merge with the existing manifest (if one exists)
+        //}))                   //- 生成一个rev-manifest.json
+        //.pipe(gulp.dest('./rev'))               //- 将 rev-manifest.json 保存到 rev 目录内
         .pipe(notify({message:'css task ok'})); //提示成功
 });
 
@@ -136,18 +136,17 @@ gulp.task('html', function() {
         .pipe(gulp.dest('temp'));
 });
 
-//gulp.task('rev', function () {
-//    return gulp.src(['build/css/*.css', 'build/js/*.js'])
-//        .pipe(gulp.dest('build/assets'))  // copy original assets to build dir
-//        .pipe(rev())
-//        .pipe(gulp.dest('build/assets'))  // write rev'd assets to build dir
-//        .pipe(rev.manifest())
-//        .pipe(gulp.dest('build/assets')); // write manifest to build dir
-//});
-
 // rev md5指纹替换
-gulp.task('rev', function() {
-    return gulp.src(['./rev/rev-manifest.json', './build/index.html'])   //- 读取 rev-manifest.json 文件以及需要进行css名替换的文件
+gulp.task('rev-md', function() {
+    return gulp.src(['build/**/*.js', 'build/**/*.css'])
+        .pipe(rev())
+        .pipe(gulp.dest('build'))  // write rev'd assets to build dir
+        .pipe(rev.manifest())                   //- 生成一个rev-manifest.json
+        .pipe(gulp.dest('./rev'));
+});
+
+gulp.task('rev',['rev-md'], function(){
+    return gulp.src(['./rev/rev-manifest.json', './temp/index.html'])   //- 读取 rev-manifest.json 文件以及需要进行css名替换的文件
         .pipe(revCollector())                                   //- 执行文件内css名的替换
         .pipe(gulp.dest('build'));                     //- 替换后的文件输出的目录
 });
@@ -174,12 +173,12 @@ gulp.task('js', function(){
         .pipe(gulp.dest('./build/js'))
         .pipe(uglify())
         .pipe(rename({suffix:'.min'}))          //修改文件名
-        .pipe(rev())                            //生成MD5指纹
+        //.pipe(rev())                            //生成MD5指纹
         .pipe(gulp.dest('./build/js'))
-        .pipe(rev.manifest({
-            merge: true // merge with the existing manifest (if one exists)
-        }))                   //- 生成一个rev-manifest.json
-        .pipe(gulp.dest('./rev'))               //- 将 rev-manifest.json 保存到 rev 目录内
+        //.pipe(rev.manifest({
+        //    merge: true // merge with the existing manifest (if one exists)
+        //}))                   //- 生成一个rev-manifest.json
+        //.pipe(gulp.dest('./rev'))               //- 将 rev-manifest.json 保存到 rev 目录内
         .pipe(notify({message:'js task ok'})); //提示成功
 });
 
