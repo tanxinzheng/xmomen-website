@@ -14,7 +14,7 @@ define(function(require){
         // Tell the module to store the language in the local storage
         $translateProvider.useLocalStorage();
 
-        //$translateProvider.useSanitizeValueStrategy('sanitize');
+        $translateProvider.useSanitizeValueStrategy('sanitize');
     }]).run(["$translate", "$rootScope", function($translate, $rootScope){
 
         // angular translate

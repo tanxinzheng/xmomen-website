@@ -108,8 +108,8 @@
                                 <a ng-bind="item.lastLoginTime | date:'yyyy-MM-dd HH:mm:ss'"></a>
                             </td>
                             <td class="action">
-                                <div ng-show="item.showAction" class="dropdown dropdown-right-action" dropdown="">
-                                    <i class="icon icon-settings" dropdown-toggle="" aria-haspopup="true" aria-expanded="false"></i>
+                                <div ng-show="item.showAction" class="dropdown dropdown-right-action" uib-dropdown="">
+                                    <i class="icon icon-settings" uib-dropdown-toggle="" aria-haspopup="true" aria-expanded="false"></i>
                                     <ul class="dropdown-menu">
                                         <li><a href="javascript:void(0)" data-ng-click="view($index)"><i class="icon icon-info"></i>&nbsp;&nbsp;查看</a></li>
                                         <li><a href="javascript:void(0)" data-ng-click="update($index)"><i class="fa fa-edit"></i>&nbsp;&nbsp;修改</a></li>
@@ -138,8 +138,8 @@
                                        data-ng-true-value="true"
                                        data-ng-false-value="false"><i></i>
                             </label>
-                            <div class="btn-group open" dropdown="">
-                                <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
+                            <div class="btn-group open" uib-dropdown="">
+                                <button type="button" class="btn btn-sm btn-default dropdown-toggle" uib-dropdown-toggle>
                                     批量操作&nbsp;&nbsp;
                                     <span class="caret"></span>
                                     <span class="sr-only">Split button!</span>

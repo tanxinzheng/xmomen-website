@@ -12,7 +12,7 @@ define(function(require){
             transclude : true, //嵌入
             scope:{
                 pageInfo:"=",
-                loadData:"=",
+                //loadData:"=",
                 loadParameter:"="
             },
             templateUrl : 'js/core/xmomen-ui/template/pagination-tpl.html',//模板url
@@ -28,7 +28,7 @@ define(function(require){
                 };
                 //$scope.pageInfo = $scope.pageInfo||{};
                 $scope.pageConfig = angular.extend($scope.pageConfig,$scope.pageInfo.pageConfig);
-                $scope.$watch('pageInfo',function(newVal,oldVal){
+                $scope.$watch('pageInfo',function(newVal, oldVal){
                     if(newVal && newVal !== oldVal){
                         $scope.load();
                     }

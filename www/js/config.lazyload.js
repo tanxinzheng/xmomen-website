@@ -93,13 +93,6 @@ define(function(require) {
                         ]
                     },
                     {
-                        name: 'toaster',
-                        files: [
-                            'js/core/angularjs-toaster/toaster.js',
-                            'js/core/angularjs-toaster/toaster.css'
-                        ]
-                    },
-                    {
                         name: 'textAngular',
                         files: [
                             'js/vendor/modules/textAngular/textAngular-sanitize.min.js',

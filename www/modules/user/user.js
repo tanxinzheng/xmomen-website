@@ -2,7 +2,7 @@
  * Created by tanxinzheng on 16/7/3.
  */
 define(function(){
-    return ["$scope",  "UserAPI", "$dialog", "$injector", function($scope, UserAPI, $dialog, $injector){
+    return ["$scope",  "UserAPI", "$dialog", "$injector", "$uibModal", function($scope, UserAPI, $dialog, $injector, $uibModal){
         $scope.pageSetting = {
             checkAll : false,
             queryBtnLoading : false
@@ -29,7 +29,7 @@ define(function(){
                 $scope.pageInfoSetting = data.pageInfo;
             }).$promise.finally(function(){
                 $scope.pageSetting.queryBtnLoading = false;
-                });
+            });
         };
         // 全选
         $scope.checkAll = function(){
@@ -72,19 +72,19 @@ define(function(){
         };
         // 弹出
         $scope.openModal = function(index, action){
-            var $uibModal;
-            if(!$uibModal){
-                $uibModal = $injector.get('$uibModal');
-            }
+            //var $uibModal;
+            //if(!$uibModal){
+            //    $uibModal = $injector.get('$uibModal');
+            //}
             $uibModal.open({
                 templateUrl: 'user_detail.html',
-                modal:true,
+                //modal:true,
                 resolve: {
                     Params: function () {
                         var params = {
                             action: action
                         };
-                        if($scope.userList[index] && $scope.userList[index].id){
+                        if($scope.userList && $scope.userList[index] && $scope.userList[index].id){
                             params.id = $scope.userList[index].id;
                         }
                         return params;
@@ -135,8 +135,6 @@ define(function(){
                         $uibModalInstance.dismiss();
                     };
                 }]
-            }).result.then(function () {
-                $scope.getUserList();
             });
         };
         // 删除

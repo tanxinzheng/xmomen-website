@@ -15,7 +15,7 @@ var uglify = require('gulp-uglify');
 var requirejsOptimize = require('gulp-requirejs-optimize');
 var $ = require("gulp-load-plugins")();
 var imagemin = require('gulp-imagemin');
-var usemin = require('gulp-usemin');
+//var usemin = require('gulp-usemin');
 var sourcemaps = require('gulp-sourcemaps');
 var copy = require('gulp-copy');
 var htmlmin = require('gulp-htmlmin');              //html压缩
@@ -42,7 +42,7 @@ gulp.task('server', function() {
             },
             //proxies: [
             //    {
-            //        source: '/api', target: 'http://backend.api/api'
+            //        source: '/api', target: 'http://127.0.0.1:8080'
             //    }
             //],
             middleware: function(req, res, next) {
@@ -83,7 +83,7 @@ gulp.task('csslint', function (cb) {
 
 // html压缩
 gulp.task('htmlmin', function() {
-    return gulp.src(['www/**/*.html', '!www/bower_components/**'])
+    return gulp.src(['./www/**/*.html', '!www/bower_components/**'])
         .pipe(gulp.dest('build'))
         .pipe(notify({ message: 'html min task ok' }));
 

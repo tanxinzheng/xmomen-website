@@ -1,5 +1,4 @@
 {
-
 "header" : {
   "navbar" : {
     "UPLOAD" : "上传",
@@ -69,5 +68,4 @@
   "MILESTONE" : "里程杯",
   "RELEASE" : "Release"
 }
-
 }

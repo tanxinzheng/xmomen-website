@@ -48,7 +48,7 @@ define([
                 container: false,
                 showTabs: false
             },
-            logout:"/logout"
+            logout:"/api/logout"
         };
 
         var init = function(){

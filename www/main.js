@@ -10,7 +10,7 @@ require(['require'], function(require){
         'ngAnimate',
         'ngCookies',
         'ngResource',
-        //'ngSanitize',
+        'ngSanitize',
         //'ngTouch',
         "toaster",
         'oc.lazyLoad', //懒加载包
@@ -28,9 +28,9 @@ require(['require'], function(require){
         "config.i18n"
     ]);
     angular.element(document).ready(function() {
-        $.get('/account/permissions', function(data) {
-            var permissionList = data;
+        //$.get('/account/permissions', function(data) {
+        //    var permissionList = data;
             angularAMD.bootstrap(ngApp);
-        });
+        //});
     });
 });

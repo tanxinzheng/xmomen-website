@@ -18,6 +18,7 @@ require.config({
         "angular-translate":"bower_components/angular-translate/angular-translate",
         "angular-local-storage":"bower_components/angular-local-storage/dist/angular-local-storage",
         "angular-resource":"bower_components/angular-resource/angular-resource",
+        "angular-sanitize":"bower_components/angular-sanitize/angular-sanitize",
         "angular-animate":"bower_components/angular-animate/angular-animate",
         "angular-cookies":"bower_components/angular-cookies/angular-cookies",
         "loader-static-files":"bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files",
@@ -47,6 +48,7 @@ require.config({
             exports:"$.validator"
         },
         "angular-local-storage":["angular"],
+        "angular-sanitize":["angular"],
         "angular-cookies": ["angular"],
         "angular-resource": ["angular"],
         "angular-animate": ["angular"],
@@ -72,7 +74,7 @@ require.config({
             "jquery-validate",
             //"jquery-validate-local",
             "toaster",
-
+            'angular-sanitize',
             "xmomen-ui",
             "app.module",
             "config",

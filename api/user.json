@@ -1,0 +1,36 @@
+{
+  "data": [
+    {
+      "id": "83243e2895fb11e69aef080027b274d7",
+      "username": "tanxinzheng",
+      "nickname": "谭新政",
+      "salt": "4e1fe3a55ff548aca21225c7046a34bd",
+      "password": "c524d9fb462f25ccaa1bc0e8ee47fd",
+      "email": null,
+      "phoneNumber": null,
+      "locked": null,
+      "createDate": null,
+      "lastLoginTime": null
+    },
+    {
+      "id": "cc73b1409be011e69156080027b274d7",
+      "username": "admin",
+      "nickname": "管理员",
+      "salt": "173d307ad79447cf92cf682d8b8ed63f",
+      "password": "4643c34e8e19aa3f9627831159cff734",
+      "email": "admin@xmomen.com",
+      "phoneNumber": null,
+      "locked": null,
+      "createDate": 1477497600000,
+      "lastLoginTime": 1485330232000
+    }
+  ],
+  "pageInfo": {
+    "pageNum": 1,
+    "pageSize": 10,
+    "startRow": 0,
+    "endRow": 10,
+    "total": 2,
+    "pages": 1
+  }
+}

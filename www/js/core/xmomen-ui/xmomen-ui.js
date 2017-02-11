@@ -1,5 +1,6 @@
 // 使用相对路径必须该模块必须未在require的config中配置方可使用
 define([
+    "angular",
     "./dialog",
     "./modal-draggable",
     "./ui-directive",
@@ -7,7 +8,7 @@ define([
     "./pagination",
     "./datetimepicker",
     "./grid"
-],function(dialog, modal_draggable, uiDirective, validate, pagination, datetimepicker,
+],function(angular, dialog, modal_draggable, uiDirective, validate, pagination, datetimepicker,
            grid){
     return angular.module("xmomen.ui",[
         pagination.name,
@@ -53,7 +54,7 @@ define([
 
             methods = angular.extend( defaults, methods );
 
-            var resource = $resource( "/api" + url, params, methods );
+            var resource = $resource( url, params, methods );
 
             resource.prototype.$save = function(success, fail) {
                 var thisResource = this;
