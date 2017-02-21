@@ -20,7 +20,7 @@ require(['require'], function(require){
         'ui.router',
         //'ui.router.extras.tabs',
         "angular-loading-bar",
-        //'permission',
+        'permission',
         'app.module',
         "config.router",
         "config.lazyload",
@@ -28,9 +28,9 @@ require(['require'], function(require){
         "config.i18n"
     ]);
     angular.element(document).ready(function() {
-        //$.get('/account/permissions', function(data) {
-        //    var permissionList = data;
+        $.get('/account/permissions', function(data) {
+            var permissionList = data;
             angularAMD.bootstrap(ngApp);
-        //});
+        });
     });
 });

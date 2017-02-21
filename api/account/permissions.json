@@ -1,1 +1,10 @@
-{"permissions":[],"roles":["xmo_admin","XMO_USER"]}
+{
+  "permissions": [
+    "USER_VIEW",
+    "GROUP_VIEW"
+  ],
+  "roles": [
+    "xmo_admin",
+    "XMO_USER"
+  ]
+}

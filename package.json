@@ -1,5 +1,5 @@
 {
-  "name": "base-website",
+  "name": "xmomen-website",
   "version": "1.0.0",
   "description": "xmomen website template",
   "main": "index.js",
@@ -16,7 +16,6 @@
   "license": "ISC",
   "devDependencies": {
     "amd-optimize": "^0.6.1",
-    "angular-ui-bootstrap": "^2.4.0",
     "bower": "^1.7.9",
     "gulp": "^3.9.1",
     "gulp-amd-optimize": "^0.4.3",
@@ -46,8 +45,5 @@
   },
   "script": {
     "test": "karma start ./test/karma.conf.js"
-  },
-  "dependencies": {
-    "angular-storage": "0.0.15"
   }
 }
