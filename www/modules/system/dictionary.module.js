@@ -23,12 +23,7 @@ define([
                 name: 'app.dictionary',
                 url: '/dictionary',
                 controller: dictionary,
-                templateUrl: 'modules/system/dictionary.html',
-                resolve: {
-                    deps: ['$ocLazyLoad', function( $ocLazyLoad ){
-                        return $ocLazyLoad.load('ui.select');
-                    }]
-                }
+                templateUrl: 'modules/system/dictionary.html'
             });
 
             angular.forEach(states, function(state){

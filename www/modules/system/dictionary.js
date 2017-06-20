@@ -2,7 +2,73 @@
  * Created by tanxinzheng on 16/7/3.
  */
 define(function(){
-    return ["$scope", "$uibModal", "DictionaryAPI", "$dialog", function($scope, $uibModal, DictionaryAPI, $dialog){
+    return ["$scope", "$uibModal", "DictionaryAPI", "uiaDialog", function($scope, $uibModal, DictionaryAPI, $dialog){
+        $scope.gridOption = {
+            title:'数据字典',
+            loadEvent: DictionaryAPI.query,
+            // 过滤条件列配置
+            filters:[
+                { name:'keyword', title:'关键词', placeholder:'请输入关键字进行模糊查询' }
+            ],
+//          js定义列字段
+            columns:[
+                { name:'dictionaryType', title:'字典类型', primaryKey:true },
+                { name:'name', title:'名称'},
+                { name:'code', title:'代码', type:'number', fractionSize:1 },
+                { name:'sort', title:'排序', type:'number', fractionSize:1 },
+                { name:'active', title:'激活', type:'checkbox',
+                    checked: function(data){
+                        return data.fisnew == 1 ? true:false;
+                    }
+                },
+                { name:'show', title:'显示', type:'checkbox',
+                    checked: function(data){
+                        return data.fisnew == 1 ? true:false;
+                    }
+                },
+                { name:'createTime', title:'创建时间', type:'date' }
+            ],
+            addBtn:{
+                permission:"PROJECT:DOCUMENT:NEW",
+                handlerParam:function(item){
+                    return {
+                        action:'add'
+                    };
+                },
+                link:'/form'
+            },
+            viewBtn:{
+                permission:"PROJECT:DOCUMENT:VIEW",
+                handlerParam:function(item){
+                    return {
+                        projectNa:item.projectNa
+                    };
+                },
+                link:'/form'
+            },
+            reviseBtn:{
+                permission:"PROJECT:DOCUMENT:NEW",
+                handlerParam:function(item){
+                    return {
+                        action:'revise'
+                    };
+                },
+                link:'/form'
+            },
+            removeBtn:{
+                permission:"PROJECT:DOCUMENT:DELETE",
+                click: function(item){
+                    uiaDialog.confirm('是否删除该数据？').then(function(){
+//                    AppAPI.delete({
+//                        id:item.projectId
+//                    }, function(data){
+//                        uiaDialog.alert("删除成功");
+//                    });
+                        uiaDialog.alert("删除成功");
+                    });
+                }
+            }
+        };
         $scope.pageSetting = {
             checkAll : false,
             queryBtnLoading : false
@@ -86,7 +152,7 @@ define(function(){
                         return params;
                     }
                 },
-                controller: ['$scope', '$uibModalInstance', "$uibModal", "DictionaryAPI", "Params", "$dialog", "DictionaryGroupAPI", function($scope, $uibModalInstance, $uibModal, DictionaryAPI, Params, $dialog, DictionaryGroupAPI){
+                controller: ['$scope', '$uibModalInstance', "$uibModal", "DictionaryAPI", "Params", "uiaDialog", "DictionaryGroupAPI", function($scope, $uibModalInstance, $uibModal, DictionaryAPI, Params, $dialog, DictionaryGroupAPI){
                     //$scope.dictionary = null;
                     $scope.pageSetting = {
                         formDisabled : true,
@@ -106,9 +172,8 @@ define(function(){
                             $scope.dictionary.dictionaryType = newVal.dictionaryType;
                         }
                     });
-                    $scope.dictionaryDetailForm = {};
                     $scope.saveDictionary = function(){
-                        if($scope.dictionaryDetailForm.validator.form()){
+                        if($scope.dictionaryDetailFormName.validate()){
                             $dialog.confirm("是否保存数据？").then(function(){
                                 $scope.pageSetting.saveBtnLoading = true;
                                 if ( !$scope.dictionary.id ) {

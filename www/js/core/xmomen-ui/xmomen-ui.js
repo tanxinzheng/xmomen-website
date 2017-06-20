@@ -1,22 +1,29 @@
 // 使用相对路径必须该模块必须未在require的config中配置方可使用
 define([
     "angular",
-    "./dialog",
+    //"./dialog",
     "./modal-draggable",
     "./ui-directive",
-    "./validate",
-    "./pagination",
-    "./datetimepicker",
-    "./grid"
-],function(angular, dialog, modal_draggable, uiDirective, validate, pagination, datetimepicker,
-           grid){
+    //"./validate",
+    //"./pagination",
+    //"./datetimepicker",
+    //"./grid"
+],function(angular,
+           //dialog,
+           modal_draggable,
+           uiDirective
+           //validate,
+           //pagination,
+           //datetimepicker,
+           //grid
+){
     return angular.module("xmomen.ui",[
-        pagination.name,
+        //pagination.name,
         uiDirective.name,
-        dialog.name,
-        modal_draggable.name,
-        datetimepicker.name,
-        grid.name
+        //dialog.name,
+        modal_draggable.name
+        //datetimepicker.name,
+        //grid.name
       //  validate.name
     ]).factory("$menu", [function(){
         var menuList = [];
@@ -43,9 +50,9 @@ define([
         var $dialog;
 
         return function( url, params, methods ) {
-            if(!$dialog){
-                $dialog = $injector.get("$dialog");
-            }
+            //if(!$dialog){
+            //    $dialog = $injector.get("$dialog");
+            //}
             var defaults = {
                 query: {method: "GET", isArray: false},
                 update: { method: 'PUT' },
@@ -54,7 +61,7 @@ define([
 
             methods = angular.extend( defaults, methods );
 
-            var resource = $resource( url, params, methods );
+            var resource = $resource( '/api' + url, params, methods );
 
             resource.prototype.$save = function(success, fail) {
                 var thisResource = this;
@@ -113,32 +120,32 @@ define([
                 })
             };
 
-            resource.$upload = function(option, success, fail) {
-                $dialog.confirm("是否导入文件？").then(function(){
-                    Upload.upload(option).then(function (data) {
-                        $dialog.success("文件上传成功");
-                        success(data.data, data.headers);
-                    }, function(data){
-                        var anchor = angular.element("<iframe/>");
-                        anchor.attr({
-                            style:"display:none",
-                            src: data.data.validResultUrl,
-                            onLoad:function(){
-                                $timeout(function(){
-                                    anchor.remove();
-                                },2000)
-                            }
-                        });
-                        angular.element("body").append(anchor);
-                        if(fail){
-                            fail(data.data, data.headers);
-                        }
-                    }, function (evt) {
-                        var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-                        console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
-                    });
-                })
-            };
+            //resource.$upload = function(option, success, fail) {
+            //    $dialog.confirm("是否导入文件？").then(function(){
+            //        Upload.upload(option).then(function (data) {
+            //            $dialog.success("文件上传成功");
+            //            success(data.data, data.headers);
+            //        }, function(data){
+            //            var anchor = angular.element("<iframe/>");
+            //            anchor.attr({
+            //                style:"display:none",
+            //                src: data.data.validResultUrl,
+            //                onLoad:function(){
+            //                    $timeout(function(){
+            //                        anchor.remove();
+            //                    },2000)
+            //                }
+            //            });
+            //            angular.element("body").append(anchor);
+            //            if(fail){
+            //                fail(data.data, data.headers);
+            //            }
+            //        }, function (evt) {
+            //            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+            //            console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+            //        });
+            //    })
+            //};
 
             return resource;
         };

@@ -1,6 +1,6 @@
 {
   "development":{
-    "port":8000,
+    "port":8008,
     "serverPath":"www"
   },
   "production":{

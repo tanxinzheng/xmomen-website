@@ -9,11 +9,11 @@ require.config({
         "angularAMD": "bower_components/angularAMD/angularAMD",
         "angular-ui-router": "bower_components/angular-ui-router/release/angular-ui-router",
         "ui-bootstrap-tpls":"bower_components/angular-bootstrap/ui-bootstrap-tpls",
-        "permission":"bower_components/angular-permission/dist/angular-permission",
-        "toaster":'bower_components/AngularJS-Toaster/toaster',
+        //"permission":"bower_components/angular-permission/dist/angular-permission",
+        //"toaster":'bower_components/AngularJS-Toaster/toaster',
         "loading-bar": "bower_components/angular-loading-bar/build/loading-bar",
         "jquery-validate":"bower_components/jquery-validation/dist/jquery.validate",
-        "datetimepicker": "bower_components/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker",
+        //"datetimepicker": "bower_components/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker",
         "ocLazyLoad":"bower_components/oclazyload/dist/ocLazyLoad.min",
         "angular-translate":"bower_components/angular-translate/angular-translate",
         "angular-local-storage":"bower_components/angular-local-storage/dist/angular-local-storage",
@@ -25,6 +25,9 @@ require.config({
         "storage-cookie":"bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie",
         "storage-local":"bower_components/angular-translate-storage-local/angular-translate-storage-local",
 
+        "ui-xmomen":"bower_components/angular-ui-xmomen/ui-xmomen",
+        "ui-xmomen-tpl":"bower_components/angular-ui-xmomen/ui-xmomen-html-tpl",
+
         "xmomen-ui":"js/core/xmomen-ui/xmomen",
         "app.module":"modules/app.module",
         "config": "js/config",
@@ -35,18 +38,24 @@ require.config({
     },
     shim: {
         "jquery" : { exports : "jquery" },
-        "datetimepicker" : ["jquery"],
-        "permission" : ["angular"],
+        //"datetimepicker" : ["jquery"],
+        //"permission" : ["angular"],
         "angular": { exports: "angular" },
         "angularAMD": ["angular"],
         "angular-ui-router": ["angular"],
         "ui-bootstrap-tpls": ["angular"],
-        "toaster" : ["angular"],
+        //"toaster" : ["angular"],
         "loading-bar" : ["angular"],
         "ocLazyLoad":["angular"],
         "jquery-validate":{
             deps:['jquery'],
             exports:"$.validator"
+        },
+        "ui-xmomen-tpl":{
+            deps:['angular', 'ui-xmomen']
+        },
+        "ui-xmomen":{
+            deps:['angular']
         },
         "angular-local-storage":["angular"],
         "angular-sanitize":["angular"],
@@ -58,6 +67,7 @@ require.config({
         "storage-cookie":["angular","angular-translate"],
         "storage-local":["angular","angular-translate"],
         "main": [
+            "ui-xmomen-tpl",
             "ocLazyLoad",
             "angular-cookies",
             "angular-resource",
@@ -73,9 +83,9 @@ require.config({
             "angularAMD",
             "loading-bar",
             "jquery-validate",
-            "permission",
+            //"permission",
             //"jquery-validate-local",
-            "toaster",
+            //"toaster",
             'angular-sanitize',
             "xmomen-ui",
             "app.module",

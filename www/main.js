@@ -6,13 +6,13 @@ require(['require'], function(require){
 
         'ui.bootstrap',
         //'ngStorage',
-
+        'uia',
         'ngAnimate',
         'ngCookies',
         'ngResource',
         'ngSanitize',
         //'ngTouch',
-        "toaster",
+        //"toaster",
         'oc.lazyLoad', //懒加载包
         'pascalprecht.translate',
         'xmomen.ui',
@@ -20,7 +20,7 @@ require(['require'], function(require){
         'ui.router',
         //'ui.router.extras.tabs',
         "angular-loading-bar",
-        'permission',
+        //'permission',
         'app.module',
         "config.router",
         "config.lazyload",
@@ -28,7 +28,7 @@ require(['require'], function(require){
         "config.i18n"
     ]);
     angular.element(document).ready(function() {
-        $.get('/account/permissions', function(data) {
+        $.get('/api/account/permissions', function(data) {
             var permissionList = data;
             angularAMD.bootstrap(ngApp);
         });
