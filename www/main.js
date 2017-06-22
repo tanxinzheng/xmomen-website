@@ -28,9 +28,9 @@ require(['require'], function(require){
         "config.i18n"
     ]);
     angular.element(document).ready(function() {
-        $.get('/api/account/permissions', function(data) {
-            var permissionList = data;
+        //$.get('/api/account/permissions', function(data) {
+        //    var permissionList = data;
             angularAMD.bootstrap(ngApp);
-        });
+        //});
     });
 });

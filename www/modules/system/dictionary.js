@@ -2,7 +2,7 @@
  * Created by tanxinzheng on 16/7/3.
  */
 define(function(){
-    return ["$scope", "$uibModal", "DictionaryAPI", "uiaDialog", function($scope, $uibModal, DictionaryAPI, $dialog){
+    return ["$scope", "$uibModal", "DictionaryAPI", "uiaDialog", function($scope, $uibModal, DictionaryAPI, uiaDialog){
         $scope.gridOption = {
             title:'数据字典',
             loadEvent: DictionaryAPI.query,
@@ -12,21 +12,22 @@ define(function(){
             ],
 //          js定义列字段
             columns:[
-                { name:'dictionaryType', title:'字典类型', primaryKey:true },
-                { name:'name', title:'名称'},
-                { name:'code', title:'代码', type:'number', fractionSize:1 },
-                { name:'sort', title:'排序', type:'number', fractionSize:1 },
+                { name:'groupCode', title:'字典类型' },
+                { name:'groupName', title:'类型描述' },
+                { name:'dictionaryName', title:'字典名称'},
+                { name:'dictionaryCode', title:'字典代码'},
+                { name:'sort', title:'排序'},
                 { name:'active', title:'激活', type:'checkbox',
                     checked: function(data){
-                        return data.fisnew == 1 ? true:false;
+                        return data.active == 1 ? true:false;
                     }
                 },
                 { name:'show', title:'显示', type:'checkbox',
                     checked: function(data){
-                        return data.fisnew == 1 ? true:false;
+                        return data.show == 1 ? true:false;
                     }
                 },
-                { name:'createTime', title:'创建时间', type:'date' }
+                { name:'createdTime', title:'创建时间', type:'date' }
             ],
             addBtn:{
                 permission:"PROJECT:DOCUMENT:NEW",
@@ -46,82 +47,13 @@ define(function(){
                 },
                 link:'/form'
             },
-            reviseBtn:{
-                permission:"PROJECT:DOCUMENT:NEW",
-                handlerParam:function(item){
-                    return {
-                        action:'revise'
-                    };
-                },
-                link:'/form'
-            },
             removeBtn:{
                 permission:"PROJECT:DOCUMENT:DELETE",
                 click: function(item){
                     uiaDialog.confirm('是否删除该数据？').then(function(){
-//                    AppAPI.delete({
-//                        id:item.projectId
-//                    }, function(data){
-//                        uiaDialog.alert("删除成功");
-//                    });
                         uiaDialog.alert("删除成功");
                     });
                 }
-            }
-        };
-        $scope.pageSetting = {
-            checkAll : false,
-            queryBtnLoading : false
-        };
-        $scope.pageInfoSetting = {
-            pageSize:10,
-            pageNum:1
-        };
-        // 重置
-        $scope.reset = function(){
-            $scope.queryParam={};
-            $scope.getDictionaryList();
-        };
-        $scope.queryParam = {};
-        // 查询列表
-        $scope.getDictionaryList = function(){
-            $scope.pageSetting.queryBtnLoading = true;
-            DictionaryAPI.query({
-                keyword: $scope.queryParam.keyword,
-                limit: $scope.pageInfoSetting.pageSize,
-                offset: $scope.pageInfoSetting.pageNum
-            }, function(data){
-                $scope.dictionaryList = data.data;
-                $scope.pageInfoSetting = data.pageInfo;
-            }).$promise.finally(function(){
-                $scope.pageSetting.queryBtnLoading = false;
-                });
-        };
-        // 全选
-        $scope.checkAll = function(){
-            if(!$scope.dictionaryList){
-                return;
-            }
-            for (var i = 0; i < $scope.dictionaryList.length; i++) {
-                $scope.dictionaryList[i].checked = $scope.pageSetting.checkAll;
-            }
-        };
-        // 子集控制全选
-        $scope.changeItemChecked = function(){
-            if(!$scope.dictionaryList){
-                return;
-            }
-            var num = 0;
-            for (var i = 0; i < $scope.dictionaryList.length; i++) {
-                if($scope.dictionaryList[i].checked){
-                    num++;
-                }
-            }
-            // 子集勾选数量等于集合总数则勾选全选，否则取消全选
-            if(num == $scope.dictionaryList.length){
-                $scope.pageSetting.checkAll = true;
-            }else{
-                $scope.pageSetting.checkAll = false;
             }
         };
         // 新增
@@ -219,33 +151,6 @@ define(function(){
                 $scope.getDictionaryList();
             });
         };
-        // 删除
-        $scope.delete = function(index){
-            $dialog.confirm("请确认是否删除").then(function(){
-                DictionaryAPI.delete({id:$scope.dictionaryList[index].id}, function(){
-                    $scope.getDictionaryList();
-                });
-            });
-        };
-        // 批量删除
-        $scope.batchDelete = function(){
-            var choiceItems = [];
-            for (var i = 0; i < $scope.dictionaryList.length; i++) {
-                var obj = $scope.dictionaryList[i];
-                if(obj.checked){
-                    choiceItems.push(obj.id);
-                }
-            }
-            if(choiceItems && choiceItems.length > 0){
-                $dialog.confirm("已勾选记录数：" + choiceItems.length + "，请确认是否删除已勾选数据").then(function(){
-                    DictionaryAPI.delete({ids:choiceItems}, function(){
-                        $scope.getDictionaryList();
-                    });
-                })
-            }else{
-                $dialog.alert("请勾选需要删除的数据");
-            }
-        };
         // 导出
         $scope.batchExport = function(){
             DictionaryAPI.export({
@@ -253,7 +158,7 @@ define(function(){
             });
         };
         var init = function(){
-            $scope.getDictionaryList();
+            //$scope.getDictionaryList();
         };
         init();
     }]

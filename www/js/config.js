@@ -3,20 +3,13 @@ define(function(require){
     var angular = require('angular');
     angular.module("config",[]).config(
     ['$controllerProvider', '$compileProvider', '$filterProvider', '$provide', "$logProvider", "$httpProvider",
-        "cfpLoadingBarProvider", '$uiaValidateDefault','uiaDialog',
+        "cfpLoadingBarProvider",
         function ($controllerProvider,   $compileProvider,   $filterProvider,   $provide, $logProvider, $httpProvider,
-                  cfpLoadingBarProvider, $uiaValidateDefault, uiaDialog) {
+                  cfpLoadingBarProvider) {
             cfpLoadingBarProvider.latencyThreshold = 500;
             cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
             cfpLoadingBarProvider.spinnerTemplate = '<div><span class="fa fa-spinner">Loading...</div>';
             $logProvider.debugEnabled(true);
-            $uiaValidateDefault =  {
-                errorElement: "div",
-                errorClass:"error",
-                errorPlacement: function(error, element) { //指定错误信息位置
-                    uiaDialog.alert(error);
-                }
-            };
             //$uiaValidateDefault
             // lazy controller, directive and service
             //App.controller = $controllerProvider.register;
