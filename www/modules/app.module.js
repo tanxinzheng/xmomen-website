@@ -2,6 +2,7 @@
  * Created by tanxinzheng on 16/9/15.
  */
 define([
+    "angular",
     "modules/app.api",
     "modules/basic/basic.module",
     "modules/system/system.module",
@@ -12,10 +13,9 @@ define([
         "basic.module",
         "authorization.module",
         "system.module",
-        "user.module",
-        "App.REST"
-    ]).controller('AppCtrl', ['$scope', '$window', 'localStorageService',"AppAPI","$rootScope",
-        function($scope,  $window, $localStorage, AppAPI, $rootScope) {
+        "user.module"
+    ]).controller('AppCtrl', ['$scope', '$window', 'localStorageService',"$rootScope",
+        function($scope,  $window, $localStorage, $rootScope) {
         // add 'ie' classes to html
         var isIE = !!navigator.userAgent.match(/MSIE/i);
         isIE && angular.element($window.document.body).addClass('ie');
@@ -52,9 +52,9 @@ define([
         };
 
         var init = function(){
-            AppAPI.getAccount({}, function(data){
-                $rootScope.Account = data;
-            })
+            // AppAPI.getAccount({}, function(data){
+            //     $rootScope.Account = data;
+            // })
         };
         init();
 

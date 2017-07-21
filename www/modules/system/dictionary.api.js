@@ -8,7 +8,7 @@ define(function () {
         var resource = Resource("/dictionary/:id", { id:"@id" });
         resource.export = function(data, success, error){
             if(!data.url){
-                data.url = "/dictionary/export";
+                data.url = "/api/dictionary/export";
             }
             resource.$export(data, success, error);
         };

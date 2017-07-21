@@ -1,0 +1,72 @@
+<div class="row-fluid">
+<form name="{{boxOption.formName}}" uia-form validate-option="validateOption" class="uia-response-form">
+    <div class="widget-box">
+        <div class="widget-title">
+            <span class="icon"> <i class="icon-th"></i></span>
+            <h5 ng-bind="boxOption.title"></h5>
+            <div class="uia-btn-group">
+                <!--<btn-edit event-click="unlock()" ng-show="locked()" ></btn-edit>-->
+                <!--<btn-cancel event-click="lock()"   ng-show="unlocked()"></btn-cancel>-->
+                <!--<btn-save ng-disabled="invalid()" ng-show="unlocked()" event-click="save()"></btn-save>-->
+            </div>
+        </div>
+        <div class="widget-content clearfix">
+            <div class="uia-input-group" ng-repeat="filterColumn in boxOption.columns" >
+                <label for="{{filterColumn.name}}" ng-bind="filterColumn.title"></label>
+                <div>
+                <!--    日期      -->
+                <input type="text" id="{{filterColumn.name}}" name="{{filterColumn.name}}" class="uia-date {{filterColumn.addClass}}" ng-if="filterColumn.type=='date'" uia-date
+                       ng-model="formData[filterColumn.name]" placeholder="{{filterColumn.placeholder}}">
+                <!--    文本      -->
+                <input type="text" id="{{filterColumn.name}}" required="{{filterColumn.required}}" name="{{filterColumn.name}}" class="{{filterColumn.addClass}}" ng-if="!filterColumn.type || filterColumn.type=='text'"
+                       ng-model="formData[filterColumn.name]" placeholder="{{filterColumn.placeholder}}">
+                <!--    Checkbox      -->
+                <input type="checkbox" id="{{filterColumn.name}}" name="{{filterColumn.name}}" class="{{filterColumn.addClass}}" ng-if="filterColumn.type=='checkbox'"
+                       ng-checked="filterColumn.checked(formData)"
+                       ng-model="formData[filterColumn.name]">
+                <!--    选择框    -->
+                <select id="{{filterColumn.name}}" name="{{filterColumn.name}}" required="{{filterColumn.required}}" ng-if="filterColumn.type == 'select' && !filterColumn.options" class="uia-chosen {{filterColumn.addClass}}"
+                        uia-select chosen disable-search="filterColumn.disableSearch"
+                        dict-code="filterColumn.dictCode" ng-model="formData[filterColumn.name]">
+                    <option value="">请选择</option>
+                </select>
+                <select id="{{filterColumn.name}}" name="{{filterColumn.name}}" required="{{filterColumn.required}}" ng-disabled="boxOption.formName.locked"
+                        ng-if="filterColumn.type == 'select' && filterColumn.options" class="uia-chosen {{filterColumn.addClass}}" chosen disable-search="filterColumn.disableSearch"
+                        ng-model="formData[filterColumn.name]">
+                    <option value="">请选择</option>
+                    <option ng-repeat="item in filterColumn.options()" value="{{item[filterColumn.keyName]}}" ng-bind="item[filterColumn.labelName]"></option>
+                </select>
+                <!--    文本域          -->
+                <textarea id="{{filterColumn.name}}" name="{{filterColumn.name}}" class="{{filterColumn.addClass}}" ng-if="filterColumn.type=='textarea'"
+                          ng-model="formData[filterColumn.name]" placeholder="{{filterColumn.placeholder}}" rows="3"></textarea>
+                <!--    弹出选择框      -->
+                <input type="text" id="{{filterColumn.name}}" name="{{filterColumn.name}}" class="{{filterColumn.addClass}}" ng-if="filterColumn.type=='choice'"
+                       uia-choice choice-option="filterColumn.choiceOption" choice-model-label="formData[filterColumn.choiceModelLabel]"
+                       ng-model="formData[filterColumn.name]" placeholder="{{filterColumn.placeholder}}">
+                <!--    数字类     -->
+                <!--    整数      -->
+                <input type="text" id="{{filterColumn.name}}" name="{{filterColumn.name}}" class="{{filterColumn.addClass}}"
+                       uia-number number-type="integer" ng-if="filterColumn.type=='integer'"
+                       ng-model="formData[filterColumn.name]" placeholder="{{filterColumn.placeholder}}">
+                <!--    百分比      -->
+                <input type="text" id="{{filterColumn.name}}" name="{{filterColumn.name}}" class="{{filterColumn.addClass}}"
+                       uia-number number-type="percentage" ng-if="filterColumn.type=='percentage'"
+                       ng-model="formData[filterColumn.name]" placeholder="{{filterColumn.placeholder}}">
+                <!--    数字      -->
+                <input type="text" id="{{filterColumn.name}}" name="{{filterColumn.name}}" class="{{filterColumn.addClass}}"
+                       uia-number number-type="decimal" ng-if="filterColumn.type=='decimal'"
+                       ng-model="formData[filterColumn.name]" placeholder="{{filterColumn.placeholder}}">
+                <!--    金额      -->
+                <input type="text" id="{{filterColumn.name}}" name="{{filterColumn.name}}" class="{{filterColumn.addClass}}"
+                       uia-number number-type="currency" ng-if="filterColumn.type=='currency'"
+                       ng-model="formData[filterColumn.name]" placeholder="{{filterColumn.placeholder}}">
+                <!--    万元      -->
+                <input type="text" id="{{filterColumn.name}}" name="{{filterColumn.name}}" class="{{filterColumn.addClass}}"
+                       uia-number number-type="million" ng-if="filterColumn.type=='million'"
+                       ng-model="formData[filterColumn.name]" placeholder="{{filterColumn.placeholder}}">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+</div>

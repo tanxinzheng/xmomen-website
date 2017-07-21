@@ -2,8 +2,13 @@
  * Created by tanxinzheng on 16/7/3.
  */
 define(function(){
-    return ["$scope", "$uibModal", "DictionaryAPI", "uiaDialog", function($scope, $uibModal, DictionaryAPI, uiaDialog){
+    return ["$scope", "$uibModal", "DictionaryAPI", "uiaDialog", "$UrlUtils", function($scope, $uibModal, DictionaryAPI, $dialog, $UrlUtils){
+        $scope.pageSetting = {
+            formDisabled : true,
+            saveBtnLoading : false
+        };
         $scope.gridOption = {
+            id:"dictionary",
             title:'数据字典',
             loadEvent: DictionaryAPI.query,
             // 过滤条件列配置
@@ -36,7 +41,9 @@ define(function(){
                         action:'add'
                     };
                 },
-                link:'/form'
+                click:function(item){
+                    $scope.add(item);
+                }
             },
             viewBtn:{
                 permission:"PROJECT:DOCUMENT:VIEW",
@@ -45,111 +52,134 @@ define(function(){
                         projectNa:item.projectNa
                     };
                 },
-                link:'/form'
+                click:function(item){
+                    $scope.view(item);
+                }
             },
             removeBtn:{
                 permission:"PROJECT:DOCUMENT:DELETE",
                 click: function(item){
-                    uiaDialog.confirm('是否删除该数据？').then(function(){
-                        uiaDialog.alert("删除成功");
+                    $dialog.confirm('是否删除该数据？').then(function(){
+                        $dialog.alert("删除成功");
                     });
+                }
+            },
+            exportBtn:{
+                click:function(){
+                    DictionaryAPI.export({});
                 }
             }
         };
-        // 新增
-        $scope.add = function(index){
-            $scope.openModal(index, "ADD");
-        };
-        // 查看
-        $scope.view = function(index){
-            $scope.openModal(index, "VIEW");
-        };
-        // 修改
-        $scope.update = function(index){
-            $scope.openModal(index, "UPDATE");
-        };
-        // 弹出
-        $scope.openModal = function(index, action){
-            $uibModal.open({
-                templateUrl: 'dictionary_detail.html',
-                modal:true,
-                resolve: {
-                    Params: function () {
-                        var params = {
-                            action: action
-                        };
-                        if($scope.dictionaryList[index] && $scope.dictionaryList[index].id){
-                            params.id = $scope.dictionaryList[index].id;
-                        }
-                        return params;
+        $scope.boxOption = {
+            columns:[
+                { name:'text', title:'文本框',
+                    rules:{
+                        required:true,
+                        maxlength:20
+                    },
+                    messages:{
+                        required:"请输入值",
+                        maxlength:"请输入不超过20的字符"
                     }
                 },
-                controller: ['$scope', '$uibModalInstance', "$uibModal", "DictionaryAPI", "Params", "uiaDialog", "DictionaryGroupAPI", function($scope, $uibModalInstance, $uibModal, DictionaryAPI, Params, $dialog, DictionaryGroupAPI){
-                    //$scope.dictionary = null;
-                    $scope.pageSetting = {
-                        formDisabled : true,
-                        saveBtnLoading : false
-                    };
-                    if(Params.action == "UPDATE" || Params.action == "ADD"){
-                        $scope.pageSetting.formDisabled = false;
-                    }
-                    if(Params && Params.id){
-                        $scope.dictionary = DictionaryAPI.get({
-                            id: Params.id
+                { name:'choice', title:'弹出选择框', type:'choice', placeholder:'请选择负责人', choiceOption:{ choiceWidgetType:'user', choiceModelLabel:'userName' } },
+                { name:'date', title:'日期控件', type:'date', placeholder:'请输入投资时间' },
+                { name:'checkbox', title:'Checkbox控件', type:'checkbox', checked: function(data){
+                    return data && data.checkbox == 1 ? true:false;
+                } },
+                { name:'defaultSelect', title:'下拉框(字典)', type:'select', dictCode:'PROJECT_TYPE' ,rules:{
+                    required:true
+                }},
+                { name:'selectOption', title:'下拉框', type:'select', rules:{
+                    required:true
+                },  options: function(){
+                    return $scope.typeList;
+                }, keyName:'id', labelName:'name' },
+                { name:'integer', title:'整数', type:'integer', rules:{
+                    required:true
+                }},
+                { name:'percentage', title:'百分比', type:'percentage'},
+                { name:'decimal', title:'数字', type:'decimal'},
+                { name:'currency', title:'金额', type:'currency'},
+                { name:'million', title:'万元', type:'million'},
+                { name:'textarea', title:'文本域', type:'textarea'}
+            ],
+            saveBtn:{
+                permission:"PROJECT:DOCUMENT:EDIT",
+                saveEvent: function(q, data){
+                    if(data.id){
+                        UserAPI.update(data, function(result){
+                            q.resolve(result);
+                        });
+                    }else{
+                        UserAPI.create(data, function(result){
+                            q.resolve(result);
                         });
                     }
-                    $scope.dictionaryGroupSelect = {};
-                    $scope.$watch("dictionaryGroupSelect.selected", function(newVal, oldVal){
-                        if(newVal != oldVal){
-                            $scope.dictionary.dictionaryType = newVal.dictionaryType;
-                        }
+                    return q.promise;
+                }
+            },
+            // 初始化
+            formData:{
+                date:new Date().getTime()
+            },
+            getEvent: function(q){
+                var params = $UrlUtils.getParameters();
+                if(params.id){
+                    // 修改，查看
+                    var id = params.id;
+                    DictionaryAPI.get({
+                        id:id
+                    }, function(data){
+                        q.resolve(data);
                     });
-                    $scope.saveDictionary = function(){
-                        if($scope.dictionaryDetailFormName.validate()){
-                            $dialog.confirm("是否保存数据？").then(function(){
-                                $scope.pageSetting.saveBtnLoading = true;
-                                if ( !$scope.dictionary.id ) {
-                                    DictionaryAPI.create($scope.dictionary, function(data,headers){
-                                        $dialog.success("新增成功");
-                                        $uibModalInstance.close();
-                                    }).$promise.finally(function(){
-                                        $scope.pageSetting.saveBtnLoading = false;
-                                    });
-                                }else {
-                                    DictionaryAPI.update($scope.dictionary, function(data,headers){
-                                        $dialog.success("更新成功");
-                                        $uibModalInstance.close();
-                                    }).$promise.finally(function(){
-                                        $scope.pageSetting.saveBtnLoading = false;
-                                    });
-                                }
-                            });
-                        }
-                    };
-                    $scope.dictionaryGroup = [];
-                    $scope.queryDictionaryGroup = function(){
-                        DictionaryGroupAPI.query({
-                            offset:1,
-                            limit:10000
-                        }, function(data){
-                            $scope.dictionaryGroup = data.data;
-                        });
-                    };
-                    $scope.addDictionaryGroup = function(){
-
-                    };
-                    $scope.cancel = function(){
-                        $uibModalInstance.dismiss();
-                    };
-                    var init = function(){
-                        $scope.dictionary = {};
-                        $scope.queryDictionaryGroup();
-                    };
-                    init();
-                }]
-            }).result.then(function () {
-                $scope.getDictionaryList();
+                }else{
+                    // 新增
+                    q.reject({
+                        text:"我是初始值"
+                    });
+                }
+                return q.promise;
+            }
+        };
+        var layerIndex;
+        // 新增
+        $scope.add = function(item){
+            layerIndex = layer.open({
+                title:"数据字典",
+                zIndex:88888,
+                skin:'layui-layer-lan',
+                resize:false,
+                area:['800px'],
+                type:1,
+                maxmin:true,
+                content:$("#dictionary_detail")
             });
+        };
+        $scope.saveDictionary = function(){
+            // if($scope.dictionaryDetailFormName.validate()){
+                $dialog.confirm("是否保存数据？").then(function(){
+                    $scope.pageSetting.saveBtnLoading = true;
+                    if ( !$scope.dictionary.id ) {
+                        DictionaryAPI.create($scope.dictionary, function(data,headers){
+                            $dialog.success("新增成功");
+                            $scope.cancel();
+                        }).$promise.finally(function(){
+                            $scope.pageSetting.saveBtnLoading = false;
+                        });
+                    }else {
+                        DictionaryAPI.update($scope.dictionary, function(data,headers){
+                            $dialog.success("更新成功");
+                            $scope.cancel();
+                        }).$promise.finally(function(){
+                            $scope.pageSetting.saveBtnLoading = false;
+                        });
+                    }
+                });
+            // }
+        };
+        $scope.cancel = function(){
+            layer.close(layerIndex);
         };
         // 导出
         $scope.batchExport = function(){
@@ -157,9 +187,5 @@ define(function(){
                 data:{keyword: $scope.queryParam.keyword}
             });
         };
-        var init = function(){
-            //$scope.getDictionaryList();
-        };
-        init();
     }]
 });

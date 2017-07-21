@@ -26,13 +26,8 @@ define(function(require){
             states.push({
                 name: 'app.dashboard',
                 url: '/dashboard',
-                //views: {
-                //    'dashboard': {
-                        controllerUrl: 'modules/dashboard.js',
-                        templateUrl: 'modules/dashboard.html'
-                    //}
-                //},
-                //sticky: true
+                controllerUrl: 'modules/dashboard.js',
+                templateUrl: 'modules/dashboard.html'
             });
 
             states.push( {

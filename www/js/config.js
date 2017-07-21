@@ -1,8 +1,11 @@
 // config
 define(function(require){
     var angular = require('angular');
-    angular.module("config",[]).config(
-    ['$controllerProvider', '$compileProvider', '$filterProvider', '$provide', "$logProvider", "$httpProvider",
+    angular.module("config",['uia']).factory("SelectAPI",["$resource",function($resource){
+        return $resource("/api/cache/dictionary/:id", { id:"@id" }, {
+            query:{ isArray:true, method:"GET"}
+        });
+    }]).config(['$controllerProvider', '$compileProvider', '$filterProvider', '$provide', "$logProvider", "$httpProvider",
         "cfpLoadingBarProvider",
         function ($controllerProvider,   $compileProvider,   $filterProvider,   $provide, $logProvider, $httpProvider,
                   cfpLoadingBarProvider) {

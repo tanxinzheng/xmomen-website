@@ -34,7 +34,7 @@ gulp.task('server', function() {
     gulp.src(ENV.serverPath) // 服务器目录（./代表根目录）
         .pipe(webserver({ // 运行gulp-webserver
             port: ENV.port, //端口，默认8000
-            livereload: true, // 启用LiveReload
+            //livereload: true, // 启用LiveReload
             //open: true, // 服务器启动时自动打开网页
             directoryListing: {
                 enable: true,

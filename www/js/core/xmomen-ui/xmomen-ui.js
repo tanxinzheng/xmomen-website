@@ -95,29 +95,27 @@ define([
             };
 
             resource.$export = function(option, success, fail) {
-                $dialog.confirm("是否以当前查询条件导出数据（包含当前所有分页数据）？").then(function(){
-                    var params = "";
-                    if(option && option.data){
-                        for(var p in option.data){
-                            if(option.data[p]){
-                                params += p + "=" + option.data[p] + "&";
-                            }
+                var params = "";
+                if(option && option.data){
+                    for(var p in option.data){
+                        if(option.data[p]){
+                            params += p + "=" + option.data[p] + "&";
                         }
-                        params = "?"+params;
                     }
-                    var anchor = angular.element("<iframe/>");
-                    anchor.attr({
-                        style:"display:none",
-                        src: option.url + params,
-                        onLoad:function(){
-                            $dialog.success("已成功导出");
-                            $timeout(function(){
-                                anchor.remove();
-                            },2000)
-                        }
-                    });
-                    angular.element("body").append(anchor);
-                })
+                    params = "?"+params;
+                }
+                var anchor = angular.element("<iframe/>");
+                anchor.attr({
+                    style:"display:none",
+                    src: option.url + params,
+                    onLoad:function(){
+                        //$dialog.success("已成功导出");
+                        $timeout(function(){
+                            anchor.remove();
+                        }, 2000);
+                    }
+                });
+                angular.element("body").append(anchor);
             };
 
             //resource.$upload = function(option, success, fail) {
@@ -149,41 +147,8 @@ define([
 
             return resource;
         };
-    }]).factory("HttpInterceptor", ["$q", "$log", "$injector", function($q, $log, $injector){
-        return {
-            request: function (config) {
-                if(config.method=='GET' && !config.cache){
-                    if(config.params){
-                        config.params._noCache = new Date().getTime();
-                    }else{
-                        config.params = {
-                            _noCache : new Date().getTime()
-                        }
-                    }
-                }
-                return config;
-            },
-            responseError:function(response){
-                var $dialog;
-                if(!$dialog){
-                    $dialog = $injector.get("$dialog");
-                }
-                $log.error("Response Error: ", response);
-                if(response.status == 400){
-                    $dialog.error(response.data.message);
-                }else if(response.status == 401){
-                    //未找到用户
-                    window.location.reload();
-                }else if(response.status == 500){
-                    $dialog.error("系统操作异常，请联系管理员。");
-                }
-                return $q.reject(response);
-            }
-        }
     }]).config(["$ocLazyLoadProvider", "$httpProvider", function($ocLazyLoadProvider, $httpProvider){
         //$ocLazyLoadProvider.config($xmomenUILazyLoadConfig);
-        $httpProvider.interceptors.push('HttpInterceptor');
-        $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
     }]).run(["$ocLazyLoadTool", function($ocLazyLoadTool){
         //$ocLazyLoadTool.loadConfig($xmomenUILazyLoadConfig);
     }]);

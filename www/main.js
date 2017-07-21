@@ -3,24 +3,18 @@ require(['require'], function(require){
     var angular = require('angular');
     var angularAMD = require('angularAMD');
     var ngApp = angular.module('app', [
-
         'ui.bootstrap',
-        //'ngStorage',
         'uia',
         'ngAnimate',
         'ngCookies',
         'ngResource',
         'ngSanitize',
-        //'ngTouch',
-        //"toaster",
         'oc.lazyLoad', //懒加载包
         'pascalprecht.translate',
-        'xmomen.ui',
+        // 'xmomen.ui',
         'LocalStorageModule',
         'ui.router',
-        //'ui.router.extras.tabs',
         "angular-loading-bar",
-        //'permission',
         'app.module',
         "config.router",
         "config.lazyload",
@@ -28,9 +22,6 @@ require(['require'], function(require){
         "config.i18n"
     ]);
     angular.element(document).ready(function() {
-        //$.get('/api/account/permissions', function(data) {
-        //    var permissionList = data;
-            angularAMD.bootstrap(ngApp);
-        //});
+        angularAMD.bootstrap(ngApp);
     });
 });

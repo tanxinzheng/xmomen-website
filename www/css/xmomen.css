@@ -30,7 +30,7 @@
     text-align: center;
     padding-top: 40px;
     font-size: 16px;
-    height: 300px;
+    height: 130px;
     background-color: #f6f8f8;
 }
 
@@ -230,8 +230,10 @@ button {
 }
 
 /** 头部操作区 ****/
-.panel-heading i {
+.panel-heading div.btn-group {
     float: right;
+}
+.panel-heading div.btn-group i {
     padding: 5px 10px 5px 10px;
 }
 
