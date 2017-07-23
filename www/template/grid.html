@@ -62,8 +62,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-class="{'choice-row-active': currentChoiceItem.$$hashKey==item.$$hashKey}"
-                data-ng-dblclick="dbcEvent(item)"
+            <tr data-ng-dblclick="dbcEvent(item)"
                 ng-repeat="item in gridOption.data"
                 data-ng-click="choiceEvent(item)">
                 <td>
