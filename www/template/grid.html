@@ -1,7 +1,6 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         {{gridOption.title}}
-
         <div class="btn-group" dropdown is-open="isopen">
             <!--<button type="button" class="btn btn-primary" dropdown-toggle ng-disabled="disabled">-->
                 <!--Button dropdown <span class="caret"></span>-->
@@ -20,11 +19,20 @@
                 <label for="{{filterColumn.name}}" class="control-label" ng-bind="filterColumn.title"></label>
                 <div>
                     <!--    日期      -->
-                    <input class="form-control" type="text" id="{{filterColumn.name}}" name="filterColumn.name" ng-if="filterColumn.type=='date'" uia-date ng-model="queryParams[filterColumn.name]" placeholder="{{filterColumn.placeholder}}">
+                    <input class="form-control" type="text" id="{{filterColumn.name}}" name="filterColumn.name"
+                           ng-if="filterColumn.type=='date'" uia-date
+                           ng-model="queryParams[filterColumn.name]"
+                           placeholder="{{filterColumn.placeholder}}">
                     <!--    文本      -->
-                    <input class="form-control" type="text" id="{{filterColumn.name}}" name="filterColumn.name" ng-if="!filterColumn.type || filterColumn.type=='text'" ng-model="queryParams[filterColumn.name]" placeholder="{{filterColumn.placeholder}}">
+                    <input class="form-control" type="text" id="{{filterColumn.name}}" name="filterColumn.name"
+                           ng-if="!filterColumn.type || filterColumn.type=='text'"
+                           ng-model="queryParams[filterColumn.name]"
+                           placeholder="{{filterColumn.placeholder}}">
                     <!--    选择框    -->
-                    <select class="form-control" id="{{filterColumn.name}}" name="filterColumn.name" ng-if="filterColumn.type == 'select'" uia-select dict-code="filterColumn.dictCode" ng-model="queryParams[filterColumn.name]">
+                    <select class="form-control" id="{{filterColumn.name}}" name="filterColumn.name"
+                            ng-if="filterColumn.type == 'select'" uia-select chosen
+                            dict-code="filterColumn.dictCode"
+                            ng-model="queryParams[filterColumn.name]">
                         <option value="">请选择</option>
                     </select>
                     <!--    弹出选择框      -->
@@ -119,7 +127,7 @@
             </div>
         </div>
     </footer>
-    <div id="{{gridOption.boxModalId}}" style="display: none">
-
-    </div>
+    <script type="text/ng-template" id="box.modal.html" >
+        <uia-box box-option="boxOption" template-url="/template/box.html"></uia-box>
+    </script>
 </div>

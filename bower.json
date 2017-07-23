@@ -52,6 +52,8 @@
     "angular-translate-storage-cookie": "^2.13.1",
     "angular-translate-storage-local": "^2.13.1",
     "angular-sanitize": "^1.6.1",
-    "angular-input-masks": "^2.5.0"
+    "angular-input-masks": "^2.5.0",
+    "chosen": "^1.7.0",
+    "angular-chosen": "*"
   }
 }

@@ -2,17 +2,16 @@
 define(function(require){
     var angular = require('angular');
     angular.module("config",['uia']).factory("SelectAPI",["$resource",function($resource){
-        return $resource("/api/cache/dictionary/:id", { id:"@id" }, {
+        return $resource("/api/select/cache/:id", { id:"@id" }, {
             query:{ isArray:true, method:"GET"}
         });
     }]).config(['$controllerProvider', '$compileProvider', '$filterProvider', '$provide', "$logProvider", "$httpProvider",
-        "cfpLoadingBarProvider",
-        function ($controllerProvider,   $compileProvider,   $filterProvider,   $provide, $logProvider, $httpProvider,
-                  cfpLoadingBarProvider) {
-            cfpLoadingBarProvider.latencyThreshold = 500;
-            cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
-            cfpLoadingBarProvider.spinnerTemplate = '<div><span class="fa fa-spinner">Loading...</div>';
-            $logProvider.debugEnabled(true);
+        function ($controllerProvider,   $compileProvider,   $filterProvider,   $provide, $logProvider, $httpProvider) {
+
+            // cfpLoadingBarProvider.latencyThreshold = 500;
+            // cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
+            // cfpLoadingBarProvider.spinnerTemplate = '<div><span class="fa fa-spinner">Loading...</div>';
+            // $logProvider.debugEnabled(true);
             //$uiaValidateDefault
             // lazy controller, directive and service
             //App.controller = $controllerProvider.register;

@@ -5,17 +5,17 @@ define([
     "angular",
     "modules/app.api",
     "modules/basic/basic.module",
-    "modules/system/system.module",
-    "modules/user/user.module",
-    "modules/authorization/authorization.module"
+    // "modules/system/system.module",
+    // "modules/user/user.module",
+    // "modules/authorization/authorization.module"
 ],function () {
     return angular.module("app.module", [
         "basic.module",
-        "authorization.module",
-        "system.module",
-        "user.module"
-    ]).controller('AppCtrl', ['$scope', '$window', 'localStorageService',"$rootScope",
-        function($scope,  $window, $localStorage, $rootScope) {
+        // "authorization.module",
+        // "system.module",
+        // "user.module"
+    ]).controller('AppCtrl', ['$scope', '$window',"$rootScope",
+        function($scope,  $window, $rootScope) {
         // add 'ie' classes to html
         var isIE = !!navigator.userAgent.match(/MSIE/i);
         isIE && angular.element($window.document.body).addClass('ie');
@@ -59,18 +59,18 @@ define([
         init();
 
         //  save settings to local storage
-        if ( angular.isDefined($localStorage.settings) ) {
-            $scope.app.settings = $localStorage.settings;
-        } else {
-            $localStorage.settings = $scope.app.settings;
-        }
+        // if ( angular.isDefined($localStorage.settings) ) {
+        //     $scope.app.settings = $localStorage.settings;
+        // } else {
+        //     $localStorage.settings = $scope.app.settings;
+        // }
         $scope.$watch('app.settings', function(){
             if( $scope.app.settings.asideDock  &&  $scope.app.settings.asideFixed ){
                 // aside dock and fixed must set the header fixed.
                 $scope.app.settings.headerFixed = true;
             }
             // save to local storage
-            $localStorage.settings = $scope.app.settings;
+            // $localStorage.settings = $scope.app.settings;
         }, true);
 
         function isSmartDevice( $window ){

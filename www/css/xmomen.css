@@ -241,3 +241,10 @@ button {
 .choice-row-active {
     background-color: #007700 !important;
 }
+.uia-box div.form-group {
+    margin-right: 15px;
+    margin-top: 15px;
+}
+.chosen-container .chosen-container-single {
+    width: 240px;
+}
