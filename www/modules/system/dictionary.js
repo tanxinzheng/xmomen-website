@@ -4,10 +4,6 @@
 define(function(){
     return ["$scope", "$uibModal", "DictionaryAPI",
     function($scope, $uibModal, DictionaryAPI){
-        $scope.types = [
-            { name: "男", code:"01" },
-            { name: "女", code:"02" }
-        ];
         $scope.gridOption = {
             id:"dictionary",
             title:'数据字典',
@@ -15,8 +11,7 @@ define(function(){
             ApiService: DictionaryAPI,
             // 过滤条件列配置
             filters:[
-                { name:'keyword', title:'关键词', placeholder:'请输入关键字进行模糊查询' },
-                { name:'type', title:'类型', type:'select', dictCode:"DICTIONARY_TYPE"}
+                { name:'keyword', title:'关键字', placeholder:'请输入字典名称或字典代码等关键字查询' }
             ],
 //          js定义列字段
             columns:[

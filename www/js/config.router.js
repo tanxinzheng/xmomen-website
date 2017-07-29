@@ -14,38 +14,34 @@ define(function(require){
                 .otherwise('/app/dashboard');
 
             navMenu = [];
-            navMenu.push({
-                name: 'app',
-                url: '/app',
-                templateUrl: 'modules/app.html',
-                abstract: true
-            });
 
             navMenu.push({
-                name: 'app.dashboard',
-                url: '/dashboard',
-                controllerUrl: 'modules/dashboard.js',
-                templateUrl: 'modules/dashboard.html'
-            });
-
-            navMenu.push( {
-                title:"文档",
-                name: 'app.documents',
-                url: '/documents',
-                templateUrl: 'modules/system/docs.html',
+                group:"authorization",
+                title:"用户",
+                name:"app.user",
+                url: '/user',
+                templateUrl: 'modules/authorization/user.html',
+                controllerUrl: 'modules/authorization/user',
                 resolve: {
-                    deps: ['$ocLazyLoad',function( $ocLazyLoad){
-                        return $ocLazyLoad.load('tpl/tools/directives/ui-scroll.js');
+                    deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
+                        return $ocLazyLoad.load('modules/authorization/user.api.js');
                     }]
                 }
             });
 
-            // navMenu.push({
-            //     title:"403",
-            //     name:"unauthorized",
-            //     url: '/unauthorized',
-            //     templateUrl: 'views/error/error403.html'
-            // });
+            navMenu.push({
+                group:"authorization",
+                title:"用户组",
+                name:"app.group",
+                url: '/group',
+                templateUrl: 'modules/authorization/group.html',
+                controllerUrl: 'modules/authorization/group',
+                resolve: {
+                    deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
+                        return $ocLazyLoad.load('modules/authorization/group.api.js');
+                    }]
+                }
+            });
 
             navMenu.push({
                 group:"system",
@@ -65,11 +61,24 @@ define(function(require){
                 $stateProvider.state(state.name, angularAMD.route(state));
             })
         }
-    ]).run(['$rootScope', '$state', '$stateParams',
-        function ($rootScope,   $state, $stateParams) {
+    ]).run(['$rootScope', '$state', '$stateParams', '$urlRouter', '$http',
+        function ($rootScope,   $state, $stateParams, $urlRouter, $http) {
             $rootScope.navMenu = navMenu;
             $rootScope.$state = $state;
             $rootScope.$stateParams = $stateParams;
+            $http
+                .get('/permissions')
+                .then(function(permissions){
+                    // Use RoleStore and PermissionStore to define permissions and roles
+                    // or even set up whole session
+                })
+                .then(function(){
+                    // Once permissions are set-up
+                    // kick-off router and start the application rendering
+                    $urlRouter.sync();
+                    // Also enable router to listen to url changes
+                    $urlRouter.listen();
+                });
         }
     ]);
 });

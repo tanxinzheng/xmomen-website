@@ -20,7 +20,9 @@
 
     <div ui-butterbar></div>
     <a href class="off-screen-toggle hide" ui-toggle-class="off-screen" data-target=".app-aside" ></a>
-    <div id="content-body-main" class="app-content-body fade-in-up" ui-view></div>
+    <div id="content-body-main" class="app-content-body fade-in-up">
+      <div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="app.settings.asideFolded = false;app.settings.asideDock = false;" ui-view></div>
+    </div>
   </div>
   <!-- /content -->
 

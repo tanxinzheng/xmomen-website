@@ -237,14 +237,24 @@ button {
     padding: 5px 10px 5px 10px;
 }
 
-/********   ********/
-.choice-row-active {
-    background-color: #007700 !important;
-}
-.uia-box div.form-group {
+/********  uix-box  ********/
+.uix-box div.form-group {
     margin-right: 15px;
     margin-top: 15px;
 }
-.chosen-container .chosen-container-single {
+.uix-box .i-checks {
+    padding-top: 7px;
+}
+.uix-box .chosen-container .chosen-container-single {
     width: 240px;
+}
+/** grid css **/
+.uix-grid .panel-heading .nav > li > a{
+    padding: 10px 10px;
+}
+.uix-grid .panel-heading .nav > li > a:hover {
+    background-color: #dcdfe0;
+}
+.uix-grid .panel-heading .nav-pills > li > a {
+    border-radius: 0;
 }

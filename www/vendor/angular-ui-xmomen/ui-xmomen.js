@@ -7319,13 +7319,10 @@ angular.module('uia',[
  * Created by TANXINZHENG481 on 2017-01-20.
  */
 angular.module('uia').controller('UiaBoxController', ['$scope', '$filter', 'uiaDialog', '$timeout','$q',  function ($scope, $filter, $dialog, $timeout, $q) {
-    var defaultOption = {
-
-    };
-    $scope.formData = {};
     $scope.boxOption = angular.extend({
         formName: "uiaBox_" + new Date().getTime()
-    }, defaultOption, $scope.boxOption);
+    }, $scope.boxOption);
+    $scope.formData = {};
     $scope.cancel = function(){
     	if($scope.boxOption.cancelBtn.click){
             $scope.boxOption.cancelBtn.click();
@@ -7424,6 +7421,7 @@ angular.module('uia').controller('UiaBoxController', ['$scope', '$filter', 'uiaD
         if($scope.boxOption.formData){
             $scope.viewEvent();
 		}
+        $scope.boxOption.$ctrl = this;
     };
     init();
 }]).directive('uiaBox', [function () {
@@ -7460,20 +7458,17 @@ angular.module('uia'
         link: function (scope, element, attr, ctrl) {
             var defaultLoadingText = attr.btnLoadingText || "<i class='icon-spinner'>&nbsp;稍等</i>";
             scope.insideHtml = element.html();
-            scope.$watch(function () {
-                    return scope.$eval(attr.btnLoading);
-                }, function (value,oldV) {
-                    if (angular.isDefined(value)) {
-                        if(value){
-                            element.attr('disabled', true);
-                            element.html(defaultLoadingText);
-                        }else{
-                            element.removeAttr('disabled');
-                            element.html(scope.insideHtml);
-                        }
-                    }
-                }
-            );
+            scope.$watch('btnLoading', function (value,oldV) {
+				if (angular.isDefined(value)) {
+					if(value){
+						element.attr('disabled', true);
+						element.html(defaultLoadingText);
+					}else{
+						element.removeAttr('disabled');
+						element.html(scope.insideHtml);
+					}
+				}
+			});
         }
     }
 }]).directive('ngEnter', function () {
@@ -9121,9 +9116,9 @@ angular.module('uia').directive("uiaSelect", ['$compile', '$timeout', 'SelectAPI
             var getDictInfoList = function(){
                 scope.dictInfoList = [];
                 SelectAPI.query({
-                    parentCode:  scope.dictParentCode,
+                    parentId:  scope.dictParentCode,
                     dictSource: scope.dictSource,
-                    typeCode : scope.dictCode
+                    type : scope.dictCode
                 }).$promise.then(function(data){
                     scope.dictInfoList = data;
                     var change = true;
@@ -9150,7 +9145,130 @@ angular.module('uia').directive("uiaSelect", ['$compile', '$timeout', 'SelectAPI
 /**
  * Created by TANXINZHENG481 on 2017-06-06.
  */
-angular.module('uia').directive('uiaForm',['$uiaValidateDefault', '$timeout', function($uiaValidateDefault, $timeout){
+angular.module('uia').run(['$uiaValidateRule', '$uiaValidateProvider', function($uiaValidateRule, $uiaValidateProvider){
+    angular.forEach($uiaValidateRule, function(val, key){
+        $uiaValidateProvider.addRule(key, val);
+    });
+    $.extend($.validator.messages, {
+        required: "这是必填字段",
+        remote: "请修正此字段",
+        email: "请输入有效的电子邮件地址",
+        url: "请输入有效的网址",
+        date: "请输入有效的日期",
+        dateISO: "请输入有效的日期 (YYYY-MM-DD)",
+        number: "请输入有效的数字",
+        digits: "请输入有效的正整数",
+        creditcard: "请输入有效的信用卡号码",
+        equalTo: "你的输入不相同",
+        extension: "请输入有效的后缀",
+        maxlength: $.validator.format("最多可以输入 {0} 个字符"),
+        minlength: $.validator.format("最少要输入 {0} 个字符"),
+        rangelength: $.validator.format("请输入长度在 {0} 到 {1} 之间的字符串"),
+        range: $.validator.format("请输入范围在 {0} 到 {1} 之间的数值"),
+        max: $.validator.format("请输入不大于 {0} 的数值"),
+        min: $.validator.format("请输入不小于 {0} 的数值")
+    });
+}]).value("$uiaValidateRule", {
+    // 整数
+    integer: {
+        rule:/^\-?[0-9]+$/,
+        message:"请输入正确的整数"
+    },
+    // 正浮点数字
+    positiveDecimal: {
+        rule:/^[0-9]*\.?[0-9]+$/,
+        message:"请输入不小于0的数字"
+    },
+    // 大小写字母或数字
+    notSpecialCharacter: {
+        rule:/^[A-Za-z0-9]+$/i,
+        message:"请输入大小写字母或数字"
+    },
+    // 中国身份证
+    chinaId: {
+        rule:/^[1-9]\d{5}[1-9]\d{3}(((0[13578]|1[02])(0[1-9]|[12]\d|3[0-1]))|((0[469]|11)(0[1-9]|[12]\d|30))|(02(0[1-9]|[12]\d)))(\d{4}|\d{3}[xX])$/,
+        message:"请输入正确的身份证号码"
+    },
+    // 中国邮政编码
+    chinaZip: {
+        rule:/^\d{6}$/,
+        message:"请输入正确的邮政编码"
+    },
+    // 手机号码
+    telephone: {
+        rule:/^(1)[0-9]{10}$/,
+        message:"请输入正确的手机号码"
+    },
+    // IP
+    ip: {
+        rule:/^((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){3}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})$/,
+        message:"请输入正确的IP"
+    },
+    latitude: {
+        rule:/^-?(([1-8]\d?)|([1-8]\d)|90)(\.\d{1,6})?$/,
+        message:"请输入[±90.000000]的有效纬度值"
+    },
+    longitude: {
+        rule:/^-?(([1-9]\d?)|(1[0-7]\d)|180)(\.\d{1,6})?$/,
+        message:"请输入[±180.000000]的有效经度值"
+    }
+}).constant("$uiaValidateDefault", {
+    errorElement: "font",
+    errorClass: "error"
+    // showErrors: function(errorMap, errorList) {
+    //     $.each(this.successList, function(index, value) {
+    //         var index = $(value).attr('layer-tip-index');
+    //         layer.close(index);
+    //     });
+    //     // 只显示一个错误提示（多个提示会遮住）
+    //     if(errorList && errorList.length > 0){
+    //         var error = errorList[0];
+    //         var tipIndex;
+    //         tipIndex = $(error.element).attr('layer-tip-index');
+    //         layer.close(tipIndex);
+    //         tipIndex = layer.tips(error.message, error.element, {
+    //             tips: [2, '#3595CC'],
+    //             time:0,
+    //             tipsMore:true
+    //         });
+    //         $(error.element).attr('layer-tip-index', tipIndex);
+    //     }
+    //     // $.each(errorList, function(index, value) {
+    //     //     var tipIndex;
+    //     //     tipIndex = $(value.element).attr('layer-tip-index');
+    //     //     layer.close(tipIndex);
+    //     //     tipIndex = layer.tips(value.message, value.element, {
+    //     //         tips: [2, '#3595CC'],
+    //     //         time:0,
+    //     //         tipsMore:true
+    //     //     });
+    //     //     $(value.element).attr('layer-tip-index', tipIndex);
+    //     // });
+    // }
+}).factory("$uiaValidateProvider", function () {
+    return {
+        setDefaults: function (options) {
+            $.validator.setDefaults(options);
+        },
+        addMethod: function (name, func, errorText) {
+            $.validator.addMethod(name, func, errorText);
+        },
+        addRule: function(key, rule){
+            this.addMethod(key, function(value, element){
+                var pattern = new RegExp(rule.rule);
+                if(value === false){
+                    return false;
+                }
+                if(value != ""){
+                    if(!pattern.test(value)){
+                        return false;
+                    }
+                }
+                return true;
+            }, rule.message);
+        }
+    }
+}).directive('uiaForm',['$uiaValidateDefault', '$timeout', function($uiaValidateDefault, $timeout){
     return{
         restrict:'A',
         require: 'form',
@@ -9188,53 +9306,48 @@ angular.module('uia').directive('uiaForm',['$uiaValidateDefault', '$timeout', fu
                     });
 				});
             }
-            if(attr.ignoreTip && attr.ignoreTip == 'true'){
-                ctrl.ignoreTip = true;
-            }
-            var option = scope.validateOption;
-            option = angular.extend({}, $uiaValidateDefault, option );
-            ctrl.validateConfig = angular.copy(option);
-            ctrl.validate = function(){
-                if($(element).validate(ctrl.validateConfig).form() && $(element).validate(ctrl.validateConfig).valid()){
-                    return true;
+            var initValidateConfig = function(){
+                var option = scope.validateOption;
+                option = angular.extend({}, $uiaValidateDefault, option );
+                ctrl.validateConfig = angular.copy(option);
+                ctrl.validate = function(){
+                    if($(element).validate(ctrl.validateConfig).form() && $(element).validate(ctrl.validateConfig).valid()){
+                        return true;
+                    }
+                    return false;
+                };
+                if($(element).find("input[uia-date]").datetimepicker){
+                    $(element).find("input[uia-date]").datetimepicker().on('changeDate', function(ev){
+                        $(ev.target).valid();
+                    });
                 }
-                return false;
-            };
-            // var error = "<span class='error'> *</span>";
-            // // html 依赖
-            // $(element).find("input[required]").each(function(){
-            //     addError(this);
-            // });
-            // $(element).find("select[required]").each(function(){
-            //     addError(this);
-            // });
-            if($(element).find("input[uia-date]").datetimepicker){
-                $(element).find("input[uia-date]").datetimepicker().on('changeDate', function(ev){
-                    $(ev.target).valid();
-                });
-            }
-            // js 依赖
-            $timeout(function(){
-                angular.forEach(option.rules, function(rule, index){
-                    var target = $(element).find("[name='" + index + "']");
-                    target.attr('required', true);
-                    // addError(target);
-                })
-            }, 1000);
-            // function addError(target){
-            //     var next = $(target).next();
-            //     if(target['type'] == 'hidden' || next[0] != null && next[0].nodeName == 'SPAN'){
-            //         return;
-            //     }
-            //     if(next[0] != null && next[0].nodeName == 'DIV'){
-            //         var nextDom = $(next).next();
-            //         target = nextDom['prevObject']['0'];
-            //     }
-            //     $(error).insertAfter(target);
-            // }
+                // $('input,select,textarea').on('blur',function(){
+                //     var index = $(this).attr('layer-tip-index');
+                //     layer.close(index);
+                // }).on('focus', function(){
+                //     // $("#form1").validate().element($("#elementId"))
+                //     var ruleMessage = "";
+                //     var tipIndex = $(this).attr('layer-tip-index');
+					// layer.close(tipIndex);
+					// tipIndex = layer.tips(ruleMessage, this, {
+					// 	tips: [2, '#3595CC'],
+					// 	time:0,
+					// 	tipsMore:true
+					// });
+					// $(this).attr('layer-tip-index', tipIndex);
+                // });
+                // js 依赖
+                $timeout(function(){
+                    angular.forEach(option.rules, function(rule, index){
+                        var target = $(element).find("[name='" + index + "']");
+                        target.attr('required', true);
+                    })
+                }, 1000);
+			};
             var init = function(){
                 // 默认锁定
-                ctrl.lock();
+                // ctrl.lock();
+                initValidateConfig();
             }
             init();
         }
@@ -9457,7 +9570,7 @@ angular.module('uia').directive('htmlBind', function($compile, $parse) {
         }
         $scope.viewModal(angular.copy($scope.currentChoiceItem));
     };
-    $scope.viewModal = function(item){
+    $scope.viewModal = function(item, action){
     	$uibModal.open({
 			templateUrl: "box.modal.html",
             resolve:{
@@ -9470,10 +9583,15 @@ angular.module('uia').directive('htmlBind', function($compile, $parse) {
 				},
 				ApiService: function(){
 					return $scope.gridOption.ApiService;
+				},
+				Option: function(){
+					return {
+						action:action
+					}
 				}
 			},
-			controller:['$scope', 'Item', 'BoxOption', 'ApiService', 'uiaDialog', '$uibModalInstance',
-			function($scope, item, BoxOption, ApiService, uiaDialog, $uibModalInstance){
+			controller:['$scope', 'Item', 'BoxOption', 'ApiService', 'uiaDialog', '$uibModalInstance', 'Option', '$timeout',
+			function($scope, item, BoxOption, ApiService, uiaDialog, $uibModalInstance, Option, $timeout){
 				if(BoxOption){
 					$scope.boxOption = BoxOption;
 					$scope.boxOption.cancelBtn = {
@@ -9491,6 +9609,11 @@ angular.module('uia').directive('htmlBind', function($compile, $parse) {
 				if(item){
                     $scope.boxOption.formData = item;
 				}
+				if(Option.action == 'ADD'){
+					$timeout(function(){
+                        $scope.boxOption.formName.unlock();
+					}, 3000)
+				}
 				$scope.cancel = function(){
                     $uibModalInstance.dismiss();
 				};
@@ -9505,7 +9628,7 @@ angular.module('uia').directive('htmlBind', function($compile, $parse) {
             $scope.gridOption.viewBtn.click();
             return;
         }
-        $scope.viewModal({});
+        $scope.viewModal({}, 'ADD');
     };
     //双击
     $scope.dbcEvent = function(item){
@@ -9940,8 +10063,47 @@ angular.module('uia').factory("$UrlUtils", ["$location", function ($location) {
             return "?" + params;
         }
     }
+}]).factory('uiaResource', [ '$resource', '$injector', "$timeout", function( $resource , $injector, $timeout) {
+
+    return function( url, params, methods ) {
+        var defaults = {
+            query: {method: "GET", isArray: false},
+            update: { method: 'PUT' },
+            create: { method: 'POST' }
+        };
+
+        methods = angular.extend( defaults, methods );
+
+        var resource = $resource( '/api' + url, params, methods );
+
+        resource.$export = function(option, success, fail) {
+            var params = "";
+            if(option && option.data){
+                for(var p in option.data){
+                    if(option.data[p]){
+                        params += p + "=" + option.data[p] + "&";
+                    }
+                }
+                params = "?"+params;
+            }
+            var anchor = angular.element("<iframe/>");
+            anchor.attr({
+                style:"display:none",
+                src: option.url + params,
+                onLoad:function(){
+                    $timeout(function(){
+                        anchor.remove();
+                    }, 2000);
+                }
+            });
+            angular.element("body").append(anchor);
+        };
+
+        return resource;
+    };
 }]).factory('HttpInterceptor', ["$q", "$injector", function ($q, $injector) {
     var uiaMessage,
+        $state,
         $dialog;
     return {
         request: function (config) {
@@ -9964,13 +10126,13 @@ angular.module('uia').factory("$UrlUtils", ["$location", function ($location) {
         responseError: function (response, data) {
             $dialog = $dialog || $injector.get("uiaDialog");
             uiaMessage = uiaMessage || $injector.get("uiaMessage");
-            if (response.status == 400) {
+            if (response.status == 400 || response.status == 403) {
                 $dialog.alert(response.data.message);
             }else if(response.status == 500){
                 $dialog.alert("系统错误，请联系管理员");
             }else if(response.status == 401){
-                uiaMessage.publish("SessionTimeOut");
-                $q.reject(response);
+            	$state = $injector.get("$state");
+            	$state.go('access.signin');
             }
             return $q.reject(response);
         }
@@ -10026,178 +10188,4 @@ angular.module('uia').directive('uiaTable',['$compile', function($compile){
             scope.uiaTableOption.load();
         }
     }
-}]);
-/**
- * Created by TANXINZHENG481 on 2017-06-06.
- */
-angular.module('uia').run(['$uiaValidateRule', '$uiaValidateProvider', function($uiaValidateRule, $uiaValidateProvider){
-    angular.forEach($uiaValidateRule, function(val, key){
-        $uiaValidateProvider.addRule(key, val);
-    });
-    $.extend($.validator.messages, {
-        required: "这是必填字段",
-        remote: "请修正此字段",
-        email: "请输入有效的电子邮件地址",
-        url: "请输入有效的网址",
-        date: "请输入有效的日期",
-        dateISO: "请输入有效的日期 (YYYY-MM-DD)",
-        number: "请输入有效的数字",
-        digits: "请输入有效的正整数",
-        creditcard: "请输入有效的信用卡号码",
-        equalTo: "你的输入不相同",
-        extension: "请输入有效的后缀",
-        maxlength: $.validator.format("最多可以输入 {0} 个字符"),
-        minlength: $.validator.format("最少要输入 {0} 个字符"),
-        rangelength: $.validator.format("请输入长度在 {0} 到 {1} 之间的字符串"),
-        range: $.validator.format("请输入范围在 {0} 到 {1} 之间的数值"),
-        max: $.validator.format("请输入不大于 {0} 的数值"),
-        min: $.validator.format("请输入不小于 {0} 的数值")
-    });
-}]).value("$uiaValidateRule", {
-    // 整数
-    integer: {
-        rule:/^\-?[0-9]+$/,
-        message:"请输入正确的整数"
-    },
-    // 正浮点数字
-    positiveDecimal: {
-        rule:/^[0-9]*\.?[0-9]+$/,
-        message:"请输入不小于0的数字"
-    },
-    // 大小写字母或数字
-    notSpecialCharacter: {
-        rule:/^[A-Za-z0-9]+$/i,
-        message:"请输入大小写字母或数字"
-    },
-    // 中国身份证
-    chinaId: {
-        rule:/^[1-9]\d{5}[1-9]\d{3}(((0[13578]|1[02])(0[1-9]|[12]\d|3[0-1]))|((0[469]|11)(0[1-9]|[12]\d|30))|(02(0[1-9]|[12]\d)))(\d{4}|\d{3}[xX])$/,
-        message:"请输入正确的身份证号码"
-    },
-    // 中国邮政编码
-    chinaZip: {
-        rule:/^\d{6}$/,
-        message:"请输入正确的邮政编码"
-    },
-    // 手机号码
-    telephone: {
-        rule:/^(1)[0-9]{10}$/,
-        message:"请输入正确的手机号码"
-    },
-    // IP
-    ip: {
-        rule:/^((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){3}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})$/,
-        message:"请输入正确的IP"
-    },
-    latitude: {
-        rule:/^-?(([1-8]\d?)|([1-8]\d)|90)(\.\d{1,6})?$/,
-        message:"请输入[±90.000000]的有效纬度值"
-    },
-    longitude: {
-        rule:/^-?(([1-9]\d?)|(1[0-7]\d)|180)(\.\d{1,6})?$/,
-        message:"请输入[±180.000000]的有效经度值"
-    }
-}).constant("$uiaValidateDefault", {
-    errorElement: "font",
-    errorClass: "error",
-    onblur: function(element){
-        $(element).valid();
-    },
-    showErrors: function(errorMap, errorList) {
-        $.each(this.successList, function(index, value) {
-//            return $(value).popover ? $(value).popover("hide"):null;
-            var index = $(value).attr('layer-tip-index');
-            layer.close(index);
-        });
-        return $.each(errorList, function(index, value) {
-//            var _popover;
-//            _popover = $(value.element).popover({
-//                trigger: "manual",
-//                placement: "top",
-//                content: value.message,
-//                html:true,
-//                template: "<div class=\"popover error-popover\"><div class=\"arrow\"></div> <div class=\"popover-inner\"> <div class=\"popover-content\"><p></p></div> </div></div>"
-//            });
-//            _popover.data("bs.popover").options.content = value.message;
-//            return _popover.popover("show");
-            var tipIndex;
-            tipIndex = $(value.element).attr('layer-tip-index');
-            layer.close(tipIndex);
-            tipIndex = layer.tips(value.message, value.element, {
-                tips: [1, '#3595CC'],
-                time:0,
-                tipsMore:true
-            });
-            $(value.element).attr('layer-tip-index', tipIndex);
-        });
-    }
-}).factory("$uiaValidateProvider", function () {
-    return {
-        setDefaults: function (options) {
-            $.validator.setDefaults(options);
-        },
-        addMethod: function (name, func, errorText) {
-            $.validator.addMethod(name, func, errorText);
-        },
-        addRule: function(key, rule){
-            this.addMethod(key, function(value, element){
-                var pattern = new RegExp(rule.rule);
-                if(value === false){
-                    return false;
-                }
-                if(value != ""){
-                    if(!pattern.test(value)){
-                        return false;
-                    }
-                }
-                return true;
-            }, rule.message);
-        }
-    }
-}).directive('uiaValidate', ["$uiaValidateDefault", function ($uiaValidateDefault) {
-    return {
-        restrict: 'A',
-        scope:{
-            uiaValidateOption:"="
-        },
-        require: "form",
-        link: function (scope, element, attr, ctrl) {
-            if(attr.ignoreTip && attr.ignoreTip == 'true'){
-                ctrl.ignoreTip = true;
-            }
-            var option = scope.uiaValidateOption;
-            option = angular.extend($uiaValidateDefault, option);
-            ctrl.validateConfig = angular.copy(option);
-            ctrl.validate = function(){
-                if($(element).validate(ctrl.validateConfig).form() && $(element).validate(ctrl.validateConfig).valid()){
-                    return true;
-                }
-                return false;
-            };
-            $('input,select,textarea').live('blur',function(){
-                $(this).closest('form').validate().element($(this));
-            });
-            // var error = "<span class='error'> *</span>";
-            // ///^-?([1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0+|0)$/
-            // $(element).find("input[required]").each(function(){
-            //     var next = $(this).next();
-            //     if(this['type'] == 'hidden' || next[0] != null && next[0].nodeName == 'SPAN'){
-            //         return;
-            //     }
-            //     $(error).insertAfter(this);
-            // });
-            // $(element).find("select[required]").each(function(){
-            //     var next = $(this).next();
-            //     if(next[0] != null && next[0].nodeName == 'SPAN'){
-            //         return;
-            //     }
-            //     $(error).insertAfter(this);
-            // });
-            if($(element).find("input[uia-date]").datetimepicker){
-                $(element).find("input[uia-date]").datetimepicker().on('changeDate', function(ev){
-                    $(ev.target).valid();
-                });
-            }
-        }
-    };
 }]);

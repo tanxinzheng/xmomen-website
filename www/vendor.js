@@ -1,5 +1,5 @@
 define([
-    "ui-xmomen-tpl",
+    "ui-xmomen",
     "ocLazyLoad",
     "angular-cookies",
     "angular-resource",

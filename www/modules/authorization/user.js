@@ -1,177 +1,56 @@
 /**
  * Created by tanxinzheng on 16/7/3.
  */
-define(function(){
-    return ["$scope",  "UserAPI", "$dialog", "$injector", "$uibModal", function($scope, UserAPI, $dialog, $injector, $uibModal){
-        $scope.pageSetting = {
-            checkAll : false,
-            queryBtnLoading : false
-        };
-        $scope.pageInfoSetting = {
-            pageSize:10,
-            pageNum:1
-        };
-        // 重置
-        $scope.reset = function(){
-            $scope.queryParam={};
-            $scope.getUserList();
-        };
-        $scope.queryParam = {};
-        // 查询列表
-        $scope.getUserList = function(){
-            $scope.pageSetting.queryBtnLoading = true;
-            UserAPI.query({
-                keyword: $scope.queryParam.keyword,
-                limit: $scope.pageInfoSetting.pageSize,
-                offset: $scope.pageInfoSetting.pageNum
-            }, function(data){
-                $scope.userList = data.data;
-                $scope.pageInfoSetting = data.pageInfo;
-            }).$promise.finally(function(){
-                $scope.pageSetting.queryBtnLoading = false;
-            });
-        };
-        // 全选
-        $scope.checkAll = function(){
-            if(!$scope.userList){
-                return;
-            }
-            for (var i = 0; i < $scope.userList.length; i++) {
-                $scope.userList[i].checked = $scope.pageSetting.checkAll;
-            }
-        };
-        // 子集控制全选
-        $scope.changeItemChecked = function(){
-            if(!$scope.userList){
-                return;
-            }
-            var num = 0;
-            for (var i = 0; i < $scope.userList.length; i++) {
-                if($scope.userList[i].checked){
-                    num++;
-                }
-            }
-            // 子集勾选数量等于集合总数则勾选全选，否则取消全选
-            if(num == $scope.userList.length){
-                $scope.pageSetting.checkAll = true;
-            }else{
-                $scope.pageSetting.checkAll = false;
-            }
-        };
-        // 新增
-        $scope.add = function(index){
-            $scope.openModal(index, "ADD");
-        };
-        // 查看
-        $scope.view = function(index){
-            $scope.openModal(index, "VIEW");
-        };
-        // 修改
-        $scope.update = function(index){
-            $scope.openModal(index, "UPDATE");
-        };
-        // 弹出
-        $scope.openModal = function(index, action){
-            //var $uibModal;
-            //if(!$uibModal){
-            //    $uibModal = $injector.get('$uibModal');
-            //}
-            $uibModal.open({
-                templateUrl: 'user_detail.html',
-                //modal:true,
-                resolve: {
-                    Params: function () {
-                        var params = {
-                            action: action
-                        };
-                        if($scope.userList && $scope.userList[index] && $scope.userList[index].id){
-                            params.id = $scope.userList[index].id;
+define([
+    "modules/authorization/user_permission.api"
+], function(){
+    return ["$scope",  "UserAPI", "uiaDialog", "$injector", "$uibModal", function($scope, UserAPI, uiaDialog, $injector, $uibModal){
+        $scope.gridOption = {
+            id:"user",
+            title:'用户',
+            loadEvent: UserAPI.query,
+            ApiService: UserAPI,
+            // 过滤条件列配置
+            filters:[
+                { name:'keyword', title:'关键字', placeholder:'请输入用户名/姓名/邮箱/手机号码' }
+            ],
+//          js定义列字段
+            columns:[
+                { name:'username', title:'用户名' },
+                { name:'nickname', title:'姓名' },
+                { name:'email', title:'邮箱'},
+                { name:'phoneNumber', title:'手机号码'},
+                { name:'createdTime', title:'注册时间',  type:'date' },
+                { name:'lastLoginTime', title:'最后登录时间', type:'date'},
+                { name:'locked', title:'锁定', type:'checkbox'}
+            ],
+            boxOption : {
+                ApiService: UserAPI,
+                columns:[
+                    { name:'username', title:'用户名', rules:{ required: true} },
+                    { name:'nickname', title:'姓名', rules:{ required: true} },
+                    { name:'password', title:'密码', rules:{ required: true}, show: function(item){
+                        if(item.id){
+                            return false;
                         }
-                        return params;
+                        return true;
+                    }},
+                    { name:'email', title:'邮箱', rules:{ required: true, email:true}},
+                    { name:'phoneNumber', title:'手机号码', rules:{ required: true, telephone:true}},
+                    { name:'locked', title:'锁定', type:'checkbox'}
+                ]
+            },
+            buttons:[
+                {
+                    title:'绑定用户组',
+                    click:function (item) {
+                        $scope.viewUserPermission(item);
                     }
-                },
-                controller: ['$scope', '$uibModalInstance', "$uibModal", "UserAPI", "Params", "$dialog", function($scope, $uibModalInstance, $uibModal, UserAPI, Params, $dialog){
-                    //$scope.user = null;
-                    $scope.pageSetting = {
-                        formDisabled : true,
-                        saveBtnLoading : false,
-                        editing:false
-                    };
-                    if(Params.action == "UPDATE" || Params.action == "ADD"){
-                        $scope.pageSetting.formDisabled = false;
-                        $scope.pageSetting.editing = false;
-                    }
-                    if(Params && Params.id){
-                        $scope.user = UserAPI.get({
-                            id: Params.id
-                        });
-                    }
-                    $scope.userDetailForm = {};
-                    $scope.saveUser = function(){
-                        if($scope.userDetailForm.validator.form()){
-                            if($scope.userDetailForm.validator.form()){
-                                $dialog.confirm("是否保存数据？").then(function(){
-                                    $scope.pageSetting.saveBtnLoading = true;
-                                    if ( !$scope.user.id ) {
-                                        UserAPI.create($scope.user, function(data,headers){
-                                            $dialog.success("新增成功");
-                                            $uibModalInstance.close();
-                                        }).$promise.finally(function(){
-                                            $scope.pageSetting.saveBtnLoading = false;
-                                        });
-                                    }else {
-                                        UserAPI.update($scope.user, function(data,headers){
-                                            $dialog.success("更新成功");
-                                            $uibModalInstance.close();
-                                        }).$promise.finally(function(){
-                                            $scope.pageSetting.saveBtnLoading = false;
-                                        });
-                                    }
-                                });
-                            }
-                        }
-                    };
-                    $scope.cancel = function(){
-                        $uibModalInstance.dismiss();
-                    };
-                }]
-            });
-        };
-        // 删除
-        $scope.delete = function(index){
-            $dialog.confirm("请确认是否删除").then(function(){
-                UserAPI.delete({id:$scope.userList[index].id}, function(){
-                    $scope.getUserList();
-                });
-            });
-        };
-        // 批量删除
-        $scope.batchDelete = function(){
-            var choiceItems = [];
-            for (var i = 0; i < $scope.userList.length; i++) {
-                var obj = $scope.userList[i];
-                if(obj.checked){
-                    choiceItems.push(obj.id);
                 }
-            }
-            if(choiceItems && choiceItems.length > 0){
-                $dialog.confirm("已勾选记录数：" + choiceItems.length + "，请确认是否删除已勾选数据").then(function(){
-                    UserAPI.delete({ids:choiceItems}, function(){
-                        $scope.getUserList();
-                    });
-                })
-            }else{
-                $dialog.alert("请勾选需要删除的数据");
-            }
-        };
-        // 导出
-        $scope.batchExport = function(){
-            UserAPI.export({
-                data:{keyword: $scope.queryParam.keyword}
-            });
+            ]
         };
         // 用户权限
-        $scope.viewUserPermission = function(index){
+        $scope.viewUserPermission = function(item){
             var $uibModal;
             if(!$uibModal){
                 $uibModal = $injector.get('$uibModal');
@@ -183,14 +62,14 @@ define(function(){
                 resolve: {
                     Params: function () {
                         var params = {};
-                        if($scope.userList[index] && $scope.userList[index].id){
-                            params.id = $scope.userList[index].id;
-                            params.name = $scope.userList[index].nickname;
+                        if(item && item.id){
+                            params.id = item.id;
+                            params.name = item.nickname;
                         }
                         return params;
                     }
                 },
-                controller: ['$scope', '$uibModalInstance', "$uibModal", "UserAPI", "UserPermissionAPI", "Params", function($scope, $uibModalInstance, $uibModal, UserAPI, UserPermissionAPI, Params){
+                controller: ['$scope', '$uibModalInstance', "$uibModal", "UserAPI", "Params", function($scope, $uibModalInstance, $uibModal, UserAPI, Params){
                     $scope.queryParam = {};
                     // 查询可选资源
                     $scope.getNotHasResource = function(){
@@ -500,9 +379,5 @@ define(function(){
                 $scope.getUserList();
             });
         };
-        var init = function(){
-            $scope.getUserList();
-        };
-        init();
     }]
 });

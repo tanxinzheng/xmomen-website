@@ -16,7 +16,11 @@ var requirejsOptimize = require('gulp-requirejs-optimize');
 var $ = require("gulp-load-plugins")();
 var imagemin = require('gulp-imagemin');
 //var usemin = require('gulp-usemin');
+var ngHtml2Js = require('gulp-ng-html2js');
 var sourcemaps = require('gulp-sourcemaps');
+var less = require('gulp-less');
+var watchLess = require('gulp-watch-less');
+var plumber = require('gulp-plumber');
 var copy = require('gulp-copy');
 var htmlmin = require('gulp-htmlmin');              //html压缩
 var notify = require('gulp-notify');                //任务通知
@@ -25,7 +29,10 @@ var jshint = require('gulp-jshint');              //js检测
 var csslint = require('gulp-csslint');              //css检测
 var rev = require('gulp-rev');                      //对文件名加MD5后缀
 var revCollector = require('gulp-rev-collector');   //路径替换
+var replace = require('gulp-replace');
 var gulpsync = require('gulp-sync')(gulp);
+
+var pkg = require('./package.json');
 
 var environment = require("./environments.json");
 var ENV = environment['development'];
@@ -42,9 +49,14 @@ gulp.task('server', function() {
             },
             proxies: [
                 {
-                    source: '/api', target: 'http://127.0.0.1:8000'
+                    source: '/api',
+                    target: 'http://127.0.0.1:8000',
+                    // options: {
+                    //     headers: {'X-Requested-With': 'XMLHttpRequest'}
+                    // }
                 }
             ],
+            fallback: 'index.html',
             middleware: function(req, res, next) {
                 var urlObj = url.parse(req.url, true),
                     method = req.method,
@@ -96,6 +108,18 @@ gulp.task('fonts', function() {
         .pipe(notify({ message: 'fonts task ok' }));
 
 });
+
+gulp.task('watch', ['less'], function () {
+    gulp.watch(pkg.asset.less + "/*.less", ['less']);
+});
+
+gulp.task('less', function () {
+    return gulp.src([ pkg.asset.less + '/app.less'])
+        .pipe(plumber())
+        .pipe(less())
+        .pipe(gulp.dest('./www/css'));
+});
+
 
 //css处理
 gulp.task('css', function(){
@@ -182,6 +206,60 @@ gulp.task('js', function(){
         .pipe(notify({message:'js task ok'})); //提示成功
 });
 
+gulp.task('ui', gulpsync.sync(['ng-html-2-js']), function(){
+    gulp.src([
+        './www/bower_components/jquery-validate/jquery.validate.js',
+        './www/bower_components/angularjs-toaster/toaster.js',
+        './www/bower_components/chosen/chosen.jquery.min.js',
+        './www/bower_components/chosen/angular-chosen.js',
+        './www/bower_components/jquery.inputmask/jquery.inputmask.bundle.js',
+        './www/bower_components/angular-permission/dist/angular-permission.js',
+        './www/bower_components/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
+        './www/bower_components/bootstrap-datetimepicker/src/js/locales/bootstrap-datetimepicker.zh-CN.js',
+        './www/bower_components/ng-file-upload/ng-file-upload-all.js',
+        './www/bower_components/angular-ui-xmomen/ui-xmomen.js',
+        './www/bower_components/angular-ui-xmomen/temp/ui-xmomen-html-tpl.js',
+        './www/bower_components/angular-ui-xmomen/src/**.js'
+    ])
+        .pipe(sourcemaps.init())
+        .pipe(concat('ui-xmomen.js'))
+        // 组件模板 url 替换
+        .pipe(replace("'/template/grid.html'", "'uia/template/grid.html'"))
+        .pipe(replace("'/template/choice.html'", "'uia/template/choice.html'"))
+        .pipe(replace("'/template/dialog.html'", "'uia/template/dialog.html'"))
+        .pipe(replace("'/template/box.html'", "'uia/template/box.html'"))
+        .pipe(replace("'/template/dictionary.html'", "'uia/template/dictionary.html'"))
+        .pipe(replace("'/template/login-dialog.html'", "'uia/template/login-dialog.html'"))
+        .pipe(replace("'/template/pagination.html'", "'uia/template/pagination.html'"))
+        .pipe(gulp.dest('./www/bower_components/angular-ui-xmomen/dist'))
+        .pipe(uglify())
+        .pipe(rename({
+            suffix:'.min'
+        }))
+        .pipe(sourcemaps.write('./'))
+        .pipe(gulp.dest('./www/bower_components/angular-ui-xmomen/dist'));                         //- 输出文件本地
+    // gulp.src(['./www/bower_components/angular-ui-xmomen/temp'])
+    //     .pipe(clean());
+});
 
+gulp.task('ng-html-2-js', function () {
+    return gulp.src('./www/bower_components/angular-ui-xmomen/template/*.html')
+        .pipe(htmlmin({
+            collapseWhitespace:false // 是否去除空白行
+        }))
+        .pipe(ngHtml2Js({
+            moduleName:'uia',
+            prefix: pkg.ngMoudle.ngTplPrefix
+        }))
+        .pipe(concat(pkg.ngMoudle.tplJsFile))
+        .pipe(gulp.dest('./www/bower_components/angular-ui-xmomen/temp'))
+        .pipe(uglify())
+        .pipe(rename({
+            suffix:'.min'
+        }))
+        .pipe(gulp.dest('./www/bower_components/angular-ui-xmomen/temp'));
+});
 
-gulp.task('default',gulpsync.sync(['clean', 'html', 'css', 'rjs', 'js', 'img', 'htmlmin', 'fonts', 'rev']));
+gulp.task('build',gulpsync.sync(['clean', 'html', 'css', 'rjs', 'js', 'img', 'htmlmin', 'fonts', 'rev']));
+
+gulp.task('default',gulpsync.sync(['server', 'watch']));

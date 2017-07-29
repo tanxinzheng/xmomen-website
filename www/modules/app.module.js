@@ -4,18 +4,17 @@
 define([
     "angular",
     "modules/app.api",
-    "modules/basic/basic.module",
-    // "modules/system/system.module",
-    // "modules/user/user.module",
-    // "modules/authorization/authorization.module"
+    "modules/basic/basic.module"
 ],function () {
     return angular.module("app.module", [
         "basic.module",
+        "App.REST",
         // "authorization.module",
         // "system.module",
         // "user.module"
-    ]).controller('AppCtrl', ['$scope', '$window',"$rootScope",
-        function($scope,  $window, $rootScope) {
+    ]).controller('AppCtrl', ['$scope', '$window',"$rootScope", "$http", "$state",
+    function($scope,  $window, $rootScope, $http, $state) {
+
         // add 'ie' classes to html
         var isIE = !!navigator.userAgent.match(/MSIE/i);
         isIE && angular.element($window.document.body).addClass('ie');
@@ -51,7 +50,14 @@ define([
             logout:"/api/logout"
         };
 
-        var init = function(){
+        $rootScope.logout = function(){
+            $http.post($rootScope.app.logout).then(function(){
+                $state.go('access.signin')
+            })
+        };
+
+
+            var init = function(){
             // AppAPI.getAccount({}, function(data){
             //     $rootScope.Account = data;
             // })

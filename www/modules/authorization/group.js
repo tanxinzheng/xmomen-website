@@ -2,172 +2,43 @@
  * Created by tanxinzheng on 16/7/3.
  */
 define(function(){
-    return ["$scope", "$uibModal", "GroupAPI", "$dialog", function($scope, $uibModal, GroupAPI, $dialog){
-        $scope.pageSetting = {
-            checkAll : false,
-            queryBtnLoading : false
-        };
-        $scope.pageInfoSetting = {
-            pageSize:10,
-            pageNum:1
-        };
-        // 重置
-        $scope.reset = function(){
-            $scope.queryParam={};
-            $scope.getGroupList();
-        };
-        $scope.queryParam = {};
-        // 查询列表
-        $scope.getGroupList = function(){
-            $scope.pageSetting.queryBtnLoading = true;
-            GroupAPI.query({
-                keyword: $scope.queryParam.keyword,
-                limit: $scope.pageInfoSetting.pageSize,
-                offset: $scope.pageInfoSetting.pageNum
-            }, function(data){
-                $scope.groupList = data.data;
-                $scope.pageInfoSetting = data.pageInfo;
-            }).$promise.finally(function(){
-                $scope.pageSetting.queryBtnLoading = false;
-                });
-        };
-        // 全选
-        $scope.checkAll = function(){
-            if(!$scope.groupList){
-                return;
-            }
-            for (var i = 0; i < $scope.groupList.length; i++) {
-                $scope.groupList[i].checked = $scope.pageSetting.checkAll;
-            }
-        };
-        // 子集控制全选
-        $scope.changeItemChecked = function(){
-            if(!$scope.groupList){
-                return;
-            }
-            var num = 0;
-            for (var i = 0; i < $scope.groupList.length; i++) {
-                if($scope.groupList[i].checked){
-                    num++;
+    return ["$scope", "$uibModal", "GroupAPI", "uiaDialog", function($scope, $uibModal, GroupAPI, $dialog){
+        $scope.gridOption = {
+            id:"user",
+            title:'用户组',
+            loadEvent: GroupAPI.query,
+            ApiService: GroupAPI,
+            // 过滤条件列配置
+            filters:[
+                { name:'keyword', title:'关键字', placeholder:'请输入用户名/姓名/邮箱/手机号码' }
+            ],
+//          js定义列字段
+            columns:[
+                { name:'groupCode', title:'用户组代码' },
+                { name:'groupName', title:'用户组名称' },
+                { name:'description', title:'用户组描述'},
+                { name:'createdTime', title:'创建时间',  type:'date' },
+                { name:'active', title:'激活', type:'checkbox'}
+            ],
+            boxOption : {
+                ApiService: GroupAPI,
+                columns:[
+                    { name:'groupCode', title:'用户组代码' },
+                    { name:'groupName', title:'用户组名称' },
+                    { name:'description', title:'用户组描述'},
+                    { name:'active', title:'激活', type:'checkbox'}
+                ]
+            },
+            buttons:{
+                relationBtn:{
+                    click: function(item){
+                        $scope.viewGroupPermission(item);
+                    }
                 }
             }
-            // 子集勾选数量等于集合总数则勾选全选，否则取消全选
-            if(num == $scope.groupList.length){
-                $scope.pageSetting.checkAll = true;
-            }else{
-                $scope.pageSetting.checkAll = false;
-            }
-        };
-        // 新增
-        $scope.add = function(index){
-            $scope.openModal(index, "ADD");
-        };
-        // 查看
-        $scope.view = function(index){
-            $scope.openModal(index, "VIEW");
-        };
-        // 修改
-        $scope.update = function(index){
-            $scope.openModal(index, "UPDATE");
-        };
-        // 弹出
-        $scope.openModal = function(index, action){
-            $uibModal.open({
-                templateUrl: 'group_detail.html',
-                modal:true,
-                resolve: {
-                    Params: function () {
-                        var params = {
-                            action: action
-                        };
-                        if($scope.groupList[index] && $scope.groupList[index].id){
-                            params.id = $scope.groupList[index].id;
-                        }
-                        return params;
-                    }
-                },
-                controller: ['$scope', '$uibModalInstance', "$uibModal", "GroupAPI", "Params", "$dialog", function($scope, $uibModalInstance, $uibModal, GroupAPI, Params, $dialog){
-                    //$scope.group = null;
-                    $scope.pageSetting = {
-                        formDisabled : true,
-                        saveBtnLoading : false
-                    };
-                    if(Params.action == "UPDATE" || Params.action == "ADD"){
-                        $scope.pageSetting.formDisabled = false;
-                    }
-                    if(Params && Params.id){
-                        $scope.group = GroupAPI.get({
-                            id: Params.id
-                        });
-                    }
-                    $scope.groupDetailForm = {};
-                    $scope.saveGroup = function(){
-                        if($scope.groupDetailForm.validator.form()){
-                            if($scope.groupDetailForm.validator.form()){
-                                $dialog.confirm("是否保存数据？").then(function(){
-                                    $scope.pageSetting.saveBtnLoading = true;
-                                    if ( !$scope.group.id ) {
-                                        GroupAPI.create($scope.group, function(data,headers){
-                                            $dialog.success("新增成功");
-                                            $uibModalInstance.close();
-                                        }).$promise.finally(function(){
-                                            $scope.pageSetting.saveBtnLoading = false;
-                                        });
-                                    }else {
-                                        GroupAPI.update($scope.group, function(data,headers){
-                                            $dialog.success("更新成功");
-                                            $uibModalInstance.close();
-                                        }).$promise.finally(function(){
-                                            $scope.pageSetting.saveBtnLoading = false;
-                                        });
-                                    }
-                                });
-                            }
-                        }
-                    };
-                    $scope.cancel = function(){
-                        $uibModalInstance.dismiss();
-                    };
-                }]
-            }).result.then(function () {
-                $scope.getGroupList();
-            });
-        };
-        // 删除
-        $scope.delete = function(index){
-            $dialog.confirm("请确认是否删除").then(function(){
-                GroupAPI.delete({id:$scope.groupList[index].id}, function(){
-                    $scope.getGroupList();
-                });
-            });
-        };
-        // 批量删除
-        $scope.batchDelete = function(){
-            var choiceItems = [];
-            for (var i = 0; i < $scope.groupList.length; i++) {
-                var obj = $scope.groupList[i];
-                if(obj.checked){
-                    choiceItems.push(obj.id);
-                }
-            }
-            if(choiceItems && choiceItems.length > 0){
-                $dialog.confirm("已勾选记录数：" + choiceItems.length + "，请确认是否删除已勾选数据").then(function(){
-                    GroupAPI.delete({ids:choiceItems}, function(){
-                        $scope.getGroupList();
-                    });
-                })
-            }else{
-                $dialog.alert("请勾选需要删除的数据");
-            }
-        };
-        // 导出
-        $scope.batchExport = function(){
-            GroupAPI.export({
-                data:{keyword: $scope.queryParam.keyword}
-            });
         };
         // 组权限
-        $scope.viewGroupPermission = function(index){
+        $scope.viewGroupPermission = function(item){
             $uibModal.open({
                 templateUrl: 'group_permission.html',
                 modal:true,
@@ -175,9 +46,9 @@ define(function(){
                 resolve: {
                     Params: function () {
                         var params = {};
-                        if($scope.groupList[index] && $scope.groupList[index].id){
-                            params.id = $scope.groupList[index].id;
-                            params.name = $scope.groupList[index].groupName;
+                        if(item && item.id){
+                            params.id = item.id;
+                            params.name = item.groupName;
                         }
                         return params;
                     }
@@ -324,12 +195,8 @@ define(function(){
                     init();
                 }]
             }).result.then(function () {
-                $scope.getGroupList();
+                $scope.gridOption.search();
             });
         };
-        var init = function(){
-            $scope.getGroupList();
-        };
-        init();
     }]
 });

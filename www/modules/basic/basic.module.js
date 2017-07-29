@@ -4,19 +4,65 @@
  * Config for the router
  */
 define([
+    "angular",
     "angularAMD",
-    "./file-upload"
-],function(angularAMD, fileUpload){
+    // "modules/app.api",
+],function(angular, angularAMD){
     return angular.module('basic.module',[]).config(['$stateProvider', '$urlRouterProvider',
     function ($stateProvider,   $urlRouterProvider) {
 
         var states = [];
 
         states.push({
-            title: "帐号",
-            name:"app.profile",
-            url: '/account/profile',
-            templateUrl: 'modules/basic/account_profile.html'
+            name: 'app',
+            url: '/app',
+            templateUrl: 'modules/app.html',
+            abstract: true
+        });
+
+        states.push({
+            name: 'app.dashboard',
+            url: '/dashboard',
+            controllerUrl: 'modules/basic/dashboard.js',
+            templateUrl: 'modules/basic/dashboard.html'
+        });
+
+        states.push({
+            title: "安全中心",
+            name:"app.security",
+            url: '/account/security',
+            templateUrl: 'modules/basic/account_security.html',
+            controllerUrl: 'modules/basic/account_security.js'
+        });
+
+        states.push({
+            name: 'access',
+            url: '/access',
+            template: '<div ui-view class="fade-in-right-big smooth"></div>'
+        });
+
+        states.push({
+            title: "登录",
+            name:"access.signin",
+            url: '/signin',
+            templateUrl: 'modules/basic/signin.html',
+            controllerUrl: 'modules/basic/signin.js'
+        });
+
+        states.push({
+            title: "注册",
+            name:"access.signup",
+            url: '/signup',
+            templateUrl: 'modules/basic/signup.html',
+            controllerUrl: 'modules/basic/signup.js',
+        });
+
+        states.push({
+            title: "找回密码",
+            name:"access.find_password",
+            url: '/find_password',
+            templateUrl: 'modules/basic/find_password.html',
+            controllerUrl: 'modules/basic/find_password.js'
         });
 
         states.push({
@@ -24,21 +70,6 @@ define([
             name:"app.account",
             url: '/account/information',
             templateUrl: 'modules/basic/account_information.html'
-        });
-
-        states.push({
-            title: "文件上传",
-            name:"app.fileupload",
-            url: '/fileupload',
-            templateUrl: 'modules/basic/form_fileupload.html',
-            controller:fileUpload,
-            resolve: {
-                deps: ['$ocLazyLoad',
-                    function( $ocLazyLoad){
-                        return $ocLazyLoad.load('angularFileUpload');
-                    }]
-            },
-            sticky: true
         });
 
         angular.forEach(states, function(state){
