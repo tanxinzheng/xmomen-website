@@ -1,10 +1,8 @@
 /**
  * Created by Jeng on 2016/1/28.
  */
-define(function () {
-    return angular.module("UserGroup.REST",[
-        "ngResource"
-    ]).factory("UserGroupAPI", ["Resource", function(Resource){
+// define(function () {
+    angular.module("App.REST").factory("UserGroupAPI", ["uiaResource", function(Resource){
         var resource = Resource("/user/group/:id", { id:"@id" });
         resource.export = function(data, success, error){
             if(!data.url){
@@ -14,4 +12,4 @@ define(function () {
         };
         return resource;
     }]);
-});
+// });

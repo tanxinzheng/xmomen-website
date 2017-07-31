@@ -21,7 +21,7 @@ define(function(){
                 { name:'dictionaryCode', title:'字典代码'},
                 { name:'sort', title:'排序'},
                 { name:'active', title:'激活', type:'checkbox'},
-                { name:'show', title:'显示', type:'checkbox'},
+                { name:'isShow', title:'显示', type:'checkbox'},
                 { name:'createdTime', title:'创建时间', type:'date' }
             ],
             boxOption : {

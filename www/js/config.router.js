@@ -24,7 +24,11 @@ define(function(require){
                 controllerUrl: 'modules/authorization/user',
                 resolve: {
                     deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
-                        return $ocLazyLoad.load('modules/authorization/user.api.js');
+                        return $ocLazyLoad.load([
+                            'modules/authorization/user.api.js',
+                            'modules/authorization/user_group.api.js',
+                            'modules/authorization/user_permission.api.js'
+                        ]);
                     }]
                 }
             });
@@ -39,6 +43,20 @@ define(function(require){
                 resolve: {
                     deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
                         return $ocLazyLoad.load('modules/authorization/group.api.js');
+                    }]
+                }
+            });
+
+            navMenu.push({
+                group:"authorization",
+                title:"权限",
+                name:"app.permission",
+                url: '/permission',
+                templateUrl: 'modules/authorization/permission.html',
+                controllerUrl: 'modules/authorization/permission',
+                resolve: {
+                    deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
+                        return $ocLazyLoad.load('modules/authorization/permission.api.js');
                     }]
                 }
             });

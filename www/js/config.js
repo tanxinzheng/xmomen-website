@@ -25,5 +25,7 @@ define(function(require){
             //App.constant   = $provide.constant;
             //App.value      = $provide.value;
         }
-    ]);
+    ]).factory('Resource', ['uiaResource', function(uiaResource){
+        return uiaResource;
+    }]);
 });

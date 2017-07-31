@@ -1,6 +1,13 @@
 /* 
 
 */
+.uix-grid .btn-control .btn {
+  margin: 0 5px 0 5px;
+}
+.uix-pagination .dropdown-menu {
+  min-width: 50px;
+  left: -15px;
+}
 html {
   background-color: #f0f3f4;
 }
@@ -443,6 +450,9 @@ pre {
 .dropdown-header {
   padding: 5px 15px;
 }
+.dropdown-menu {
+  font-size: 10px;
+}
 .dropdown-submenu {
   position: relative;
 }
@@ -621,7 +631,6 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 1005;
 }
 .app-footer.app-footer-fixed {
   position: fixed;

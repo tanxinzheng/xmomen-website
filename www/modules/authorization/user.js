@@ -1,9 +1,7 @@
 /**
  * Created by tanxinzheng on 16/7/3.
  */
-define([
-    "modules/authorization/user_permission.api"
-], function(){
+define(function(){
     return ["$scope",  "UserAPI", "uiaDialog", "$injector", "$uibModal", function($scope, UserAPI, uiaDialog, $injector, $uibModal){
         $scope.gridOption = {
             id:"user",
@@ -42,7 +40,12 @@ define([
             },
             buttons:[
                 {
-                    title:'绑定用户组',
+                    title:'用户组',
+                    click:function (item) {
+                        $scope.viewUserGroup(item);
+                    }
+                },{
+                    title:'权限',
                     click:function (item) {
                         $scope.viewUserPermission(item);
                     }
@@ -50,7 +53,7 @@ define([
             ]
         };
         // 用户权限
-        $scope.viewUserPermission = function(item){
+        $scope.viewUserPermission = function(user){
             var $uibModal;
             if(!$uibModal){
                 $uibModal = $injector.get('$uibModal');
@@ -62,9 +65,9 @@ define([
                 resolve: {
                     Params: function () {
                         var params = {};
-                        if(item && item.id){
-                            params.id = item.id;
-                            params.name = item.nickname;
+                        if(user && user.id){
+                            params.id = user.id;
+                            params.name = user.nickname;
                         }
                         return params;
                     }
@@ -215,7 +218,7 @@ define([
             });
         };
         // 组权限
-        $scope.viewUserGroup = function(index){
+        $scope.viewUserGroup = function(user){
             var $uibModal;
             if(!$uibModal){
                 $uibModal = $injector.get('$uibModal');
@@ -227,9 +230,9 @@ define([
                 resolve: {
                     Params: function () {
                         var params = {};
-                        if($scope.userList[index] && $scope.userList[index].id){
-                            params.id = $scope.userList[index].id;
-                            params.name = $scope.userList[index].nickname;
+                        if(user && user.id){
+                            params.id = user.id;
+                            params.name = user.nickname;
                         }
                         return params;
                     }

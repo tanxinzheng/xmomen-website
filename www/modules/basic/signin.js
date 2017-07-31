@@ -9,7 +9,8 @@ define(function () {
             $http.post('/api/login', null, {
                 params:{
                     username: $scope.user.username,
-                    password: $scope.user.password
+                    password: $scope.user.password,
+                    rememberMe: $scope.user.rememberMe,
                 }
             }).then(function(response) {
                 $state.go('app.dashboard');
