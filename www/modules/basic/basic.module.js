@@ -21,6 +21,7 @@ define([
         });
 
         states.push({
+            title: "仪表盘",
             name: 'app.dashboard',
             url: '/dashboard',
             controllerUrl: 'modules/basic/dashboard.js',
@@ -69,7 +70,16 @@ define([
             title: "基本资料",
             name:"app.account",
             url: '/account/information',
-            templateUrl: 'modules/basic/account_information.html'
+            templateUrl: 'modules/basic/account_information.html',
+            controllerUrl: 'modules/basic/account_information.js'
+        });
+
+        states.push({
+            title: "锁屏",
+            name:"lock",
+            url: '/lock',
+            templateUrl: 'modules/basic/lock.html',
+            controllerUrl: 'modules/basic/lock.js'
         });
 
         angular.forEach(states, function(state){

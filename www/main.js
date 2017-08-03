@@ -22,7 +22,7 @@ require.config({
         "loader-static-files":"bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files",
         "storage-cookie":"bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie",
         "storage-local":"bower_components/angular-translate-storage-local/angular-translate-storage-local",
-        "ui-xmomen":"bower_components/angular-ui-xmomen/dist/ui-xmomen.min",
+        "ui-xmomen":"bower_components/angular-ui-xmomen/dist/ui-xmomen",
         "app.module":"modules/app.module",
         "config": "js/config",
         "config-lazyload": "js/config.lazyload",

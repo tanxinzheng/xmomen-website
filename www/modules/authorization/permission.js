@@ -25,6 +25,7 @@ define(function(){
                     { name:'permissionCode', title:'权限代码', rules:{ required: true} },
                     { name:'permissionName', title:'权限名称', rules:{ required: true} },
                     { name:'description', title:'权限描述', rules:{ required: true} },
+                    { name:'actions', title:'权限类型', type:'select', dictCode: 'PERMISSION_ACTION', multiple:true },
                     { name:'active', title:'激活', type:'checkbox' }
                 ]
             }

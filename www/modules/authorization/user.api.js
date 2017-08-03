@@ -5,32 +5,32 @@ angular.module("App.REST").factory("UserAPI", ["uiaResource", function(Resource)
     var resource = Resource("/user/:id", { id:"@id" }, {
         getUserPermission:{
             method:"GET",
-            url: "/user/:userId/permission",
-            isArray:false,
+            url: "/api/user/:userId/permission",
+            isArray:true,
             params:{userId: "@userId"}
         },
-        createUserPermission:{
-            method:"POST",
-            url: "/user/:userId/permission",
-            params:{userId: "@userId", permissionIds:"@permissionIds"},
-            isArray:true
-        },
+        // createUserPermission:{
+        //     method:"POST",
+        //     url: "/api/user/:userId/permission",
+        //     params:{userId: "@userId", permissionIds:"@permissionIds"},
+        //     isArray:true
+        // },
         getUserGroup:{
             method:"GET",
-            url: "/user/:userId/group",
+            url: "/api/user/:userId/group",
             isArray:false,
             params:{userId: "@userId"}
         },
         createUserGroup:{
             method:"POST",
-            url: "/user/:userId/group",
+            url: "/api/user/:userId/group",
             params:{userId: "@userId", groupIds:"@groupIds"},
             isArray:true
         }
     });
     resource.export = function(data, success, error){
         if(!data.url){
-            data.url = "/user/export";
+            data.url = "/api/user/export";
         }
         resource.$export(data, success, error);
     };

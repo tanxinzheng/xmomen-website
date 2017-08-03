@@ -17,7 +17,7 @@
         <div class="form-group">
           <label class="col-lg-2 control-label font-bold">用户名</label>
           <div class="col-lg-10">
-            <p class="form-control-static" ng-bind="Account.username"></p>
+            <p class="form-control-static" ng-bind="account.username"></p>
           </div>
         </div>
         <div class="line line-dashed b-b line-lg pull-in"></div>
@@ -35,21 +35,36 @@
         <div class="form-group">
           <label class="col-lg-2 control-label font-bold">邮箱绑定</label>
           <div class="col-lg-8">
-            <p class="form-control-static">您已绑定了邮箱tan***@139.com [您的邮箱可以直接用于登录、找回密码等]</p>
+            <p class="form-control-static" ng-if="account.email">您已绑定了邮箱［{{account.email}}］，您的邮箱可以直接用于登录、找回密码等。</p>
+            <p class="form-control-static error" ng-if="!account.email">
+              <i class="icon icon-info"></i>&nbsp;&nbsp;您尚未绑定邮箱，绑定邮箱后可以直接用于登录、找回密码等
+            </p>
           </div>
-          <div class="col-lg-2">
-            <span class="pull-right m-t-xs">｜<a class="font-bold text-info" data-ng-click="settingPassword()">修改</a></span>
+          <div class="col-lg-2" ng-if="account.email">
+            <span class="pull-right m-t-xs">｜<a class="font-bold text-info" data-ng-click="bindEmail()">修改</a></span>
             <span class="label bg-primary pull-right m-t-xs">已设置</span>
+          </div>
+          <div class="col-lg-2" ng-if="!account.email">
+            <span class="pull-right m-t-xs">｜<a class="font-bold text-info" data-ng-click="bindEmail()">绑定</a></span>
+            <span class="label bg-danger pull-right m-t-xs">未设置</span>
           </div>
         </div>
         <div class="line line-dashed b-b line-lg pull-in"></div>
         <div class="form-group">
           <label class="col-lg-2 control-label font-bold">手机绑定</label>
           <div class="col-lg-8">
-            <p class="form-control-static">您已绑定了手机150****4483 [您的手机号可以直接用于登录、找回密码等]</p>
+            <p class="form-control-static" ng-if="account.phoneNumber">您已绑定了手机［{{account.phoneNumber}}］，您的手机号可以直接用于登录、找回密码等。</p>
+            <p class="form-control-static error" ng-if="!account.phoneNumber">
+              <i class="icon icon-info"></i>&nbsp;&nbsp;您尚未绑定手机号码，绑定手机后可以直接用于登录、找回密码等
+            </p>
           </div>
-          <div class="col-lg-2">
-            <span class="pull-right m-t-xs">｜<a class="font-bold text-info" data-ng-click="settingPassword()">修改</a></span>
+
+          <div class="col-lg-2" ng-if="!account.phoneNumber">
+            <span class="pull-right m-t-xs">｜<a class="font-bold text-info" data-ng-click="bindPhone()">绑定</a></span>
+            <span class="label bg-danger pull-right m-t-xs">未设置</span>
+          </div>
+          <div class="col-lg-2" ng-if="account.phoneNumber">
+            <span class="pull-right m-t-xs">｜<a class="font-bold text-info" data-ng-click="bindPhone()">修改</a></span>
             <span class="label bg-primary pull-right m-t-xs">已设置</span>
           </div>
         </div>

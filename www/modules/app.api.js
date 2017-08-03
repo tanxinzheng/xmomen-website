@@ -8,11 +8,11 @@ define(function (require) {
         "ui.bootstrap"
     ]).factory("AppAPI", ["uiaResource", function(Resource){
         return Resource("/account/:id", { id:"@id" }, {
-            getAccount : { method:"GET", url:"/account", isArray:false}
+            getAccount : { method:"GET", url:"/api/account", isArray:false}
         });
     }]).factory("AccountAPI", ["uiaResource", function(Resource){
         return Resource("/account/:id", { id:"@id" }, {
-            getAccount : { method:"GET", url:"/account", isArray:false}
+            getAccount : { method:"GET", url:"/api/account", isArray:false}
         });
     }]);
 });

@@ -17,7 +17,6 @@ define(function(){
                 { name:'groupCode', title:'用户组代码' },
                 { name:'groupName', title:'用户组名称' },
                 { name:'description', title:'用户组描述'},
-                { name:'createdTime', title:'创建时间',  type:'date' },
                 { name:'active', title:'激活', type:'checkbox'}
             ],
             boxOption : {
@@ -35,7 +34,15 @@ define(function(){
                         $scope.viewGroupPermission(item);
                     }
                 }
-            }
+            },
+            buttons:[
+                {
+                    title:'组权限',
+                    click:function (item) {
+                        $scope.viewGroupPermission(item);
+                    }
+                }
+            ]
         };
         // 组权限
         $scope.viewGroupPermission = function(item){
@@ -58,11 +65,11 @@ define(function(){
                     // 查询可选资源
                     $scope.getNotHasResource = function(){
                         GroupAPI.getGroupPermission({
-                            limit:10000,
-                            offset:1,
+                            pageSize:10000,
+                            pageNum:1,
                             keyword: $scope.queryParam.notHasResourceKeyword,
                             groupId: Params.id,
-                            hasPermission: false
+                            hasBindPermission: false
                         }, function(data){
                             $scope.notHasResourceList = data.data;
                         });
@@ -70,11 +77,11 @@ define(function(){
                     // 查询已有权限
                     $scope.getHasResource = function(){
                         GroupAPI.getGroupPermission({
-                            limit:10000,
-                            offset:1,
+                            pageSize:10000,
+                            pageNum:1,
                             keyword: $scope.queryParam.hasResourceKeyword,
                             groupId: Params.id,
-                            hasPermission: true
+                            hasBindPermission: true
                         }, function(data){
                             $scope.hasResourceList = data.data;
                         });
@@ -153,7 +160,7 @@ define(function(){
                             $dialog.alert("请勾选需要删除的组权限资源");
                             return;
                         }
-                        GroupPermissionAPI.delete({
+                        GroupPermissionAPI.delete({}, {
                             groupId: Params.id,
                             permissionIds: ids
                         }, function(data){

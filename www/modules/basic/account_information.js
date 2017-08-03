@@ -3,9 +3,9 @@
  */
 define(function () {
     return ["$scope", "AppAPI", function($scope, AppAPI){
-        $scope.account = {};
+        $scope.user = {};
         AppAPI.getAccount({}, function(data){
-            $scope.account = data;
+            $scope.user = data;
         });
     }];
 });

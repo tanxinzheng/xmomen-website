@@ -1,11 +1,7 @@
 // config
 define(function(require){
     var angular = require('angular');
-    angular.module("config",['uia', 'ui.router']).factory("SelectAPI",["$resource",function($resource){
-        return $resource("/api/select/cache/:id", { id:"@id" }, {
-            query:{ isArray:true, method:"GET"}
-        });
-    }]).config(['$controllerProvider', '$compileProvider', '$filterProvider', '$provide', "$logProvider",
+    angular.module("config",['uia', 'ui.router']).config(['$controllerProvider', '$compileProvider', '$filterProvider', '$provide', "$logProvider",
         "UiaGridConfigProvider", "UiaBoxConfigProvider", 'UiaPaginationConfigProvider',
         function ($controllerProvider,   $compileProvider,   $filterProvider,   $provide, $logProvider,
                   UiaGridConfigProvider, UiaBoxConfigProvider, UiaPaginationConfigProvider) {

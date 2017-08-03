@@ -42,7 +42,10 @@ define(function(require){
                 controllerUrl: 'modules/authorization/group',
                 resolve: {
                     deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
-                        return $ocLazyLoad.load('modules/authorization/group.api.js');
+                        return $ocLazyLoad.load([
+                            'modules/authorization/group.api.js',
+                            'modules/authorization/group_permission.api.js',
+                        ]);
                     }]
                 }
             });

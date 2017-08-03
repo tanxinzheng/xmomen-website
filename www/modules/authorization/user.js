@@ -77,25 +77,21 @@ define(function(){
                     // 查询可选资源
                     $scope.getNotHasResource = function(){
                         UserAPI.getUserPermission({
-                            limit:10000,
-                            offset:1,
                             keyword: $scope.queryParam.notHasResourceKeyword,
                             userId: Params.id,
                             hasPermission: false
                         }, function(data){
-                            $scope.notHasResourceList = data.data;
+                            $scope.notHasResourceList = data;
                         });
                     };
                     // 查询已有权限
                     $scope.getHasResource = function(){
                         UserAPI.getUserPermission({
-                            limit:10000,
-                            offset:1,
                             keyword: $scope.queryParam.hasResourceKeyword,
                             userId: Params.id,
                             hasPermission: true
-                        }, function(data){
-                            $scope.hasResourceList = data.data;
+                        }).$promise.then(function(data){
+                            $scope.hasResourceList = data;
                         });
                     };
                     // 选择待绑权限
@@ -242,11 +238,11 @@ define(function(){
                     // 查询可选资源
                     $scope.getNotHasResource = function(){
                         UserAPI.getUserGroup({
-                            limit:10000,
-                            offset:1,
+                            pageSize:10000,
+                            pageNum:1,
                             keyword: $scope.queryParam.notHasResourceKeyword,
                             userId: Params.id,
-                            hasGroup: false
+                            hasBindGroup: false
                         }, function(data){
                             $scope.notHasResourceList = data.data;
                         });
@@ -254,11 +250,11 @@ define(function(){
                     // 查询已有权限
                     $scope.getHasResource = function(){
                         UserAPI.getUserGroup({
-                            limit:10000,
-                            offset:1,
+                            pageSize:10000,
+                            pageNum:1,
                             keyword: $scope.queryParam.hasResourceKeyword,
                             userId: Params.id,
-                            hasGroup: true
+                            hasBindGroup: true
                         }, function(data){
                             $scope.hasResourceList = data.data;
                         });
