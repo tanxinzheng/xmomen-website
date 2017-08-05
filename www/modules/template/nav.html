@@ -21,7 +21,7 @@
 
   <li ui-sref-active="active" ng-repeat="item in navMenu">
     <a ng-href="{{$state.href(item.name)}}">
-      <i class="fa fa-user icon"></i>
+      <i ng-class="item.icon ? item.icon : 'fa fa-th-list' "></i>
       <span ng-bind="item.title"></span>
     </a>
   </li>
@@ -40,7 +40,7 @@
   </li>
   <li>
     <a ui-sref="app.security">
-      <i class="icon-lock icon"></i>
+      <i class="icon-settings icon"></i>
       <span translate="aside.nav.your_stuff.MEDIA_HUB">安全设置</span>
     </a>
   </li>

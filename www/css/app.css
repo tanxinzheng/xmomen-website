@@ -906,6 +906,19 @@ body {
     margin-bottom: 0;
   }
 }
+ul.nav-center > li {
+  text-align: center;
+  line-height: 30px;
+  font-size: 14px;
+  border: 1px skyblue;
+}
+ul.nav-center > li.active {
+  background-color: #00b3ee;
+  color: white;
+}
+.pointer {
+  cursor: pointer;
+}
 html {
   background: url('../img/bg.jpg');
   background-attachment: fixed;

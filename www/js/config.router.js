@@ -16,6 +16,7 @@ define(function(require){
             navMenu = [];
 
             navMenu.push({
+                icon:"fa fa-user",
                 group:"authorization",
                 title:"用户",
                 name:"app.user",
@@ -34,6 +35,7 @@ define(function(require){
             });
 
             navMenu.push({
+                icon:"fa fa-group",
                 group:"authorization",
                 title:"用户组",
                 name:"app.group",
@@ -51,6 +53,7 @@ define(function(require){
             });
 
             navMenu.push({
+                icon:'fa fa-key',
                 group:"authorization",
                 title:"权限",
                 name:"app.permission",
@@ -65,6 +68,7 @@ define(function(require){
             });
 
             navMenu.push({
+                icon:"fa fa-book",
                 group:"system",
                 title:"数据字典",
                 name:"app.dictionary",
@@ -74,6 +78,21 @@ define(function(require){
                 resolve: {
                     deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
                         return $ocLazyLoad.load('modules/system/dictionary.api.js');
+                    }]
+                }
+            });
+
+            navMenu.push({
+                icon:"fa fa-file-text-o",
+                group:"system",
+                title:"操作记录",
+                name:"app.action_log",
+                url: '/action_log',
+                templateUrl: 'modules/system/action_log.html',
+                controllerUrl: 'modules/system/action_log',
+                resolve: {
+                    deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
+                        return $ocLazyLoad.load('modules/system/action_log.api.js');
                     }]
                 }
             });

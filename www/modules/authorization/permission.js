@@ -5,6 +5,7 @@ define(function(){
             title:'权限',
             loadEvent: PermissionAPI.query,
             ApiService: PermissionAPI,
+            showFileBtn:true,
             // 过滤条件列配置
             filters:[
                 { name:'keyword', title:'关键字', placeholder:'请输入关键字' }

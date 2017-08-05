@@ -13,6 +13,7 @@ define(function(){
             filters:[
                 { name:'keyword', title:'关键字', placeholder:'请输入字典名称或字典代码等关键字查询' }
             ],
+            showFileBtn:true,
 //          js定义列字段
             columns:[
                 { name:'groupCode', title:'字典类型' },

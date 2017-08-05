@@ -237,7 +237,7 @@
           <img src="img/a0.jpg" alt="...">
           <i class="on md b-white bottom"></i>
         </span>
-        <span class="hidden-sm hidden-md" ng-bind="Account.nickname"></span> <b class="caret"></b>
+        <span class="hidden-sm hidden-md" ng-bind="account.nickname"></span> <b class="caret"></b>
       </a>
       <!-- dropdown -->
       <ul class="dropdown-menu animated fadeInRight w">
@@ -250,18 +250,18 @@
         <li>
           <a ui-sref="app.account">
             <span class="badge bg-danger pull-right">30%</span>
-            <span>基本资料</span>
+            <span><i class="icon icon-user"></i>&nbsp;&nbsp;基本资料</span>
           </a>
         </li>
         <li>
-          <a ui-sref="app.security">安全设置</a>
+          <a ui-sref="app.security"><i class="icon icon-settings"></i>&nbsp;&nbsp;安全设置</a>
         </li>
         <li class="divider"></li>
         <li>
-          <a ui-sref="lock">锁屏</a>
+          <a ui-sref="lock"><i class="icon icon-lock"></i>&nbsp;&nbsp;锁屏</a>
         </li>
         <li>
-          <a ng-click="logout()">退出</a>
+          <a ng-click="logout()"><i class="icon icon-power"></i>&nbsp;&nbsp;退出</a>
         </li>
       </ul>
       <!-- / dropdown -->
