@@ -18,7 +18,7 @@ define([
     // 'angular-sanitize',
     "app.module",
     "config",
-    // "config-lazyload",
+    "config-lazyload",
     // "config-i18n",
     "config-router"
 ], function(){

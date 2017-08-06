@@ -8,8 +8,9 @@
             <div class="form-group">
               <label class="col-lg-2 control-label">头像：</label>
               <div class="col-lg-10">
-                <a href class="thumb-lg pull-left m-r">
-                  <img src="img/a0.jpg" class="img-circle">
+                <a href class="thumb-lg pull-left m-r" ng-click="openAvatar()" style="width: 96px;height: 96px;">
+                  <img src="img/a0.jpg" class="img-circle" ng-show="!user.avatarUrl">
+                  <img ng-src="{{user.avatarUrl}}" class="img-circle" ng-show="user.avatarUrl">
                 </a>
               </div>
             </div>
@@ -72,9 +73,7 @@
                 <span class="form-control" disabled ng-bind="user.lastLoginTime | date:'yyyy-MM-dd hh:mm:ss'"></span>
               </div>
             </div>
-
-
-            <div class="line line-dashed b-b line-lg pull-in"></div>
+            <!--<div class="line line-dashed b-b line-lg pull-in"></div>-->
             <!--<div class="form-group">-->
               <!--<div class="col-sm-4 col-sm-offset-2">-->
                 <!--<button type="submit" class="btn btn-default" ng-click="update()">修改</button>-->
@@ -87,3 +86,43 @@
       </div>
     </div>
 </div>
+
+
+<script type="text/ng-template" id="update_avatar.html">
+    <div class="modal-header">
+      <h3 class="modal-title">更换头像</h3>
+    </div>
+    <div class="modal-body">
+      <div class="m-b">
+        选择上传图片
+        <input type="file" id="fileInput" />
+      </div>
+      <div class="hbox hbox-auto-xs">
+        <div class="col">
+          <div class="wrapper-sm b-a bg-white m-r-xs m-b-xs">
+            <div class="bg-light" style="height:320px">
+              <img-crop
+                      image="avatarImage"
+                      result-image="croppedImage"
+                      result-image-size="160"
+                      area-type="'circle'"
+              ></img-crop>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="inline bg-white wrapper-sm b-a">
+            <div class="bg-light">
+              <img ng-src="{{croppedImage}}" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" btn-loading="loading" btn-loading-text="上传中" class="btn btn-primary" ng-click="doUpload()" >上传</button>
+      <button type="button" class="btn btn-default" ng-click="cancel()">
+        <i class="icon icon-close"></i>&nbsp;关闭
+      </button>
+    </div>
+</script>

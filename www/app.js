@@ -19,7 +19,7 @@ define([
         // "angular-loading-bar",
         'app.module',
         "config.router",
-        // "config.lazyload",
+        "config.lazyload",
         "config",
         // "config.i18n"
     ]);

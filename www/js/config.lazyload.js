@@ -81,8 +81,8 @@ define(function(require) {
                     {
                         name: 'ngImgCrop',
                         files: [
-                            'js/vendor/modules/ngImgCrop/ng-img-crop.js',
-                            'js/vendor/modules/ngImgCrop/ng-img-crop.css'
+                            'bower_components/ng-img-crop/ng-img-crop.js',
+                            'bower_components/ng-img-crop/ng-img-crop.css'
                         ]
                     },
                     {

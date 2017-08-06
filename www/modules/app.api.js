@@ -16,8 +16,8 @@ define(function (require) {
                 code:"@code",
             }}
         });
-    }]).factory("AccountAPI", ["uiaResource", function(Resource){
-        return Resource("/account/:id", { id:"@id" }, {
+    }]).factory("AccountAPI", ["uiaResource", "Upload", function(Resource, Upload){
+        var resource = Resource("/account/:id", { id:"@id" }, {
             getAccount : { method:"GET", url:"/api/account", isArray:false},
             resetPassword: {method:"PUT", url:"/api/account/password", params:{
                 password:"@password",
@@ -29,6 +29,15 @@ define(function (require) {
                 code:"@code"
             }}
         });
+        resource.updateAvatar = function(data, success, error){
+            data = data || {};
+            return Upload.upload({
+                // method:"PUT",
+                url: "/api/account/avatar",
+                data: data
+            });
+        };
+        return resource;
     }]).factory("ValidationCodeAPI", ["uiaResource", function(Resource){
         return Resource("/code/:id", { id:"@id" }, {
             create : { method:"POST", isArray:false, params:{
