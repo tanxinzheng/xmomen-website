@@ -6,8 +6,8 @@ define(function () {
         $scope.account = {};
         AppAPI.getAccount({}, function(data){
             $scope.account = data;
+            $http.post($rootScope.app.logout);
         });
-        $http.post($rootScope.app.logout);
         $scope.unLock = function(){
             if(!$scope.account.password){
                 $dialog.alert('请输入密码');

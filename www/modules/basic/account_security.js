@@ -13,7 +13,7 @@ define(function () {
             $uibModal.open({
                 templateUrl: 'updatePassword.html',
                 modal:true,
-                size:"lg",
+                // size:"lg",
                 controller: ['$scope', '$uibModalInstance', "$uibModal", "AccountAPI", "$state", function($scope, $uibModalInstance, $uibModal, AccountAPI, $state){
                     $scope.cancel = function(){
                         $uibModalInstance.dismiss();
@@ -38,7 +38,7 @@ define(function () {
             $uibModal.open({
                 templateUrl: 'bind.html',
                 modal:true,
-                size:"lg",
+                // size:"lg",
                 resolve: {
                     Option: function(){
                         if(type == 1){

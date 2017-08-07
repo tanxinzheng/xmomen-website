@@ -15,9 +15,9 @@ define(function(){
                 { name:'permissionName', title:'权限名称' },
                 { name:'description', title:'权限描述' },
                 { name:'active', title:'激活', type:'checkbox' },
-                { name:'createdUserId', title:'创建人' },
+                { name:'createdUserName', title:'创建人' },
                 { name:'createdTime', title:'创建时间', type:'date' },
-                { name:'updatedUserId', title:'修改人' },
+                { name:'updatedUserName', title:'修改人' },
                 { name:'updatedTime', title:'最新修改时间', type:'date' }
             ],
             boxOption : {

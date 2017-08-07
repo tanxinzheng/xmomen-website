@@ -79,7 +79,8 @@ define([
             name:"lock",
             url: '/lock',
             templateUrl: 'modules/basic/lock.html',
-            controllerUrl: 'modules/basic/lock.js'
+            controllerUrl: 'modules/basic/lock.js',
+            params:{'account':{}}
         });
 
         angular.forEach(states, function(state){

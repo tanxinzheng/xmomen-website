@@ -97,6 +97,22 @@ define(function(require){
                 }
             });
 
+
+            navMenu.push({
+                icon:"fa fa-folder-o",
+                group:"system",
+                title:"附件",
+                name:"app.attachment",
+                url: '/attachment',
+                templateUrl: 'modules/system/attachment.html',
+                controllerUrl: 'modules/system/attachment',
+                resolve: {
+                    deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
+                        return $ocLazyLoad.load('modules/system/attachment.api.js');
+                    }]
+                }
+            });
+
             angular.forEach(navMenu, function(state){
                 $stateProvider.state(state.name, angularAMD.route(state));
             })
