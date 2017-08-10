@@ -98,7 +98,7 @@ define(function(require){
             });
 
             navMenu.push({
-                icon:"fa fa-file-text-o",
+                icon:"fa fa-tasks",
                 group:"system",
                 title:"调度任务",
                 name:"app.schedule",
@@ -113,7 +113,7 @@ define(function(require){
             });
 
             navMenu.push({
-                icon:"fa fa-folder-o",
+                icon:"icon-paper-clip",
                 group:"system",
                 title:"附件",
                 name:"app.attachment",
@@ -128,7 +128,7 @@ define(function(require){
             });
 
             navMenu.push({
-                icon:"fa fa-file-text-o",
+                icon:"fa fa-picture-o",
                 group:"docs",
                 title:"图标",
                 name:"app.icon",
