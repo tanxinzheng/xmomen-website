@@ -22,6 +22,7 @@ define(function(){
                 { name:'lastLoginTime', title:'最后登录时间', type:'date'},
                 { name:'locked', title:'锁定', type:'checkbox'}
             ],
+            addBtnPermission:"USER:CREATE",
             boxOption : {
                 ApiService: UserAPI,
                 columns:[
@@ -41,12 +42,12 @@ define(function(){
             buttons:[
                 {
                     title:'用户组',
-                    click:function (item) {
+                    click:function (event, item) {
                         $scope.viewUserGroup(item);
                     }
                 },{
                     title:'权限',
-                    click:function (item) {
+                    click:function (event, item) {
                         $scope.viewUserPermission(item);
                     }
                 }

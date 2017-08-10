@@ -1,10 +1,38 @@
 define(function(){
     return ["$scope",  "AttachmentAPI", "uiaDialog", "uiaFileUtils", "$uibModal", function($scope, AttachmentAPI, uiaDialog, uiaFileUtils, $uibModal){
+        // 1-缩略图，2-列表
+        $scope.viewMode = 1;
+        $scope.attachmentList = [];
+        $scope.switchViewMode = function(type){
+            $scope.viewMode = type;
+        }
+        $scope.download = function (item) {
+            uiaFileUtils.download({
+                url:item.attachmentUrl
+            })
+        }
+        $scope.queryData = function(){
+            AttachmentAPI.query({
+                pageSize:10,
+                pageNum:1,
+            }, function (data) {
+                $scope.attachmentList = data.data;
+            })
+        }
         $scope.gridOption = {
             id:"user",
             title:'附件',
             loadEvent: AttachmentAPI.query,
             ApiService: AttachmentAPI,
+            headerBtns:[
+                {
+                    title:"缩略图",
+                    icon:"fa fa-th",
+                    click: function () {
+                        $scope.viewMode = 1;
+                    }
+                }
+            ],
             // 过滤条件列配置
             filters:[
                 { name:'keyword', title:'关键字', placeholder:'请输入关键字' }
@@ -46,5 +74,9 @@ define(function(){
                 ]
             }
         };
+        var init = function () {
+            $scope.queryData();
+        };
+        init();
     }]
 });

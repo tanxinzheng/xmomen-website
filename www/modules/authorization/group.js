@@ -30,7 +30,7 @@ define(function(){
             },
             buttons:{
                 relationBtn:{
-                    click: function(item){
+                    click: function(event, item){
                         $scope.viewGroupPermission(item);
                     }
                 }
@@ -38,7 +38,7 @@ define(function(){
             buttons:[
                 {
                     title:'组权限',
-                    click:function (item) {
+                    click:function (event, item) {
                         $scope.viewGroupPermission(item);
                     }
                 }

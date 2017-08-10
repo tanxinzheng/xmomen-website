@@ -1,5 +1,56 @@
 <div class="col">
     <div class="wrapper-sm">
-        <uia-grid grid-option="gridOption"></uia-grid>
+        <div class="row" ng-if="viewMode == 1">
+            <div class="wrapper">
+                <ul class="nav nav-pills nav-sm">
+                    <li class="active" ng-click="switchViewMode(2)"><a><i class="fa fa-list"></i>&nbsp;&nbsp;列表视图</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3" ng-repeat="item in attachmentList">
+                <div class="panel b-a">
+                    <div class="panel-heading no-border bg-primary">
+                        <span class="text-lt" ng-bind="item.originName"></span>
+                    </div>
+                    <div class="item m-l-n-xxs m-r-n-xxs">
+                        <img src="{{item.attachmentUrl}}" class="img-full" style="max-height: 160px;">
+                    </div>
+                    <div class="list-group no-radius alt">
+                        <span class="list-group-item" href="">
+                            <span class="badge bg-primary" ng-bind="item.attachmentGroup"></span>
+                            <!--<i class="fa fa-comment fa-fw text-muted"></i>-->
+                            所属组
+                        </span>
+                        <span class="list-group-item" href="">
+                            <span class="badge bg-primary" ng-bind="item.uploadUserName"></span>
+                            <!--<i class="fa fa-comment fa-fw text-muted"></i>-->
+                            上传人
+                        </span>
+                        <span class="list-group-item" href="">
+                            <span class="badge bg-primary" ng-bind="item.uploadTime | date:'yyyy-MM-dd hh:mm:ss'"></span>
+                            <!--<i class="fa fa-envelope fa-fw text-muted"></i>-->
+                            上传时间
+                        </span>
+                        <span class="list-group-item" href="">
+                            <span class="badge bg-primary" ng-bind="item.attachmentSuffix"></span>
+                            <!--<i class="fa fa-eye fa-fw text-muted"></i>-->
+                            文件类型
+                        </span>
+                        <span class="list-group-item" href="">
+                            <span class="badge bg-primary" ng-bind="item.attachmentSize"></span>
+                            <!--<i class="fa fa-eye fa-fw text-muted"></i>-->
+                            文件大小
+                        </span>
+                        <span class="list-group-item btn-primary text-center pointer" ng-click="download(item)">
+                            <!--<span class="badge bg-primary" ng-bind="item.attachmentSize"></span>-->
+                            <!--<i class="fa fa-eye fa-fw text-muted"></i>-->
+                            下载文件
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-if="viewMode == 2">
+            <uia-grid grid-option="gridOption"></uia-grid>
+        </div>
     </div>
 </div>

@@ -41,7 +41,7 @@ define(function () {
                                 $dialog.alert('请选择上传的图片');
                                 return
                             }
-                            var $Blob = getBlobByDataURL($scope.croppedImage,"image/png");
+                            var $Blob = getBlobByDataURL($scope.croppedImage, "image/png");
                             $scope.loading = true;
                             AccountAPI.updateAvatar({
                                 file:$Blob
@@ -57,7 +57,7 @@ define(function () {
                             for(var i = 0; i < binary.length; i++) {
                                 array.push(binary.charCodeAt(i));
                             }
-                            return new Blob([new Uint8Array(array)], {type:type });
+                            return new Blob([new Uint8Array(array)], { type: type });
                         }
                         $timeout(function () {
                             angular.element($('#fileInput')).on('change', handleFileSelect);

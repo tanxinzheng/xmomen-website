@@ -97,6 +97,20 @@ define(function(require){
                 }
             });
 
+            navMenu.push({
+                icon:"fa fa-file-text-o",
+                group:"system",
+                title:"调度任务",
+                name:"app.schedule",
+                url: '/schedule',
+                templateUrl: 'modules/system/schedule.html',
+                controllerUrl: 'modules/system/schedule',
+                resolve: {
+                    deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
+                        return $ocLazyLoad.load('modules/system/schedule.api.js');
+                    }]
+                }
+            });
 
             navMenu.push({
                 icon:"fa fa-folder-o",
@@ -113,20 +127,32 @@ define(function(require){
                 }
             });
 
+            navMenu.push({
+                icon:"fa fa-file-text-o",
+                group:"docs",
+                title:"图标",
+                name:"app.icon",
+                url: '/icon',
+                templateUrl: 'modules/docs/ui_icons.html'
+            });
+
             angular.forEach(navMenu, function(state){
                 $stateProvider.state(state.name, angularAMD.route(state));
             })
         }
-    ]).run(['$rootScope', '$state', '$stateParams', '$urlRouter', '$http',
-        function ($rootScope,   $state, $stateParams, $urlRouter, $http) {
+    ]).run(['$rootScope', '$state', '$stateParams', '$urlRouter', '$http', 'PermPermissionStore',
+        function ($rootScope, $state, $stateParams, $urlRouter, $http, PermPermissionStore) {
             $rootScope.navMenu = navMenu;
             $rootScope.$state = $state;
             $rootScope.$stateParams = $stateParams;
             $http
-                .get('/permissions')
-                .then(function(permissions){
+                .get('/api/account/permissions')
+                .then(function(data){
                     // Use RoleStore and PermissionStore to define permissions and roles
                     // or even set up whole session
+                    PermPermissionStore.defineManyPermissions(data.data.permissions, function(permissionName, data){
+                        return angular.contains(data.permissions, permissionName);
+                    });
                 })
                 .then(function(){
                     // Once permissions are set-up

@@ -14,7 +14,8 @@ define(function (require) {
                 receiver:"@receiver",
                 password:"@password",
                 code:"@code",
-            }}
+            }},
+            register: { method:"POST", url:"/api/register" }
         });
     }]).factory("AccountAPI", ["uiaResource", "Upload", function(Resource, Upload){
         var resource = Resource("/account/:id", { id:"@id" }, {
