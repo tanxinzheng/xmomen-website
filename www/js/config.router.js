@@ -21,6 +21,7 @@ define(function(require){
                 title:"用户",
                 name:"app.user",
                 url: '/user',
+                permission:'USER:VIEW',
                 templateUrl: 'modules/authorization/user.html',
                 controllerUrl: 'modules/authorization/user',
                 resolve: {
@@ -42,6 +43,7 @@ define(function(require){
                 url: '/group',
                 templateUrl: 'modules/authorization/group.html',
                 controllerUrl: 'modules/authorization/group',
+                permission:'GROUP:VIEW',
                 resolve: {
                     deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
                         return $ocLazyLoad.load([
@@ -60,6 +62,7 @@ define(function(require){
                 url: '/permission',
                 templateUrl: 'modules/authorization/permission.html',
                 controllerUrl: 'modules/authorization/permission',
+                permission:'GROUP:VIEW',
                 resolve: {
                     deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
                         return $ocLazyLoad.load('modules/authorization/permission.api.js');
