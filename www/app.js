@@ -16,6 +16,7 @@ define([
         // 'xmomen.ui',
         // 'LocalStorageModule',
         'ui.router',
+        "ngLocale",
         // "angular-loading-bar",
         'app.module',
         "config.router",
