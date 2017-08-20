@@ -143,27 +143,37 @@ define(function(require){
                 $stateProvider.state(state.name, angularAMD.route(state));
             })
         }
-    ]).run(['$rootScope', '$state', '$stateParams', '$urlRouter', '$http', 'PermPermissionStore',
-        function ($rootScope, $state, $stateParams, $urlRouter, $http, PermPermissionStore) {
+    ]).factory('TokenService', ["$q", "$window", function ($q, $window) {
+        return {
+            authentication: function () {
+                var defer = $q.defer();
+                if ($window.sessionStorage.token) {
+                    defer.resolve(true);
+                }else{
+                    defer.reject(false);
+                }
+                return defer.promise;
+            },
+            removeToken: function () {
+                delete $window.sessionStorage.token;
+            }
+        };
+    }]).run(['$rootScope', '$state', '$stateParams', '$urlRouter', '$http', 'PermPermissionStore', 'TokenService',
+        function ($rootScope, $state, $stateParams, $urlRouter, $http, PermPermissionStore, TokenService) {
             $rootScope.navMenu = navMenu;
             $rootScope.$state = $state;
             $rootScope.$stateParams = $stateParams;
-            $http
-                .get('/api/account/permissions')
-                .then(function(data){
-                    // Use RoleStore and PermissionStore to define permissions and roles
-                    // or even set up whole session
-                    PermPermissionStore.defineManyPermissions(data.data.permissions, function(permissionName, data){
-                        return angular.contains(data.permissions, permissionName);
-                    });
-                })
-                .then(function(){
-                    // Once permissions are set-up
-                    // kick-off router and start the application rendering
-                    $urlRouter.sync();
-                    // Also enable router to listen to url changes
-                    $urlRouter.listen();
-                });
+
+            $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+                if (!toState.ignoreAuth) {
+                    TokenService.authentication().then(function () {
+
+                    }, function () {
+                        event.preventDefault();
+                        $state.go('access.signin');
+                    })
+                }
+            });
         }
     ]);
 });

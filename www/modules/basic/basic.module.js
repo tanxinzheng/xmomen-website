@@ -46,6 +46,7 @@ define([
             title: "登录",
             name:"access.signin",
             url: '/signin',
+            ignoreAuth:true,
             templateUrl: 'modules/basic/signin.html',
             controllerUrl: 'modules/basic/signin.js'
         });

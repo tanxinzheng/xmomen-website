@@ -2,10 +2,10 @@
  * Created by tanxinzheng on 16/8/12.
  */
 define(function () {
-    return ["$scope", "AppAPI", "$uibModal", function($scope, AppAPI, $uibModal){
+    return ["$scope", "AccountAPI", "$uibModal", function($scope, AccountAPI, $uibModal){
         $scope.user = {};
         var getAccountInfo = function(){
-            AppAPI.getAccount({}, function(data){
+            AccountAPI.getAccount({}, function(data){
                 $scope.user = data;
             });
         }

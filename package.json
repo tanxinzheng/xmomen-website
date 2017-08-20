@@ -14,8 +14,8 @@
     "ngTplPrefix": "uia/template/",
     "tplJsFile": "ui-xmomen-html-tpl.js"
   },
-  "asset":{
-    "less":"www/css/less"
+  "asset": {
+    "less": "www/css/less"
   },
   "author": "tanxinzheng",
   "license": "ISC",

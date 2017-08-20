@@ -2,8 +2,8 @@
  * Created by tanxinzheng on 17/8/7.
  */
 define(function () {
-    return ['$scope', '$window',"$rootScope", "$http", "$state", "AppAPI", "uiaMessage",
-        function($scope,  $window, $rootScope, $http, $state, AppAPI, uiaMessage) {
+    return ['$scope', '$window',"$rootScope", "$http", "$state", "AppAPI", "AccountAPI", "TokenService", "uiaMessage", "PermPermissionStore",
+        function($scope,  $window, $rootScope, $http, $state, AppAPI, AccountAPI, TokenService, uiaMessage, PermPermissionStore) {
 
             // add 'ie' classes to html
             var isIE = !!navigator.userAgent.match(/MSIE/i);
@@ -41,19 +41,41 @@ define(function () {
             };
 
             $rootScope.logout = function(){
-                $http.post($rootScope.app.logout).then(function(){
-                    $state.go('access.signin')
+                AppAPI.logout({}).$promise.then(function(){
+                    TokenService.removeToken();
+                    $state.go('access.signin');
                 })
             };
 
             $scope.getAccountInfo = function () {
-                AppAPI.getAccount({}, function(data){
-                    $rootScope.account = data;
+                TokenService.authentication().then(function () {
+                    AccountAPI.getAccount({}, function(data){
+                        $rootScope.account = data;
+                    }, function () {
+                        $rootScope.account = null;
+                    })
                 })
             }
 
+            uiaMessage.subscribe('refreshAccount', function () {
+                $scope.getAccountInfo();
+            });
+
+            uiaMessage.subscribe('refreshPermission', function () {
+                TokenService.authentication().then(function () {
+                    AccountAPI.getPermissions({}, function(data){
+                        PermPermissionStore.defineManyPermissions(data.permissions, function(permissionName, data){
+                            return angular.contains(data.permissions, permissionName);
+                        });
+                    })
+                }, function () {
+                    PermPermissionStore.clearStore();
+                });
+            });
+
             var init = function(){
                 $scope.getAccountInfo();
+                uiaMessage.publish('refreshPermission');
             };
             init();
 

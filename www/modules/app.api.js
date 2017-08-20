@@ -8,39 +8,54 @@ define(function (require) {
         "ui.bootstrap"
     ]).factory("AppAPI", ["uiaResource", function(Resource){
         return Resource("/account/:id", { id:"@id" }, {
-            getAccount : { method:"GET", url:"/api/account", isArray:false},
-            findPassword: {method:"PUT", url:"/api/find_password", params:{
+            findPassword: {method:"PUT", url:ApiPrefix + "/access/find_password", params:{
                 type:"@type",
                 receiver:"@receiver",
                 password:"@password",
                 code:"@code",
             }},
-            register: { method:"POST", url:"/api/register" }
+            login: {
+                method:"POST",
+                url: ApiPrefix + "/login",
+                headers : {'Content-Type': 'application/x-www-form-urlencoded'},
+                transformRequest: function (data, headersGetter) {
+                    var str = [];
+                    for(var p in data){
+                        if(p && data[p]){
+                            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(data[p]));
+                        }
+                    }
+                    return str.join("&");
+                }
+            },
+            logout: {url: ApiPrefix + "/logout"},
+            register: { method:"POST", url:ApiPrefix + "/access/register" }
         });
     }]).factory("AccountAPI", ["uiaResource", "Upload", function(Resource, Upload){
         var resource = Resource("/account/:id", { id:"@id" }, {
-            getAccount : { method:"GET", url:"/api/account", isArray:false},
-            resetPassword: {method:"PUT", url:"/api/account/password", params:{
+            getAccount : { method:"GET", url:ApiPrefix + "/account", isArray:false},
+            resetPassword: {method:"PUT", url:ApiPrefix + "/account/password", params:{
                 password:"@password",
                 oldPassword:"@oldPassword"
             }},
-            bindAccount: {method:"PUT", url:"/api/account/bind", params:{
+            bindAccount: {method:"PUT", url:ApiPrefix + "/account/bind", params:{
                 type:"@type",
                 receiver:"@receiver",
                 code:"@code"
-            }}
+            }},
+            getPermissions:{url:ApiPrefix + "/account/permissions"}
         });
         resource.updateAvatar = function(data, success, error){
             data = data || {};
             return Upload.upload({
                 // method:"PUT",
-                url: "/api/account/avatar",
+                url: ApiPrefix + "/account/avatar",
                 data: data
             });
         };
         return resource;
     }]).factory("ValidationCodeAPI", ["uiaResource", function(Resource){
-        return Resource("/code/:id", { id:"@id" }, {
+        return Resource("/access/code/:id", { id:"@id" }, {
             create : { method:"POST", isArray:false, params:{
                 type:"@type",
                 receiver:"@receiver",
