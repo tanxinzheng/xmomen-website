@@ -7,8 +7,8 @@ define(function(require){
     var angular = require('angular');
     var angularAMD = require('angularAMD');
     var navMenu = [];
-    angular.module("config.router",[]).config(['$stateProvider', '$urlRouterProvider',
-        function ($stateProvider,   $urlRouterProvider) {
+    angular.module("config.router",[]).config(['$stateProvider', '$urlRouterProvider','$httpProvider',
+        function ($stateProvider,   $urlRouterProvider, $httpProvider) {
 
             $urlRouterProvider
                 .otherwise('/app/dashboard');
@@ -21,9 +21,9 @@ define(function(require){
                 title:"用户",
                 name:"app.user",
                 url: '/user',
-                permission:'USER:VIEW',
                 templateUrl: 'modules/authorization/user.html',
                 controllerUrl: 'modules/authorization/user',
+                permission:"USER:VIEW",
                 resolve: {
                     deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
                         return $ocLazyLoad.load([
@@ -43,7 +43,7 @@ define(function(require){
                 url: '/group',
                 templateUrl: 'modules/authorization/group.html',
                 controllerUrl: 'modules/authorization/group',
-                permission:'GROUP:VIEW',
+                permission:"ACTION_LOG:VIEW",
                 resolve: {
                     deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
                         return $ocLazyLoad.load([
@@ -62,7 +62,7 @@ define(function(require){
                 url: '/permission',
                 templateUrl: 'modules/authorization/permission.html',
                 controllerUrl: 'modules/authorization/permission',
-                permission:'GROUP:VIEW',
+                permission:"PERMISSION:VIEW",
                 resolve: {
                     deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
                         return $ocLazyLoad.load('modules/authorization/permission.api.js');
@@ -78,6 +78,7 @@ define(function(require){
                 url: '/dictionary',
                 templateUrl: 'modules/system/dictionary.html',
                 controllerUrl: 'modules/system/dictionary',
+                permission:"DICTIONARY:VIEW",
                 resolve: {
                     deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
                         return $ocLazyLoad.load('modules/system/dictionary.api.js');
@@ -93,6 +94,12 @@ define(function(require){
                 url: '/action_log',
                 templateUrl: 'modules/system/action_log.html',
                 controllerUrl: 'modules/system/action_log',
+                permission:"ACTION_LOG:VIEW",
+                data: {
+                    permissions: {
+                        only: ['ACTION_LOG:VIEW']
+                    }
+                },
                 resolve: {
                     deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
                         return $ocLazyLoad.load('modules/system/action_log.api.js');
@@ -108,6 +115,7 @@ define(function(require){
                 url: '/schedule',
                 templateUrl: 'modules/system/schedule.html',
                 controllerUrl: 'modules/system/schedule',
+                permission:"TASK:VIEW",
                 resolve: {
                     deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
                         return $ocLazyLoad.load('modules/system/schedule.api.js');
@@ -123,6 +131,7 @@ define(function(require){
                 url: '/attachment',
                 templateUrl: 'modules/system/attachment.html',
                 controllerUrl: 'modules/system/attachment',
+                permission:'ATTACHMENT:VIEW',
                 resolve: {
                     deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
                         return $ocLazyLoad.load('modules/system/attachment.api.js');
@@ -141,25 +150,12 @@ define(function(require){
 
             angular.forEach(navMenu, function(state){
                 $stateProvider.state(state.name, angularAMD.route(state));
-            })
+            });
+            // 阻塞路由渲染
+            $urlRouterProvider.deferIntercept();
         }
-    ]).factory('TokenService', ["$q", "$window", function ($q, $window) {
-        return {
-            authentication: function () {
-                var defer = $q.defer();
-                if ($window.sessionStorage.token) {
-                    defer.resolve(true);
-                }else{
-                    defer.reject(false);
-                }
-                return defer.promise;
-            },
-            removeToken: function () {
-                delete $window.sessionStorage.token;
-            }
-        };
-    }]).run(['$rootScope', '$state', '$stateParams', '$urlRouter', '$http', 'PermPermissionStore', 'TokenService',
-        function ($rootScope, $state, $stateParams, $urlRouter, $http, PermPermissionStore, TokenService) {
+    ]).run(['$rootScope', '$state', '$stateParams', '$urlRouter', '$http', 'PermPermissionStore', 'TokenService', 'uiaMessage', 'AccountAPI',
+        function ($rootScope, $state, $stateParams, $urlRouter, $http, PermPermissionStore, TokenService, uiaMessage, AccountAPI) {
             $rootScope.navMenu = navMenu;
             $rootScope.$state = $state;
             $rootScope.$stateParams = $stateParams;
@@ -169,11 +165,29 @@ define(function(require){
                     TokenService.authentication().then(function () {
 
                     }, function () {
+                        PermPermissionStore.clearStore();
+                        window.location.href = "/access.html";
                         event.preventDefault();
-                        $state.go('access.signin');
-                    })
+                    });
                 }
             });
+            TokenService.authentication().then(function () {
+                AccountAPI.getPermissions({}, function(resp){
+                    angular.forEach(resp.permissions, function (val) {
+                        PermPermissionStore.defineManyPermissions(resp.permissions, function(permissionName, data){
+                            return angular.contains(resp.permissions, permissionName);
+                        });
+                    });
+                }).$promise.finally(function(){
+                    // Once permissions are set-up
+                    // kick-off router and start the application rendering
+                    $urlRouter.sync();
+                    // Also enable router to listen to url changes
+                    $urlRouter.listen();
+                });
+            }, function () {
+                window.location.href = "/access.html";
+            })
         }
     ]);
 });

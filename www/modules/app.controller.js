@@ -2,8 +2,8 @@
  * Created by tanxinzheng on 17/8/7.
  */
 define(function () {
-    return ['$scope', '$window',"$rootScope", "$http", "$state", "AppAPI", "AccountAPI", "TokenService", "uiaMessage", "PermPermissionStore",
-        function($scope,  $window, $rootScope, $http, $state, AppAPI, AccountAPI, TokenService, uiaMessage, PermPermissionStore) {
+    return ['$scope', '$window',"$rootScope", "$http", "$state", "AppAPI", "AccountAPI", "TokenService", "uiaMessage", "PermPermissionStore", "$urlRouter",
+        function($scope,  $window, $rootScope, $http, $state, AppAPI, AccountAPI, TokenService, uiaMessage, PermPermissionStore, $urlRouter) {
 
             // add 'ie' classes to html
             var isIE = !!navigator.userAgent.match(/MSIE/i);
@@ -43,7 +43,7 @@ define(function () {
             $rootScope.logout = function(){
                 AppAPI.logout({}).$promise.then(function(){
                     TokenService.removeToken();
-                    $state.go('access.signin');
+                    window.location.href = "/access.html";
                 })
             };
 
@@ -59,15 +59,22 @@ define(function () {
 
             uiaMessage.subscribe('refreshAccount', function () {
                 $scope.getAccountInfo();
+                // uiaMessage.publish("refreshPermission")
             });
 
             uiaMessage.subscribe('refreshPermission', function () {
                 TokenService.authentication().then(function () {
-                    AccountAPI.getPermissions({}, function(data){
-                        PermPermissionStore.defineManyPermissions(data.permissions, function(permissionName, data){
+                    AccountAPI.getPermissions({}, function(resp){
+                        PermPermissionStore.defineManyPermissions(resp.permissions, function(permissionName, data){
                             return angular.contains(data.permissions, permissionName);
                         });
-                    })
+                    }).$promise.then(function(){
+                        // Once permissions are set-up
+                        // kick-off router and start the application rendering
+                        $urlRouter.sync();
+                        // Also enable router to listen to url changes
+                        $urlRouter.listen();
+                    });
                 }, function () {
                     PermPermissionStore.clearStore();
                 });
@@ -75,7 +82,6 @@ define(function () {
 
             var init = function(){
                 $scope.getAccountInfo();
-                uiaMessage.publish('refreshPermission');
             };
             init();
 

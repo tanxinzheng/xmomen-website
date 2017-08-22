@@ -16,7 +16,7 @@ define(function(){
             showFileBtn:true,
 //          js定义列字段
             columns:[
-                { name:'groupCode', title:'字典类型' },
+                { name:'groupCode', title:'字典类型', sortName:"GROUP_CODE" },
                 { name:'groupName', title:'类型描述' },
                 { name:'dictionaryName', title:'字典名称'},
                 { name:'dictionaryCode', title:'字典代码'},

@@ -18,7 +18,7 @@ angular.module("App.REST").factory("GroupAPI", ["uiaResource", function(Resource
     });
     resource.export = function(data, success, error){
         if(!data.url){
-            data.url = "/api/group/export";
+            data.url = "/group/export";
         }
         resource.$export(data, success, error);
     };

@@ -11,7 +11,7 @@ define(function(){
                 { name:'keyword', title:'关键字', placeholder:'请输入关键字' }
             ],
             columns:[
-                { name:'permissionCode', title:'权限代码' },
+                { name:'permissionCode', title:'权限代码', sortName:"PERMISSION_CODE" },
                 { name:'permissionName', title:'权限名称' },
                 { name:'description', title:'权限描述' },
                 { name:'active', title:'激活', type:'checkbox' },
