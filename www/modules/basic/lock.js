@@ -2,9 +2,9 @@
  * Created by tanxinzheng on 17/7/23.
  */
 define(function () {
-    return ['$scope', 'AppAPI', '$http', '$state', '$dialog', '$rootScope', function($scope, AppAPI, $http, $state, $dialog, $rootScope) {
+    return ['$scope', 'AccountAPI', '$http', '$state', '$dialog', '$rootScope', 'AppAPI', function($scope, AccountAPI, $http, $state, $dialog, $rootScope, AppAPI) {
         $scope.account = {};
-        AppAPI.getAccount({}, function(data){
+        AccountAPI.getAccount({}, function(data){
             $scope.account = data;
             $http.post($rootScope.app.logout);
         });
@@ -17,14 +17,13 @@ define(function () {
                 return;
             }
             $scope.isLoading = true;
-            $http.post('/api/login', null, {
-                params:{
-                    username: $scope.account.username,
-                    password: $scope.account.password
-                }
-            }).then(function(response) {
+            AppAPI.login({
+                username: $scope.account.username,
+                password: $scope.account.password
+            }, function(){
+                delete window.sessionStorage.isLocked;
                 $state.go('app.dashboard');
-            }).finally(function(){
+            }).$promise.finally(function(){
                 $scope.isLoading = false;
             });
         }

@@ -40,6 +40,11 @@ define(function () {
                 logout:"/api/logout"
             };
 
+            $rootScope.lock = function(){
+                window.sessionStorage.isLocked = true;
+                $state.go('lock');
+            };
+
             $rootScope.logout = function(){
                 AppAPI.logout({}).$promise.then(function(){
                     TokenService.removeToken();

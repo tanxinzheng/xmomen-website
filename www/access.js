@@ -1,14 +1,18 @@
 var ApiPrefix = "/api";
 angular.module('accessApp',[
     'ngResource', 'ui.router', 'uia', 'ui.bootstrap'
-]).factory("AppAPI", ["uiaResource", function(Resource){
+]).factory("AccessAPI", ["uiaResource", function(Resource){
     return Resource("/account/:id", { id:"@id" }, {
-        findPassword: {method:"PUT", url:ApiPrefix + "/access/find_password", params:{
-            type:"@type",
-            receiver:"@receiver",
-            password:"@password",
-            code:"@code",
-        }},
+        findPassword: {
+            method:"PUT",
+            url:ApiPrefix + "/access/find_password",
+            params:{
+                type:"@type",
+                receiver:"@receiver",
+                password:"@password",
+                code:"@code",
+            }
+        },
         login: {
             method:"POST",
             url: ApiPrefix + "/login",
@@ -23,19 +27,25 @@ angular.module('accessApp',[
                 return str.join("&");
             }
         },
-        logout: {url: ApiPrefix + "/logout"},
-        register: { method:"POST", url:ApiPrefix + "/access/register" }
-    });
-}]).factory("ValidationCodeAPI", ["uiaResource", function(Resource){
-    return Resource("/access/code/:id", { id:"@id" }, {
-        create : { method:"POST", isArray:false, params:{
+        sendCode: {
+            url:"/access/code",
+            method:"POST",
+            isArray:false,
+            params:{
             type:"@type",
             receiver:"@receiver",
-        }}
+        }},
+        logout: {
+            url: ApiPrefix + "/logout"
+        },
+        register: {
+            method:"POST",
+            url:ApiPrefix + "/access/register"
+        }
     });
 }]).controller('AccessAppCtrl', ['$scope', function ($scope) {
 
-}]).controller('findPasswordCtrl', ['$scope', '$http', '$state', 'ValidationCodeAPI', '$interval', 'AppAPI', function($scope, $http, $state, ValidationCodeAPI, $interval, AppAPI) {
+}]).controller('findPasswordCtrl', ['$scope', '$http', '$state', 'AccessAPI', '$interval', function($scope, $http, $state, AccessAPI, $interval) {
     $scope.pageSetting = {
         message:"发送验证码",
         type:1
@@ -54,7 +64,7 @@ angular.module('accessApp',[
             receiver = $scope.user.email;
         }
         $scope.loading = true;
-        AppAPI.findPassword({
+        AccessAPI.findPassword({
             type:$scope.pageSetting.type,
             receiver:receiver,
             code:$scope.user.code,
@@ -91,7 +101,7 @@ angular.module('accessApp',[
             }
             receiver = $scope.user.email;
         }
-        ValidationCodeAPI.create({
+        AccessAPI.sendCode({
             type: $scope.pageSetting.type,
             receiver: receiver
         }, function(data){
@@ -108,11 +118,11 @@ angular.module('accessApp',[
             }, 1000);
         })
     }
-}]).controller('loginCtrl', ['$scope', '$http', '$state', "AppAPI", "$window", "uiaMessage", function($scope, $http, $state, AppAPI, $window, uiaMessage) {
+}]).controller('loginCtrl', ['$scope', '$http', '$state', "AccessAPI", "$window", function($scope, $http, $state, AccessAPI, $window) {
     $scope.user = {};
     $scope.login = function() {
         $scope.form.isLoading = true;
-        AppAPI.login({
+        AccessAPI.login({
             username: $scope.user.username,
             password: $scope.user.password,
             rememberMe: $scope.user.rememberMe,
@@ -123,7 +133,7 @@ angular.module('accessApp',[
             $scope.form.isLoading = false;
         });
     };
-}]).controller('registerCtrl', ['$scope', '$http', '$state', 'ValidationCodeAPI', '$interval', 'AppAPI', function($scope, $http, $state, ValidationCodeAPI, $interval, AppAPI) {
+}]).controller('registerCtrl', ['$scope', '$http', '$state', 'AccessAPI', '$interval', function($scope, $http, $state, AccessAPI, $interval) {
     $scope.pageSetting = {
         message:"发送验证码",
         type:1
@@ -140,7 +150,7 @@ angular.module('accessApp',[
             $scope.user.type = 2;
         }
         $scope.loading = true;
-        AppAPI.register($scope.user, function (data) {
+        AccessAPI.register($scope.user, function (data) {
             var i = 5;
             var timer = $interval(function () {
                 i--;
@@ -172,7 +182,7 @@ angular.module('accessApp',[
             }
             receiver = $scope.user.email;
         }
-        ValidationCodeAPI.create({
+        AccessAPI.sendCode({
             type: $scope.pageSetting.type,
             receiver: receiver
         }, function(data){

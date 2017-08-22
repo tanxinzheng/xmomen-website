@@ -9,7 +9,7 @@
               <label class="col-lg-2 control-label">头像</label>
               <div class="col-lg-10">
                 <a href class="thumb-lg pull-left m-r" ng-click="openAvatar()" style="width: 96px;height: 96px;">
-                  <img src="{{user.avatarUrl}}" class="img-circle" onerror="this.src='img/a0.jpg';">
+                  <img src="{{user.avatarUrl ?  account.avatarUrl:'img/a0.jpg'}}" class="img-circle" onerror="this.src='img/a0.jpg';">
                 </a>
               </div>
             </div>

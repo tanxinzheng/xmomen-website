@@ -161,6 +161,10 @@ define(function(require){
             $rootScope.$stateParams = $stateParams;
 
             $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+                if(toState.name != 'lock' && window.sessionStorage.isLocked){
+                    $state.go('lock');
+                    event.preventDefault();
+                }
                 if (!toState.ignoreAuth) {
                     TokenService.authentication().then(function () {
 
