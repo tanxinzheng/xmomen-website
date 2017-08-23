@@ -134,14 +134,12 @@ define(function(){
                             groupId: Params.id,
                             permissionIds:ids
                         }, function(data){
-                            if(data && data.length > 0){
-                                for (var i = 0; i < indexs.length; i++) {
-                                    var obj1 = $scope.notHasResourceList[indexs[i] - i];
-                                    $scope.notHasResourceList.splice(indexs[i] - i, 1);
-                                    obj1.selected = false;
-                                    obj1.mouseenter = false;
-                                    $scope.hasResourceList.push(obj1);
-                                }
+                            for (var i = 0; i < indexs.length; i++) {
+                                var obj1 = $scope.notHasResourceList[indexs[i] - i];
+                                $scope.notHasResourceList.splice(indexs[i] - i, 1);
+                                obj1.selected = false;
+                                obj1.mouseenter = false;
+                                $scope.hasResourceList.push(obj1);
                             }
                         });
                     };

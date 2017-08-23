@@ -4,7 +4,7 @@
 require.config({
     baseUrl:"./",
     paths: {
-        "jquery":"bower_components/jquery/dist/jquery",
+        "jquery":"bower_components/jquery/dist/jquery.min",
         "angular": "bower_components/angular/angular",
         "angularAMD": "bower_components/angularAMD/angularAMD",
         "angular-ui-router": "bower_components/angular-ui-router/release/angular-ui-router",
@@ -32,7 +32,10 @@ require.config({
     },
     shim: {
         "jquery" : { exports : "jquery" },
-        "angular": { exports: "angular" },
+        "angular": {
+            exports: "angular" ,
+            deps:['jquery']
+        },
         "angularAMD": ["angular"],
         "angular-ui-router": ["angular"],
         "ui-bootstrap-tpls": ["angular"],

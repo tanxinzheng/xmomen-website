@@ -28,7 +28,7 @@ angular.module('accessApp',[
             }
         },
         sendCode: {
-            url:"/access/code",
+            url:ApiPrefix + "/access/code",
             method:"POST",
             isArray:false,
             params:{

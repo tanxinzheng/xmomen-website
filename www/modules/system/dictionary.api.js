@@ -8,7 +8,7 @@ angular.module("App.REST").factory("DictionaryAPI", ["uiaResource", 'Upload', fu
         if(!data.url){
             data.url = "/api/dictionary/export";
         }
-        resource.$export(data, success, error);
+        return resource.$export(data, success, error);
     };
     resource.downloadTemplate = function(data, success, error){
         data = data || {};

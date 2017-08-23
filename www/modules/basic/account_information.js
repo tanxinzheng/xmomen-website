@@ -19,23 +19,25 @@ define(function () {
                         return $ocLazyLoad.load('ngImgCrop');
                     }]
                 },
-                controller: ['$scope', '$uibModalInstance', "$timeout", "AccountAPI",
-                    function($scope, $uibModalInstance, $timeout, AccountAPI){
+                controller: ['$scope', '$uibModalInstance', "$timeout", "AccountAPI", "uiaMessage",
+                    function($scope, $uibModalInstance, $timeout, AccountAPI, uiaMessage){
                         $scope.cancel = function(){
                             $uibModalInstance.dismiss();
                         };
                         $scope.avatarImage = '';
                         $scope.croppedImage = '';
-                        var handleFileSelect = function(evt) {
-                            var file = evt.currentTarget.files[0];
+                        $scope.changeFile = function (file) {
+                            if(!file){
+                                return;
+                            }
                             var reader = new FileReader();
                             reader.onload = function (evt) {
                                 $scope.$apply(function($scope){
-                                    $scope.avatarImage =evt.target.result;
+                                    $scope.avatarImage = evt.target.result;
                                 });
                             };
                             reader.readAsDataURL(file);
-                        };
+                        }
                         $scope.doUpload = function () {
                             if($scope.croppedImage == ''){
                                 $dialog.alert('请选择上传的图片');
@@ -46,6 +48,7 @@ define(function () {
                             AccountAPI.updateAvatar({
                                 file:$Blob
                             }).then(function (data) {
+                                uiaMessage.publish('refreshAccount')
                                 $uibModalInstance.close();
                             }).finally(function () {
                                 $scope.loading = false;
@@ -59,9 +62,6 @@ define(function () {
                             }
                             return new Blob([new Uint8Array(array)], { type: type });
                         }
-                        $timeout(function () {
-                            angular.element($('#fileInput')).on('change', handleFileSelect);
-                        })
                     }]
             }).result.then(function () {
                 getAccountInfo();

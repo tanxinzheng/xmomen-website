@@ -43,7 +43,7 @@ define(function(require){
                 url: '/group',
                 templateUrl: 'modules/authorization/group.html',
                 controllerUrl: 'modules/authorization/group',
-                permission:"ACTION_LOG:VIEW",
+                permission:"GROUP:VIEW",
                 resolve: {
                     deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
                         return $ocLazyLoad.load([
@@ -115,7 +115,7 @@ define(function(require){
                 url: '/schedule',
                 templateUrl: 'modules/system/schedule.html',
                 controllerUrl: 'modules/system/schedule',
-                permission:"TASK:VIEW",
+                permission:"SCHEDULE_TASK:VIEW",
                 resolve: {
                     deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
                         return $ocLazyLoad.load('modules/system/schedule.api.js');
@@ -174,6 +174,9 @@ define(function(require){
                         event.preventDefault();
                     });
                 }
+            });
+            uiaMessage.subscribe('unAuthentication', function () {
+                window.location.href = "/access.html";
             });
             TokenService.authentication().then(function () {
                 AccountAPI.getPermissions({}, function(resp){

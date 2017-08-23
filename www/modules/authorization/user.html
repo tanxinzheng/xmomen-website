@@ -20,7 +20,7 @@
                         <a href class="list-group-item"
                            data-ng-mouseenter="item.mouseenter=true"
                            data-ng-mouseleave="item.mouseenter=false"
-                           data-ng-repeat="item in hasResourceList">
+                           data-ng-repeat="item in hasResourceList | filter:queryParam.hasResourceKeyword">
                                 <span class="list-group-item-text-block"
                                       title="单击即可选中"
                                       data-ng-click="choiceBind($index)">{{item.permissionName}}</span>
@@ -115,7 +115,7 @@
                         <a href class="list-group-item"
                            data-ng-mouseenter="item.mouseenter=true"
                            data-ng-mouseleave="item.mouseenter=false"
-                           data-ng-repeat="item in hasResourceList">
+                           data-ng-repeat="item in hasResourceList | filter:queryParam.hasResourceKeyword">
                                 <span class="icon icon-check list-group-item-icon"
                                       ng-show="item.selected">&nbsp;</span>
                                 <span class="icon icon-close list-group-item-icon"

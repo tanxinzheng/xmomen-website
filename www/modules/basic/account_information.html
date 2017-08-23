@@ -93,8 +93,9 @@
     </div>
     <div class="modal-body">
       <div class="m-b">
-        选择上传图片
-        <input type="file" id="fileInput" />
+        <!--选择上传图片-->
+        <!--<input type="file" id="fileInput" class="btn btn-primary"/>-->
+        <div class="btn btn-primary" ngf-select ng-model="file" ng-change="changeFile(file)">选择上传图片</div>
       </div>
       <div class="hbox hbox-auto-xs">
         <div class="col">

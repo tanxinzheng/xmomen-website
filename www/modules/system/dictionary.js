@@ -2,8 +2,8 @@
  * Created by tanxinzheng on 16/7/3.
  */
 define(function(){
-    return ["$scope", "$uibModal", "DictionaryAPI",
-    function($scope, $uibModal, DictionaryAPI){
+    return ["$scope", "$uibModal", "DictionaryAPI", '$http',
+    function($scope, $uibModal, DictionaryAPI, $http){
         $scope.gridOption = {
             id:"dictionary",
             title:'数据字典',
