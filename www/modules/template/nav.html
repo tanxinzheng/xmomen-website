@@ -19,7 +19,7 @@
   </li>
 
 
-  <li ui-sref-active="active" ng-repeat="item in navMenu" permission permission-only="item.permission">
+  <li ui-sref-active="active" ng-repeat="item in navMenu" ng-if="item.title" permission permission-only="item.permission">
     <a ng-href="{{$state.href(item.name)}}">
       <i ng-class="item.icon ? item.icon : 'fa fa-th-list' "></i>
       <span ng-bind="item.title"></span>

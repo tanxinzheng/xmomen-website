@@ -139,6 +139,114 @@ define(function(require){
                 }
             });
 
+            // navMenu.push({
+            //     icon:"icon icon-bell",
+            //     group:"notification",
+            //     title:"通知模板",
+            //     name:"app.notification_template",
+            //     url: '/notification_template',
+            //     templateUrl: 'modules/notification/notification_template.html',
+            //     controllerUrl: 'modules/notification/notification_template',
+            //     resolve: {
+            //         deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
+            //             return $ocLazyLoad.load('modules/notification/notification_template.api.js');
+            //         }]
+            //     }
+            // });
+
+            // mail
+            // .state('app.mail', {
+            //     abstract: true,
+            //     url: '/mail',
+            //     templateUrl: 'tpl/mail.html',
+            //     // use resolve to load other dependences
+            //     resolve: {
+            //         deps: ['uiLoad',
+            //             function( uiLoad ){
+            //                 return uiLoad.load( ['js/app/mail/mail.js',
+            //                     'js/app/mail/mail-service.js',
+            //                     'vendor/libs/moment.min.js'] );
+            //             }]
+            //     }
+            // })
+            //     .state('app.mail.list', {
+            //         url: '/inbox/{fold}',
+            //         templateUrl: 'tpl/notification.list.html'
+            //     })
+            //     .state('app.mail.detail', {
+            //         url: '/{mailId:[0-9]{1,4}}',
+            //         templateUrl: 'tpl/notification.detail.html'
+            //     })
+            //     .state('app.mail.compose', {
+            //         url: '/compose',
+            //         templateUrl: 'tpl/notification.new.html'
+            //     })
+            navMenu.push({
+                // icon:"icon icon-bell",
+                abstract: true,
+                group:"notification",
+                // title:"通知",
+                name:"app.notification",
+                url: '/notification',
+                templateUrl: 'modules/notification/notification.html',
+                controllerUrl: 'modules/notification/notification',
+                resolve: {
+                    deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
+                        return $ocLazyLoad.load([
+                            'modules/notification/notification.api.js',
+                            'modules/notification/notification_send.api.js'
+                        ]);
+                    }]
+                }
+            });
+            navMenu.push({
+                icon:"icon icon-bell",
+                group:"notification",
+                title:"通知",
+                name:"app.notification.list",
+                url: '/{dataState}',
+                templateUrl: 'modules/notification/notification.list.html',
+                controllerUrl: 'modules/notification/notification.list',
+                resolve: {
+                    deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
+                        return $ocLazyLoad.load([
+                            'modules/notification/notification.api.js',
+                            'modules/notification/notification_send.api.js'
+                        ]);
+                    }]
+                }
+            });
+            navMenu.push({
+                group:"notification",
+                name:"app.notification.detail",
+                url: '/{dataState}/{id}',
+                templateUrl: 'modules/notification/notification.detail.html',
+                controllerUrl: 'modules/notification/notification.detail.js',
+                resolve: {
+                    deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
+                        return $ocLazyLoad.load([
+                            'modules/notification/notification.api.js',
+                            'modules/notification/notification_send.api.js'
+                        ]);
+                    }]
+                }
+            });
+            navMenu.push({
+                group:"notification",
+                name:"app.notification.new",
+                url: '/compose',
+                templateUrl: 'modules/notification/notification.new.html',
+                controllerUrl: 'modules/notification/notification',
+                resolve: {
+                    deps: ['$$animateJs', '$ocLazyLoad',function( $$animateJs, $ocLazyLoad){
+                        return $ocLazyLoad.load([
+                            'modules/notification/notification.api.js',
+                            'modules/notification/notification_send.api.js'
+                        ]);
+                    }]
+                }
+            });
+
             navMenu.push({
                 icon:"fa fa-picture-o",
                 group:"docs",
@@ -151,6 +259,7 @@ define(function(require){
             angular.forEach(navMenu, function(state){
                 $stateProvider.state(state.name, angularAMD.route(state));
             });
+
             // 阻塞路由渲染
             $urlRouterProvider.deferIntercept();
         }

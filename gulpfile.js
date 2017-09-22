@@ -180,7 +180,7 @@ gulp.task('rjs', function () {
     return gulp.src('www/main.js')
         .pipe(sourcemaps.init())
         .pipe(requirejsOptimize({
-            mainConfigFile:"www/config.js",
+            // mainConfigFile:"www/app.js",
             optimize: 'none',
             generateSourceMaps:true
         }))

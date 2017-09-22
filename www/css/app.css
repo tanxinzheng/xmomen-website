@@ -2284,6 +2284,9 @@ fieldset[disabled] .i-checks input + i:before {
 .datepicker .btn-info .text-info {
   color: #fff !important;
 }
+.form-control[readonly] {
+  background-color: white;
+}
 /*Charts*/
 .jqstooltip {
   background-color: rgba(0, 0, 0, 0.8) !important;

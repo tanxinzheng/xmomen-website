@@ -2,8 +2,10 @@
  * Created by tanxinzheng on 17/8/7.
  */
 define(function () {
-    return ['$scope', '$window',"$rootScope", "$http", "$state", "AppAPI", "AccountAPI", "TokenService", "uiaMessage", "PermPermissionStore", "$urlRouter",
-        function($scope,  $window, $rootScope, $http, $state, AppAPI, AccountAPI, TokenService, uiaMessage, PermPermissionStore, $urlRouter) {
+    return ['$scope', '$window',"$rootScope", "$http", "$state", "AppAPI", "AccountAPI", "TokenService",
+        "uiaMessage", "PermPermissionStore", "$urlRouter",
+        function($scope,  $window, $rootScope, $http, $state, AppAPI, AccountAPI, TokenService,
+                 uiaMessage, PermPermissionStore, $urlRouter) {
 
             // add 'ie' classes to html
             var isIE = !!navigator.userAgent.match(/MSIE/i);
@@ -60,11 +62,35 @@ define(function () {
                         $rootScope.account = null;
                     })
                 })
+            };
+
+            $scope.countNotification = function () {
+                AppAPI.countNotification({}, function (data) {
+                    $scope.notificationCount = data;
+                    angular.forEach(data, function (val, index) {
+                        if(val.dataState == 'UNREAD'){
+                            $scope.unreadNotification = val.number;
+                        }
+                    });
+                });
+            };
+
+            $scope.getNotification = function () {
+                AppAPI.getNotification({
+                    pageSize:5,
+                    pageNum:1
+                }, function (data) {
+                    $rootScope.accountNotification = data.data;
+                });
             }
+
+            uiaMessage.subscribe('refreshNotification', function () {
+                $scope.countNotification();
+                $scope.getNotification();
+            });
 
             uiaMessage.subscribe('refreshAccount', function () {
                 $scope.getAccountInfo();
-                // uiaMessage.publish("refreshPermission")
             });
 
             uiaMessage.subscribe('refreshPermission', function () {
@@ -87,6 +113,8 @@ define(function () {
 
             var init = function(){
                 $scope.getAccountInfo();
+                $scope.countNotification();
+                $scope.getNotification();
             };
             init();
 

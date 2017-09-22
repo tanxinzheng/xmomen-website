@@ -14,6 +14,22 @@ define(function (require) {
                 password:"@password",
                 code:"@code",
             }},
+            countNotification:{
+                isArray:true,
+                method:"GET",
+                url: ApiPrefix + "/account/notification/count"
+            },
+            getNotification:{
+                method:"GET",
+                url: ApiPrefix + "/account/notification"
+            },
+            getNotificationDetail:{
+                method:"GET",
+                url: ApiPrefix + "/account/notification/:id",
+                params:{
+                    id:"@id"
+                }
+            },
             login: {
                 method:"POST",
                 url: ApiPrefix + "/login",
