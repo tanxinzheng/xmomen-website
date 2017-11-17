@@ -1,12 +1,13 @@
 <div class="col">
     <div class="wrapper-sm">
-        <div class="row" ng-if="viewMode == 1">
+        <div class="row">
             <div class="wrapper">
                 <ul class="nav nav-pills nav-sm">
-                    <li class="active" ng-click="switchViewMode(2)"><a><i class="fa fa-list"></i>&nbsp;&nbsp;列表视图</a></li>
+                    <li class="active"  ng-if="viewMode == 1" ng-click="switchViewMode(2)"><a><i class="fa fa-list"></i>&nbsp;&nbsp;列表视图</a></li>
+                    <li class="active"  ng-if="viewMode == 2" ng-click="switchViewMode(1)"><a><i class="fa fa-list"></i>&nbsp;&nbsp;预览视图</a></li>
                 </ul>
             </div>
-            <div class="col-md-3" ng-repeat="item in attachmentList">
+            <div class="col-md-3"  ng-show="viewMode == 1" ng-repeat="item in attachmentList">
                 <div class="panel b-a">
                     <div class="panel-heading no-border bg-primary">
                         <span class="text-lt" ng-bind="item.originName"></span>
@@ -49,7 +50,7 @@
                 </div>
             </div>
         </div>
-        <div ng-if="viewMode == 2">
+        <div ng-show="viewMode == 2">
             <uia-grid grid-option="gridOption"></uia-grid>
         </div>
     </div>

@@ -8,8 +8,6 @@ logs
 *.log
 npm-debug.log
 coverage
-www/bower_components
-!www/bower_components/angular-ui-xmomen/ui-xmomen.js
 build
 dist
 rev
