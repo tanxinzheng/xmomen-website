@@ -1,0 +1,191 @@
+<div class="panel panel-default uix-grid">
+    <div class="list-group-item" ng-if="importSetting.loading">
+        <uib-progressbar class="progress-striped m-b-sm" animate="importSetting.loading"
+                         ng-class="{'active':importSetting.progressPercentage != 100}"
+                         value="importSetting.progressPercentage"
+                         type="info">
+            <div>{{importSetting.progressPercentage}}%<span ng-if="importSetting.progressPercentage == 100">，<i class="fa fa-spin fa-spinner"></i>&nbsp;&nbsp;数据正在处理中...</span></div>
+        </uib-progressbar>
+    </div>
+    <div class="panel-heading">
+        <ul class="nav nav-pills pull-right">
+            <li ng-click="headerBtn.click()" ng-repeat="headerBtn in gridOption.headerButtons">
+                <a uib-tooltip="{{headerBtn.title}}"><i class="{{headerBtn.icon}}"></i>&nbsp;&nbsp;{{headerBtn.title}}</a>
+            </li>
+            <li class="dropdown" ng-if="gridOption.showFileBtn" uib-dropdown>
+                <a class="dropdown-toggle" uib-dropdown-toggle>
+                    <i class="fa fa-file-excel-o">&nbsp;&nbsp;文件</i>
+                </a>
+                <ul class="dropdown-menu animated fadeIn" role="menu">
+                    <li ng-click="downloadTemplate()">
+                        <a><i class="fa fa-file-excel-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;下载模板</a>
+                    </li>
+                    <li ng-if="!importSetting.loading" ng-change="importEvent(file)" ngf-select ng-model="file" name="file" >
+                        <a><i class="icon icon-cloud-upload"></i>&nbsp;&nbsp;&nbsp;&nbsp;导入Excel</a>
+                    </li>
+                    <li ng-if="importSetting.loading" >
+                        <a><i class="fa fa-spin fa-spinner"></i>&nbsp;&nbsp;&nbsp;&nbsp;导入中...</a>
+                    </li>
+                    <li ng-click="exportEvent()">
+                        <a><i class="icon icon-cloud-download"></i>&nbsp;&nbsp;&nbsp;&nbsp;导出Excel</a>
+                    </li>
+
+                </ul>
+            </li>
+            <li ng-click="viewEvent()" ng-if="gridOption.showViewBtn">
+                <a uib-tooltip="查看"><i class="icon icon-eye"></i>&nbsp;&nbsp;查看</a>
+            </li>
+            <li ng-click="addEvent()" ng-if="gridOption.showAddBtn" permission permission-only="gridOption.addBtnPermission">
+                <a uib-tooltip="添加"><i class="icon icon-plus" ></i>&nbsp;&nbsp;添加</a>
+            </li>
+            <li ng-click="removeEvent()" ng-if="gridOption.showRemoveBtn">
+                <a uib-tooltip="删除"><i class="icon icon-trash"></i>&nbsp;&nbsp;删除</a>
+            </li>
+            <li ng-click="reset()" ng-if="gridOption.showResetBtn">
+                <a uib-tooltip="重置"><i class="icon icon-action-undo"></i>&nbsp;&nbsp;重置</a>
+            </li>
+            <li ng-if="gridOption.showSearchBtn">
+                <a uib-tooltip="搜索" ng-if="!pageSetting.loading"  ng-click="search()"><i class="fa fa-search" ></i>&nbsp;&nbsp;搜索</a>
+                <a ng-if="pageSetting.loading"><i class="fa fa-spin fa-spinner"></i>&nbsp;&nbsp;稍等</a>
+            </li>
+        </ul>
+        {{gridOption.title}}
+    </div>
+    <div class="row wrapper">
+        <form class="bs-example">
+            <div class="col-md-4"  ng-repeat="filterColumn in gridOption.filters" >
+                <label for="{{filterColumn.name}}" class="control-label" ng-bind="filterColumn.title"></label>
+                    <!--    日期      -->
+                    <input class="form-control" type="text" id="{{filterColumn.name}}" name="filterColumn.name"
+                           ng-if="filterColumn.type=='date'" uia-date
+                           ng-model="queryParams[filterColumn.name]"
+                           placeholder="{{filterColumn.placeholder}}">
+                    <!--    文本      -->
+                    <input class="form-control" type="text" id="{{filterColumn.name}}" name="filterColumn.name"
+                           ng-if="!filterColumn.type || filterColumn.type=='text'"
+                           ng-model="queryParams[filterColumn.name]"
+                           ng-enter="search()"
+                           placeholder="{{filterColumn.placeholder}}">
+                    <!--    选择框    -->
+                    <select class="form-control" id="{{filterColumn.name}}" name="filterColumn.name"
+                            ng-if="filterColumn.type == 'select'" uia-select chosen
+                            dict-code="filterColumn.dictCode"
+                            ng-model="queryParams[filterColumn.name]">
+                        <option value="">请选择</option>
+                    </select>
+                    <!--    弹出选择框      -->
+                    <input class="form-control" type="text" id="{{filterColumn.name}}" name="filterColumn.name" ng-if="filterColumn.type=='choice'"
+                           uia-choice choice-option="filterColumn.choiceOption" choice-model-label="queryParams[filterColumn.choiceModelLabel]"
+                           ng-model="queryParams[filterColumn.name]" placeholder="{{filterColumn.placeholder}}">
+            </div>
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped b-t b-light">
+            <thead>
+            <tr>
+                <th>
+                    <label class="i-checks m-b-none">
+                        <input type="checkbox"
+                               name="checkAll"
+                               data-ng-click="checkAll()"
+                               ng-model="gridSetting.checkAll"><i></i>
+                    </label>
+                </th>
+                <th data-ng-click="sort(columnValue.sortName)" ng-repeat="(columnKey, columnValue) in gridOption.columns">
+                    <span ng-bind="columnValue.title"></span>
+                    <i ng-if="gridOption.showOrderBy" ng-class="iconsort===columnValue.name ? (sortway ? 'icon-caret-down':'icon-caret-up'):'icon-sort'" class="sort"></i>
+                </th>
+                <th ng-if="gridOption.buttons" style="text-align: center;" >操作</th>
+            </tr>
+            </thead>
+            <tbody ng-if="!pageSetting.loading && (gridOption.data && gridOption.data.length > 0)">
+                <tr data-ng-dblclick="dbcEvent(item)"
+                    ng-repeat="item in gridOption.data"
+                    data-ng-click="choiceEvent(item)">
+                    <td>
+                        <label class="i-checks m-b-none">
+                            <input type="checkbox"
+                                   ng-model="item.checked"
+                                   data-ng-click="changeItemChecked()"
+                                   data-ng-checked="item.checked"
+                                   data-ng-true-value="true"
+                                   data-ng-false-value="false"><i></i>
+                        </label>
+                    </td>
+                    <td ng-repeat="(columnKey, columnValue) in gridOption.columns" ng-class="{'uia-checkbox':columnValue.type == 'checkbox'}">
+                        <!--    文本框    -->
+                        <div ng-bind="item[columnValue.name]" ng-if="!columnValue.type||columnValue.type == 'text'"></div>
+                        <!--    日期    -->
+                        <div ng-bind="formatterValue(item[columnValue.name], columnValue)"
+                             ng-if="columnValue.type == 'date' || columnValue.type == 'currency' || columnValue.type == 'number' || columnValue.type == 'myriabit'"></div>
+                        <!--    checkbox    -->
+                        <div ng-if="columnValue.type == 'checkbox'">
+                            <label class="i-checks m-b-none">
+                                <input type="checkbox"
+                                       disabled
+                                       ng-model="item[columnValue.name]"
+                                       ng-checked="columnValue.checked(item)"><i></i>
+                            </label>
+                        </div>
+                        <!--    switch    -->
+                        <div ng-if="columnValue.type == 'switch'">
+                            <label class="i-switch bg-primary m-r">
+                                <input type="checkbox" name="active"
+                                       data-ng-true-value="true"
+                                       data-ng-false-value="false"
+                                       disabled
+                                       ng-model="item.active">
+                                <i></i>
+                            </label>
+                        </div>
+                    </td>
+                    <td ng-if="gridOption.buttons" class="btn-control" style="text-align: center;" ng-repeat-end>
+                            <button type="button" ng-repeat="btnItem in gridOption.buttons"
+                                    ng-click="btnItem.click($event, item)"
+                                    ng-show="btnItem.show ? btnItem.show($event, item) : true"
+                                    uib-tooltip="{{btnItem.tooltipTitle}}"
+                                    class="btn btn-xs btn-primary small">
+                                <i class="{{btnItem.icon}}" ng-if="btnItem.icon"></i>
+                                {{btnItem.title}}
+                            </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer table-data-empty" ng-if="!pageSetting.loading && (!gridOption.data || gridOption.data.length == 0)">
+        <div class="row">
+            <div class="col-sm-12">
+                <span><i class="icon icon-info">&nbsp;&nbsp;没有查询到符合条件的数据</i></span>
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer table-data-empty" ng-if="pageSetting.loading">
+        <div class="row">
+            <div class="col-sm-12">
+                <span style="font-size: 25px;"><i class="fa fa-spinner fa-spin"></i></span>
+            </div>
+        </div>
+    </div>
+    <footer class="panel-footer" ng-show="!pageSetting.loading && (gridOption.data && gridOption.data.length > 0)">
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="i-checks m-b-none">
+                    <input type="checkbox"
+                           name="checkAll"
+                           data-ng-click="checkAll()"
+                           ng-model="gridSetting.checkAll"
+                           data-ng-true-value="true"
+                           data-ng-false-value="false"><i></i>
+                </label>
+            </div>
+            <div class="col-sm-8 text-right text-center-xs">
+                <uia-pagination page-info="gridOption.pageInfo" load-parameter="gridOption.queryParam" load-event="search()"></uia-pagination>
+            </div>
+        </div>
+    </footer>
+    <script type="text/ng-template" id="box.modal.html" >
+        <uia-box box-option="boxOption"></uia-box>
+    </script>
+</div>

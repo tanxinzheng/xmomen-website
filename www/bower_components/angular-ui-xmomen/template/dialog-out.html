@@ -1,0 +1,16 @@
+<div class="modal-header confirm-header">
+    <h3 class="modal-title" ng-bind="message.title"></h3>
+    <span class="closeModal" ng-click="close()"><i class="icon icon-remove"></i></span>
+</div>
+<div class="modal-body confirm-body">
+    <div class="widget-body" ng-bind="message.content">
+    </div>
+</div>
+<div class="modal-footer confirm-footer">
+    <div class='footer'>
+        <button class="btn btn-primary {{message.btnYesClass}}" type="button" data-ng-click="yes()" ng-bind="message.btnYesText"></button>
+    </div>
+    <div class='footer'>
+        <button class="btn btn-warning {{message.btnNoClass}}" type="button" ng-click="no()" ng-bind="message.btnNoText"></button>
+    </div>
+</div>

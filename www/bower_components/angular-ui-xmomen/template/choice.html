@@ -1,0 +1,72 @@
+<div class="widget-choice">
+    <div class="modal-header">
+        <h5 class="modal-title">{{option.title}}</h5>
+    </div>
+    <div class="modal-body" style="min-height: 300px">
+        <div class="widget-body filter clearfix" ng-if="option.showFilter">
+            <div class="uia-input-group pull-left" ng-repeat="filterColumn in option.filters">
+                <label ng-bind="filterColumn.title"></label>
+                <div>
+                    <input type="text" name="{{filterColumn.name}}" ng-model="queryParams[filterColumn.name]"
+                           placeholder="{{filterColumn.placeholder}}">
+                </div>
+            </div>
+            <div class="btn-group btn-group-xs pull-left operation">
+                <button class="btn search" ng-enter="loadDataList()" ng-click="loadDataList()"><i class="icon icon-search"></i></button>
+                <button class="btn reset" ng-click="reset()"><i class="icon icon-undo"></i></button>
+            </div>
+        </div>
+        <div class="widget-body">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th ng-repeat="item in option.columns" data-ng-click="sort(item.name)">
+                        {{item.text}}
+                        <span ng-if="option.sort">
+                            <!--   TODO 下列class写法不支持ngHtml2js压缩规范，需要重构
+                            <!--<i ng-class="iconsort==item.name ? (sortway ? 'icon-caret-up':'icon-caret-down'):'icon-sort'" class="sort"></i>-->
+                        </span>
+                    </th>
+                </tr>
+                </thead>
+                <!--显示翻页则是后台过滤-->
+                <tbody ng-if="(dataList || dataList.length) && !option.hidePagination">
+                <tr ng-click="current(item)" data-ng-dblclick="currentSave(item)" ng-repeat="item in dataList"
+                    ng-class="{'current-tr':item.isChoiced}">
+                    <td ng-repeat="column in option.columns">
+                        <span ng-if="column.formatter" ng-bind="formatter(item[column.name], column)"></span>
+                        <span ng-if="!column.formatter && !column.type" ng-bind="item[column.name]"></span>
+                            <span ng-if="!column.formatter && column.type" class="{{column.type}}">
+                                <i class="icon" ng-class="{'icon-check' : item[column.name],'icon-check-empty': !item[column.name] }"></i>
+                            </span>
+                    </td>
+                </tr>
+                </tbody>
+                <!--隐藏分页是前台过滤-->
+                <tbody ng-if="(dataList || dataList.length) && option.hidePagination">
+                <tr ng-click="current(item)" data-ng-dblclick="currentSave(item)" ng-repeat="item in dataList | filter:queryParams"
+                    ng-class="{'current-tr':item.isChoiced}">
+                    <td ng-repeat="column in option.columns">
+                        <span ng-if="column.formatter" ng-bind="formatter(item[column.name], column)"></span>
+                        <span ng-if="!column.formatter && !column.type" ng-bind="item[column.name]"></span>
+                        <span ng-if="!column.formatter && column.type" class="{{column.type}}">
+                            <i class="icon" ng-class="{'icon-check' : item[column.name],'icon-check-empty': !item[column.name] }"></i>
+                        </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div ng-show="!dataList || !dataList.length">
+                暂时并未查到任何信息
+            </div>
+            <div class="widget-toolbar" style="padding: 0px;" ng-show="(dataList || dataList.length) && !option.hidePagination">
+                <ug-pagination page-info="pageInfoSetting" load-event="loadDataList()" load-parameter="queryParam"></ug-pagination>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-warning" type="button" data-ng-click="clear()">清除</button>
+        <button class="btn btn-success" type="submit" data-ng-click="choice()">确定</button>
+        <button class="btn btn-default" ng-click="cancel()">关闭</button>
+    </div>
+</div>
